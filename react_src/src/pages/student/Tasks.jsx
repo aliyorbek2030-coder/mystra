@@ -326,7 +326,7 @@ export default function Tasks() {
                 marginLeft: 6,
                 background: 'var(--accent)',
                 color: 'var(--accent-fg)',
-                borderRadius: 6,
+                borderRadius: 10,
                 padding: '1px 6px',
                 fontSize: 12,
               }}

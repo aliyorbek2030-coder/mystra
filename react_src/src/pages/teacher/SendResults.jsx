@@ -11,22 +11,22 @@ const PAGE = {
     margin: 0,
     boxSizing: 'border-box',
     padding: 0,
-    fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-    color: '#111',
-    backgroundColor: '#f7f7f6',
+    fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
+    color: '#12131A',
+    backgroundColor: '#F4F5F7',
     minHeight: '100vh',
 };
 
 const HEADER = {
     backgroundColor: '#fff',
-    borderBottom: '1px solid #e8e8e6',
+    borderBottom: '1px solid #E3E5EA',
     padding: '24px 24px 14px',
 };
 
 const CARD = {
     backgroundColor: '#fff',
-    border: '1px solid #e2e2e0',
-    borderRadius: 8,
+    border: '1px solid #E3E5EA',
+    borderRadius: 12,
     padding: '16px 18px',
     boxSizing: 'border-box',
 };
@@ -34,23 +34,23 @@ const CARD = {
 const FIELD = {
     boxSizing: 'border-box',
     padding: '9px 12px',
-    borderRadius: 6,
-    border: '1px solid #d4d4d2',
+    borderRadius: 10,
+    border: '1px solid #D9DCE3',
     backgroundColor: '#fff',
-    color: '#111',
+    color: '#12131A',
     fontFamily: 'inherit',
     fontSize: 13,
     outline: 'none',
     boxShadow: '0 0 0 1000px #fff inset',
-    WebkitTextFillColor: '#111',
+    WebkitTextFillColor: '#12131A',
 };
 
 const BTN_PRIMARY = {
     padding: '9px 16px',
-    backgroundColor: '#111',
+    backgroundColor: '#5B4BFF',
     color: '#fff',
-    border: '1px solid #111',
-    borderRadius: 6,
+    border: '1px solid #5B4BFF',
+    borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
     fontSize: 13,
@@ -60,9 +60,9 @@ const BTN_PRIMARY = {
 const BTN_SECONDARY = {
     padding: '9px 16px',
     backgroundColor: '#fff',
-    color: '#111',
-    border: '1px solid #d4d4d2',
-    borderRadius: 6,
+    color: '#12131A',
+    border: '1px solid #D9DCE3',
+    borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
     fontSize: 13,
@@ -71,10 +71,10 @@ const BTN_SECONDARY = {
 
 const PageHeader = () => (
     <div style={HEADER}>
-        <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#111' }}>
+        <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#12131A' }}>
             Natijalarni Telegramga yuborish
         </h1>
-        <p style={{ color: '#8a8a88', margin: 0, fontSize: 13 }}>
+        <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>
             Tekshirilgan vazifalar natijalarini guruh chatiga yuboring
         </p>
     </div>
@@ -267,7 +267,7 @@ export default function SendResults() {
             <div style={PAGE}>
                 <PageHeader />
                 <div style={{ padding: 24 }}>
-                    <p style={{ margin: 0, fontSize: 13, color: '#8a8a88' }}>
+                    <p style={{ margin: 0, fontSize: 13, color: '#5B6070' }}>
                         Ma'lumotlar yuklanmoqda...
                     </p>
                 </div>
@@ -284,11 +284,11 @@ export default function SendResults() {
                     <div
                         role="alert"
                         style={{
-                            color: 'var(--danger, #dc2626)',
+                            color: 'var(--danger, #DC2626)',
                             overflowWrap: 'anywhere',
                             backgroundColor: '#fef2f2',
                             border: '1px solid #fecaca',
-                            borderRadius: 6,
+                            borderRadius: 10,
                             padding: '10px 12px',
                             fontSize: 13,
                             marginBottom: 14,
@@ -311,10 +311,10 @@ export default function SendResults() {
                     <div
                         role="status"
                         style={{
-                            color: '#15803d',
+                            color: '#15803D',
                             backgroundColor: '#f0fdf4',
                             border: '1px solid #bbf7d0',
-                            borderRadius: 6,
+                            borderRadius: 10,
                             padding: '10px 12px',
                             fontSize: 13,
                             marginBottom: 14,
@@ -337,11 +337,11 @@ export default function SendResults() {
                     }}
                 >
                     <div>
-                        <div style={{ fontWeight: 600, fontSize: 15, color: '#111' }}>
+                        <div style={{ fontWeight: 600, fontSize: 15, color: '#12131A' }}>
                             {group ? group.name : 'Guruh tanlanmagan'}
                         </div>
                         {group && (
-                            <p style={{ margin: '3px 0 0', fontSize: 12, color: '#8a8a88' }}>
+                            <p style={{ margin: '3px 0 0', fontSize: 12, color: '#5B6070' }}>
                                 {groupStudents.length} o'quvchi · {month}
                             </p>
                         )}
@@ -372,7 +372,7 @@ export default function SendResults() {
                         font: 'inherit',
                         fontSize: 14,
                         lineHeight: 1.6,
-                        color: '#111',
+                        color: '#12131A',
                         margin: '0 0 14px',
                     }}
                 >

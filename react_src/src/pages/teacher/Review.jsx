@@ -9,22 +9,22 @@ const PAGE = {
     margin: 0,
     boxSizing: 'border-box',
     padding: 0,
-    fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-    color: '#111',
-    backgroundColor: '#f7f7f6',
+    fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
+    color: '#12131A',
+    backgroundColor: '#F4F5F7',
     minHeight: '100vh',
 };
 
 const HEADER = {
     backgroundColor: '#fff',
-    borderBottom: '1px solid #e8e8e6',
+    borderBottom: '1px solid #E3E5EA',
     padding: '20px 24px 14px',
 };
 
 const CARD = {
     backgroundColor: '#fff',
-    border: '1px solid #e2e2e0',
-    borderRadius: 8,
+    border: '1px solid #E3E5EA',
+    borderRadius: 12,
     boxSizing: 'border-box',
     padding: '16px 18px',
     marginBottom: 12,
@@ -33,23 +33,23 @@ const CARD = {
 const FIELD = {
     boxSizing: 'border-box',
     padding: '8px 10px',
-    borderRadius: 6,
-    border: '1px solid #d4d4d2',
+    borderRadius: 10,
+    border: '1px solid #D9DCE3',
     backgroundColor: '#fff',
-    color: '#111',
+    color: '#12131A',
     fontFamily: 'inherit',
     fontSize: 13,
     outline: 'none',
     boxShadow: '0 0 0 1000px #fff inset',
-    WebkitTextFillColor: '#111',
+    WebkitTextFillColor: '#12131A',
 };
 
 const BTN_P = {
     padding: '8px 14px',
-    backgroundColor: '#111',
+    backgroundColor: '#5B4BFF',
     color: '#fff',
-    border: '1px solid #111',
-    borderRadius: 6,
+    border: '1px solid #5B4BFF',
+    borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
     fontSize: 13,
@@ -59,9 +59,9 @@ const BTN_P = {
 const BTN_S = {
     padding: '8px 14px',
     backgroundColor: '#fff',
-    color: '#111',
-    border: '1px solid #d4d4d2',
-    borderRadius: 6,
+    color: '#12131A',
+    border: '1px solid #D9DCE3',
+    borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
     fontSize: 13,
@@ -79,7 +79,7 @@ const dim = on => ({ opacity: on ? 0.6 : 1 });
 const SECTION_TITLE = {
     fontSize: 15,
     fontWeight: 600,
-    color: '#111',
+    color: '#12131A',
     margin: '28px 0 12px',
 };
 
@@ -94,10 +94,10 @@ const BADGE = {
 };
 
 const BANNER_ERR = {
-    color: '#dc2626',
+    color: '#DC2626',
     backgroundColor: '#fef2f2',
     border: '1px solid #fecaca',
-    borderRadius: 6,
+    borderRadius: 10,
     padding: '10px 12px',
     fontSize: 13,
     marginBottom: 12,
@@ -105,10 +105,10 @@ const BANNER_ERR = {
 };
 
 const BANNER_OK = {
-    color: '#15803d',
+    color: '#15803D',
     backgroundColor: '#f0fdf4',
     border: '1px solid #bbf7d0',
-    borderRadius: 6,
+    borderRadius: 10,
     padding: '10px 12px',
     fontSize: 13,
     marginBottom: 12,
@@ -118,7 +118,7 @@ const Empty = ({ icon, children }) => (
     <div
         style={{
             textAlign: 'center',
-            color: '#9a9a98',
+            color: '#6B7080',
             fontSize: 14,
             padding: '20px 16px',
         }}
@@ -244,7 +244,7 @@ const AuthenticatedFile = ({ path, name, type }) => {
             <p
                 role="alert"
                 style={{
-                    color: '#dc2626',
+                    color: '#DC2626',
                     fontSize: 13,
                     margin: '4px 0',
                     overflowWrap: 'anywhere',
@@ -257,7 +257,7 @@ const AuthenticatedFile = ({ path, name, type }) => {
 
     if (!src) {
         return (
-            <span style={{ color: '#8a8a88', fontSize: 13 }}>
+            <span style={{ color: '#5B6070', fontSize: 13 }}>
                 Fayl yuklanmoqda...
             </span>
         );
@@ -295,8 +295,8 @@ const AuthenticatedFile = ({ path, name, type }) => {
                         maxWidth: '100%',
                         maxHeight: 400,
                         objectFit: 'contain',
-                        borderRadius: 8,
-                        border: '1px solid #e2e2e0',
+                        borderRadius: 12,
+                        border: '1px solid #E3E5EA',
                     }}
                 />
             </a>
@@ -309,7 +309,7 @@ const AuthenticatedFile = ({ path, name, type }) => {
             target="_blank"
             rel="noreferrer"
             download={name || undefined}
-            style={{ color: '#111', fontSize: 13 }}
+            style={{ color: '#12131A', fontSize: 13 }}
         >
             Ochish / yuklab olish
         </a>
@@ -325,9 +325,9 @@ const Media = ({ s }) => (
                     overflowWrap: 'anywhere',
                     margin: 0,
                     padding: '10px 12px',
-                    background: '#f7f7f6',
-                    border: '1px solid #eeeeec',
-                    borderRadius: 8,
+                    background: '#F4F5F7',
+                    border: '1px solid #EEF0F3',
+                    borderRadius: 12,
                     fontSize: 13,
                 }}
             >
@@ -600,10 +600,10 @@ export default function Review() {
     return (
         <div style={PAGE}>
             <div style={HEADER}>
-                <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#111' }}>
+                <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#12131A' }}>
                     Talabalarning yangi vazifalari
                 </h1>
-                <p style={{ color: '#8a8a88', margin: 0, fontSize: 13 }}>
+                <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>
                     Kunlik ish, extra work va obunalarni tekshiring
                 </p>
             </div>
@@ -660,7 +660,7 @@ export default function Review() {
                         <div style={CARD} key={day.id}>
                             <div style={{ fontSize: 14 }}>
                                 <b style={{ fontSize: 15 }}>{student.name || 'O‘quvchi'}</b>
-                                <span style={{ color: '#8a8a88' }}>
+                                <span style={{ color: '#5B6070' }}>
                                     {' · '}
                                     {day.day}
                                     {' ('}
@@ -676,7 +676,7 @@ export default function Review() {
                                         marginTop: 12,
                                         paddingTop: 12,
                                         borderTop:
-                                            '1px solid #eeeeec',
+                                            '1px solid #EEF0F3',
                                     }}
                                 >
                                     <div
@@ -727,7 +727,7 @@ export default function Review() {
                                                 display: 'block',
                                                 marginTop: 8,
                                                 fontSize: 12,
-                                                color: '#8a8a88',
+                                                color: '#5B6070',
                                             }}
                                         >
                                             🤖 {item.ai.feedback}
@@ -742,14 +742,14 @@ export default function Review() {
                                     gap: 8,
                                     marginTop: 14,
                                     paddingTop: 14,
-                                    borderTop: '1px solid #eeeeec',
+                                    borderTop: '1px solid #EEF0F3',
                                     alignItems: 'center',
                                     flexWrap: 'wrap',
                                 }}
                             >
                                 <b style={{ fontSize: 14 }}>Umumiy: {total}%</b>
 
-                                <small style={{ color: '#8a8a88', fontSize: 12, flex: 1, minWidth: 120 }}>
+                                <small style={{ color: '#5B6070', fontSize: 12, flex: 1, minWidth: 120 }}>
                                     {total >= 95
                                         ? '🏆 Sertifikat berilishi mumkin'
                                         : '(sertifikat uchun 95% kerak)'}
@@ -799,7 +799,7 @@ export default function Review() {
                         >
                             <div style={{ fontSize: 14 }}>
                                 <b style={{ fontSize: 15 }}>{student.name || 'O‘quvchi'}</b>
-                                <span style={{ color: '#8a8a88' }}>
+                                <span style={{ color: '#5B6070' }}>
                                     {' · '}
                                     {submission.title || 'Extra work'}
                                 </span>
@@ -808,7 +808,7 @@ export default function Review() {
                             <Media s={submission} />
 
                             <div style={{ marginTop: 8 }}>
-                                <small style={{ fontSize: 12, color: '#8a8a88' }}>
+                                <small style={{ fontSize: 12, color: '#5B6070' }}>
                                     🤖 AI {submission.ai?.score ?? 0}%
                                     {submission.ai?.feedback
                                         ? ` — ${submission.ai.feedback}`
@@ -822,7 +822,7 @@ export default function Review() {
                                     gap: 8,
                                     marginTop: 14,
                                     paddingTop: 14,
-                                    borderTop: '1px solid #eeeeec',
+                                    borderTop: '1px solid #EEF0F3',
                                     flexWrap: 'wrap',
                                     alignItems: 'center',
                                 }}

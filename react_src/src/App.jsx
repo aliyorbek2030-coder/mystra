@@ -95,44 +95,38 @@ const Icon = ({ name }) => (
 );
 
 const SIDEBAR_CSS = `
-.sb-link {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 12px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #4a4a48;
-    text-decoration: none;
-    transition: background 0.12s, color 0.12s;
-    cursor: pointer;
-}
-.sb-link:hover { background: #f1f1ef; color: #111; }
-.sb-link.active, .sb-link.active:hover { background: #111; color: #fff; }
-.sb-badge {
-    margin-left: auto;
-    min-width: 18px;
-    height: 18px;
-    padding: 0 5px;
-    box-sizing: border-box;
-    border-radius: 999px;
-    background: #16a34a;
-    color: #fff;
-    font-size: 11px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-body { padding-bottom: 0 !important; }
-@media (max-width: 760px) {
-    .sb-root { width: 60px !important; }
-    .sb-label, .sb-name, .sb-badge { display: none !important; }
-    .sb-link { justify-content: center; padding: 10px 0; }
-    .sb-head { justify-content: center !important; padding: 16px 0 !important; }
+.sb-root{width:248px;flex-shrink:0;position:sticky;top:0;height:100vh;box-sizing:border-box;display:flex;flex-direction:column;background:#12131A;color:#fff;padding:20px 14px}
+.sb-head{display:flex;align-items:center;gap:10px;padding:0 8px 22px}
+.sb-logo{width:36px;height:36px;border-radius:11px;background:#D4F74A;color:#12131A;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;flex-shrink:0}
+.sb-word{font-weight:700;font-size:20px;letter-spacing:-0.02em}
+.sb-ver{margin-left:auto;font-size:11px;font-weight:700;background:#2A2C38;color:#D4F74A;padding:3px 8px;border-radius:99px}
+.sb-nav{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px;margin:0 -4px;padding:0 4px}
+.sb-link{display:flex;align-items:center;gap:12px;min-height:42px;padding:0 12px;border-radius:12px;font-size:14px;font-weight:500;color:#C9CBD6;text-decoration:none;transition:background .12s,color .12s;cursor:pointer;white-space:nowrap}
+.sb-link:hover{background:#1E2030;color:#fff}
+.sb-link.active,.sb-link.active:hover{background:#D4F74A;color:#12131A;font-weight:600}
+.sb-badge{margin-left:auto;min-width:22px;height:20px;padding:0 7px;border-radius:999px;background:#5B4BFF;color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
+.sb-user{margin-top:14px;padding:12px;border-radius:14px;background:#1E2030;display:flex;align-items:center;gap:10px}
+.sb-ava{width:36px;height:36px;border-radius:99px;background:#5B4BFF;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-uname{font-size:13px;font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-urole{font-size:12px;color:#A3A6B4}
+.sb-out{margin-left:auto;width:36px;height:36px;border-radius:10px;border:0;background:transparent;color:#C9CBD6;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.sb-out:hover{background:#2A2C38;color:#fff}
+.app-main{flex:1;min-width:0}
+body{padding-bottom:0 !important}
+@media (max-width: 860px){
+  .app-root{flex-direction:column}
+  .sb-root{position:fixed;bottom:0;top:auto;left:0;right:0;width:auto;height:auto;flex-direction:row;padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:50;border-top:1px solid #2A2C38}
+  .sb-head,.sb-user .sb-uname,.sb-user .sb-urole,.sb-user .sb-ava{display:none}
+  .sb-nav{flex-direction:row;overflow-x:auto;gap:4px;margin:0;padding:0}
+  .sb-link{flex-direction:column;gap:3px;min-width:68px;min-height:52px;padding:6px 8px;font-size:11px;justify-content:center}
+  .sb-badge{position:absolute;margin:0;transform:translate(14px,-14px)}
+  .sb-link{position:relative}
+  .sb-user{margin:0 0 0 4px;padding:0;background:transparent}
+  .app-main{padding-bottom:80px}
 }
 `;
+
+const ROLE_LABEL = { teacher: 'Ustoz', admin: 'Administrator', student: "O'quvchi" };
 
 function Shell({ tabs, notifTo, children }) {
     const { user, logout } = useAuth();
@@ -141,148 +135,53 @@ function Shell({ tabs, notifTo, children }) {
 
     const hasSignups = tabs.some(([to]) => to === '/signups');
 
-    // Pending signup count for the green badge (refreshes when you navigate).
+    // Yangi so'rovlar soni (sahifa almashganda yangilanadi)
     useEffect(() => {
         if (!hasSignups) return undefined;
-
         let cancelled = false;
-
         apiRequest('/signups')
-            .then(data => {
-                if (!cancelled) {
-                    setSignupCount(Array.isArray(data) ? data.length : 0);
-                }
-            })
-            .catch(() => {
-                if (!cancelled) setSignupCount(0);
-            });
-
-        return () => {
-            cancelled = true;
-        };
+            .then(data => { if (!cancelled) setSignupCount(Array.isArray(data) ? data.length : 0); })
+            .catch(() => { if (!cancelled) setSignupCount(0); });
+        return () => { cancelled = true; };
     }, [hasSignups, pathname]);
+
+    const initials = (user.name || '?').split(' ').map(s => s[0]).join('').slice(0, 2).toUpperCase();
 
     return (
         <>
             <style>{SIDEBAR_CSS}</style>
-
-            <div
-                style={{
-                    display: 'flex',
-                    minHeight: '100vh',
-                    backgroundColor: '#f7f7f6',
-                    fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-                }}
-            >
-                <aside
-                    className="sb-root"
-                    style={{
-                        width: 220,
-                        flexShrink: 0,
-                        position: 'sticky',
-                        top: 0,
-                        height: '100vh',
-                        boxSizing: 'border-box',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        backgroundColor: '#fff',
-                        borderRight: '1px solid #e8e8e6',
-                    }}
-                >
-                    {/* Logo + avatar */}
-                    <div
-                        className="sb-head"
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            padding: '16px 16px 14px 18px',
-                            borderBottom: '1px solid #eeeeec',
-                        }}
-                    >
-                        <span
-                            className="sb-label"
-                            style={{
-                                fontFamily: "'Playfair Display', Georgia, 'Times New Roman', serif",
-                                fontStyle: 'italic',
-                                fontSize: 21,
-                                fontWeight: 500,
-                                color: '#111',
-                            }}
-                        >
-                            mystra
-                        </span>
-
-                        <span
-                            title={user.name || ''}
-                            style={{
-                                width: 22,
-                                height: 22,
-                                borderRadius: '50%',
-                                background:
-                                    'conic-gradient(#111 0 25%, #a855f7 0 50%, #ec4899 0 75%, #fff 0)',
-                                border: '1px solid #d4d4d2',
-                                flexShrink: 0,
-                            }}
-                        />
+            <div className="app-root" style={{ display: 'flex', minHeight: '100vh', background: '#F4F5F7' }}>
+                <aside className="sb-root" aria-label="Asosiy menyu">
+                    <div className="sb-head">
+                        <div className="sb-logo" aria-hidden="true">m</div>
+                        <span className="sb-word">mystra</span>
+                        <span className="sb-ver">2.0</span>
                     </div>
 
-                    {/* Navigation */}
-                    <nav
-                        style={{
-                            flex: 1,
-                            overflowY: 'auto',
-                            padding: '10px 8px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 2,
-                        }}
-                    >
+                    <nav className="sb-nav">
                         {tabs.map(([to, l]) => (
-                            <NavLink
-                                key={to}
-                                to={to}
-                                title={l}
-                                className={({ isActive }) =>
-                                    'sb-link' + (isActive ? ' active' : '')
-                                }
-                            >
+                            <NavLink key={to} to={to} title={l} className={({ isActive }) => 'sb-link' + (isActive ? ' active' : '')}>
                                 <Icon name={ICON_FOR[to]} />
-
                                 <span className="sb-label">{l}</span>
-
-                                {to === '/signups' && signupCount > 0 && (
-                                    <span className="sb-badge">{signupCount}</span>
-                                )}
+                                {to === '/signups' && signupCount > 0 && <span className="sb-badge">{signupCount}</span>}
                             </NavLink>
                         ))}
                     </nav>
 
-                    {/* Logout */}
-                    <div
-                        style={{
-                            padding: '8px',
-                            borderTop: '1px solid #eeeeec',
-                        }}
-                    >
-                        <a
-                            href="#/"
-                            onClick={logout}
-                            className="sb-link"
-                            title="Chiqish"
-                        >
+                    <div className="sb-user">
+                        <div className="sb-ava" aria-hidden="true">{initials}</div>
+                        <div style={{ minWidth: 0 }}>
+                            <div className="sb-uname">{user.name}</div>
+                            <div className="sb-urole">{ROLE_LABEL[user.role] || user.role}</div>
+                        </div>
+                        <button type="button" className="sb-out" onClick={logout} title="Chiqish" aria-label="Chiqish">
                             <Icon name="logout" />
-
-                            <span className="sb-label sb-name">
-                                Chiqish ({user.name?.split(' ')[0]})
-                            </span>
-                        </a>
+                        </button>
                     </div>
                 </aside>
 
-                <main style={{ flex: 1, minWidth: 0 }}>
+                <main className="app-main">
                     <NotifBar to={notifTo} />
-
                     {children}
                 </main>
             </div>
@@ -291,18 +190,18 @@ function Shell({ tabs, notifTo, children }) {
 }
 
 const T = [
-    ['/overview', 'Overview'],
+    ['/overview', 'Bosh sahifa'],
     ['/review', 'Tekshirish'],
     ['/signups', "So'rovlar"],
-    ['/people', 'Guruh/O\'quvchi'],
-    ['/payment', 'Tolov'],
-    ['/reports', 'Hisobot'],
-    ['/hwcheck', 'Dars'],
+    ['/people', "O'quvchilar"],
+    ['/payment', "To'lovlar"],
+    ['/reports', 'Hisobotlar'],
+    ['/hwcheck', 'Uy vazifa'],
     ['/attend', 'Davomat'],
     ['/suggest', 'AI takliflar'],
     ['/send', 'Yuborish'],
     ['/aitask', 'AI vazifa'],
-    ['/parent', 'Hisobot'],
+    ['/parent', 'Ota-onalar'],
     ['/settings', 'Sozlamalar'],
 ];
 
@@ -321,7 +220,7 @@ export default function App() {
                     ['/tasks', 'Vazifalar'],
                     ['/results', 'Natijalar'],
                     ['/archive', 'Arxiv'],
-                    ['/pay', 'Tolov'],
+                    ['/pay', "To'lov"],
                     ['/certs', 'Sertifikat'],
                 ]}
             >

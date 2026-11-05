@@ -8,15 +8,15 @@ const PAGE = {
   margin: 0,
   boxSizing: 'border-box',
   padding: 0,
-  fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-  color: '#111',
-  backgroundColor: '#f7f7f6',
+  fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
+  color: '#12131A',
+  backgroundColor: '#F4F5F7',
   minHeight: '100vh',
 };
 
 const HEADER = {
   backgroundColor: '#fff',
-  borderBottom: '1px solid #e8e8e6',
+  borderBottom: '1px solid #E3E5EA',
   padding: '20px 24px 14px',
   display: 'flex',
   justifyContent: 'space-between',
@@ -27,8 +27,8 @@ const HEADER = {
 
 const CARD = {
   backgroundColor: '#fff',
-  border: '1px solid #e2e2e0',
-  borderRadius: 8,
+  border: '1px solid #E3E5EA',
+  borderRadius: 12,
   boxSizing: 'border-box',
 };
 
@@ -37,26 +37,26 @@ const TH = {
   padding: '10px 16px',
   fontSize: 11,
   fontWeight: 500,
-  color: '#8a8a88',
+  color: '#5B6070',
   letterSpacing: '0.05em',
   textTransform: 'uppercase',
-  backgroundColor: '#f0f0ee',
+  backgroundColor: '#EEF0F3',
   whiteSpace: 'nowrap',
 };
 
 const TD = {
   padding: '14px 16px',
   fontSize: 13,
-  color: '#111',
+  color: '#12131A',
   verticalAlign: 'middle',
 };
 
 const BTN_P = {
   padding: '5px 12px',
-  backgroundColor: '#111',
+  backgroundColor: '#5B4BFF',
   color: '#fff',
-  border: '1px solid #111',
-  borderRadius: 6,
+  border: '1px solid #5B4BFF',
+  borderRadius: 10,
   cursor: 'pointer',
   fontFamily: 'inherit',
   fontSize: 12,
@@ -69,7 +69,7 @@ const BTN_WARN = {
   backgroundColor: '#fff',
   color: '#d97706',
   border: '1px solid #e8a33d',
-  borderRadius: 6,
+  borderRadius: 10,
   cursor: 'pointer',
   fontFamily: 'inherit',
   fontSize: 12,
@@ -80,9 +80,9 @@ const BTN_WARN = {
 const BTN_S = {
   padding: '8px 14px',
   backgroundColor: '#fff',
-  color: '#111',
-  border: '1px solid #d4d4d2',
-  borderRadius: 6,
+  color: '#12131A',
+  border: '1px solid #D9DCE3',
+  borderRadius: 10,
   cursor: 'pointer',
   fontFamily: 'inherit',
   fontSize: 13,
@@ -177,10 +177,10 @@ export default function Signups() {
       {/* Header: title on the left, refresh on the right */}
       <div style={HEADER}>
         <div>
-          <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#111' }}>
+          <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#12131A' }}>
             Ro'yxatdan o'tish so'rovlari ({signups.length})
           </h1>
-          <p style={{ color: '#8a8a88', margin: 0, fontSize: 13 }}>
+          <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>
             O'quvchilar guruhga qo'shilishni so'ramoqda
           </p>
         </div>
@@ -204,10 +204,10 @@ export default function Signups() {
           <div
             role="alert"
             style={{
-              color: '#dc2626',
+              color: '#DC2626',
               backgroundColor: '#fef2f2',
               border: '1px solid #fecaca',
-              borderRadius: 6,
+              borderRadius: 10,
               padding: '10px 12px',
               fontSize: 13,
               marginBottom: 14,
@@ -221,10 +221,10 @@ export default function Signups() {
         {message && (
           <div
             style={{
-              color: '#15803d',
+              color: '#15803D',
               backgroundColor: '#f0fdf4',
               border: '1px solid #bbf7d0',
-              borderRadius: 6,
+              borderRadius: 10,
               padding: '10px 12px',
               fontSize: 13,
               marginBottom: 14,
@@ -235,7 +235,7 @@ export default function Signups() {
         )}
 
         {loading && (
-          <p style={{ color: '#8a8a88', fontSize: 13, margin: 0 }}>
+          <p style={{ color: '#5B6070', fontSize: 13, margin: 0 }}>
             So'rovlar Django serveridan yuklanmoqda...
           </p>
         )}
@@ -244,7 +244,7 @@ export default function Signups() {
           <div
             style={{
               textAlign: 'center',
-              color: '#9a9a98',
+              color: '#6B7080',
               fontSize: 14,
               padding: '28px 16px',
             }}
@@ -280,7 +280,7 @@ export default function Signups() {
                   return (
                     <tr
                       key={signup.id}
-                      style={{ borderTop: '1px solid #eeeeec' }}
+                      style={{ borderTop: '1px solid #EEF0F3' }}
                     >
                       <td style={{ ...TD, fontWeight: 600 }}>
                         {signup.name}

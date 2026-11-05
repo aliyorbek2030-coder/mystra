@@ -8,15 +8,15 @@ const PAGE = {
     margin: 0,
     boxSizing: 'border-box',
     padding: 0,
-    fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-    color: '#111',
-    backgroundColor: '#f7f7f6',
+    fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
+    color: '#12131A',
+    backgroundColor: '#F4F5F7',
     minHeight: '100vh',
 };
 
 const HEADER = {
     backgroundColor: '#fff',
-    borderBottom: '1px solid #e8e8e6',
+    borderBottom: '1px solid #E3E5EA',
     padding: '20px 24px 14px',
     display: 'flex',
     justifyContent: 'space-between',
@@ -27,8 +27,8 @@ const HEADER = {
 
 const CARD = {
     backgroundColor: '#fff',
-    border: '1px solid #e2e2e0',
-    borderRadius: 8,
+    border: '1px solid #E3E5EA',
+    borderRadius: 12,
     boxSizing: 'border-box',
     padding: '16px 18px',
 };
@@ -36,23 +36,23 @@ const CARD = {
 const FIELD = {
     boxSizing: 'border-box',
     padding: '9px 12px',
-    borderRadius: 6,
-    border: '1px solid #d4d4d2',
+    borderRadius: 10,
+    border: '1px solid #D9DCE3',
     backgroundColor: '#fff',
-    color: '#111',
+    color: '#12131A',
     fontFamily: 'inherit',
     fontSize: 13,
     outline: 'none',
     boxShadow: '0 0 0 1000px #fff inset',
-    WebkitTextFillColor: '#111',
+    WebkitTextFillColor: '#12131A',
 };
 
 const BTN_P = {
     padding: '8px 14px',
-    backgroundColor: '#111',
+    backgroundColor: '#5B4BFF',
     color: '#fff',
-    border: '1px solid #111',
-    borderRadius: 6,
+    border: '1px solid #5B4BFF',
+    borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
     fontSize: 13,
@@ -62,9 +62,9 @@ const BTN_P = {
 const BTN_S = {
     padding: '8px 14px',
     backgroundColor: '#fff',
-    color: '#111',
-    border: '1px solid #d4d4d2',
-    borderRadius: 6,
+    color: '#12131A',
+    border: '1px solid #D9DCE3',
+    borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
     fontSize: 13,
@@ -75,7 +75,7 @@ const Empty = ({ icon, children }) => (
     <div
         style={{
             textAlign: 'center',
-            color: '#9a9a98',
+            color: '#6B7080',
             fontSize: 14,
             padding: '28px 16px',
         }}
@@ -233,10 +233,10 @@ export default function Parent() {
             {/* Header: title on the left, month picker on the right */}
             <div style={HEADER}>
                 <div>
-                    <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#111' }}>
+                    <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#12131A' }}>
                         Ota-ona hisoboti
                     </h1>
-                    <p style={{ color: '#8a8a88', margin: 0, fontSize: 13 }}>
+                    <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>
                         Oylik natijani nusxalang yoki Telegram orqali yuboring
                     </p>
                 </div>
@@ -252,7 +252,7 @@ export default function Parent() {
 
             <div style={{ padding: 24 }}>
                 {loading && (
-                    <div style={{ ...CARD, fontSize: 13, color: '#8a8a88' }}>
+                    <div style={{ ...CARD, fontSize: 13, color: '#5B6070' }}>
                         Ma'lumotlar yuklanmoqda...
                     </div>
                 )}
@@ -260,10 +260,10 @@ export default function Parent() {
                 {error && (
                     <div
                         style={{
-                            color: '#dc2626',
+                            color: '#DC2626',
                             backgroundColor: '#fef2f2',
                             border: '1px solid #fecaca',
-                            borderRadius: 6,
+                            borderRadius: 10,
                             padding: '10px 12px',
                             fontSize: 13,
                             marginBottom: 14,
@@ -334,10 +334,10 @@ export default function Parent() {
                                         font: 'inherit',
                                         fontSize: 13,
                                         lineHeight: 1.6,
-                                        color: '#333',
-                                        background: '#f7f7f6',
-                                        border: '1px solid #eeeeec',
-                                        borderRadius: 8,
+                                        color: '#2A2C38',
+                                        background: '#F4F5F7',
+                                        border: '1px solid #EEF0F3',
+                                        borderRadius: 12,
                                         padding: '12px 14px',
                                         margin: '12px 0',
                                     }}
@@ -379,7 +379,7 @@ export default function Parent() {
                                         style={{
                                             marginTop: 10,
                                             fontSize: 12,
-                                            color: '#8a8a88',
+                                            color: '#5B6070',
                                         }}
                                     >
                                         Bu oy uchun hisobot ma'lumotlari topilmadi.
@@ -391,7 +391,7 @@ export default function Parent() {
                                         style={{
                                             marginTop: 6,
                                             fontSize: 12,
-                                            color: '#8a8a88',
+                                            color: '#5B6070',
                                         }}
                                     >
                                         To'lov ma'lumotlari topilmadi.

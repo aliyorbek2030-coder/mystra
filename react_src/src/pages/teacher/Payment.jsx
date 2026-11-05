@@ -10,15 +10,15 @@ const PAGE = {
   margin: 0,
   boxSizing: 'border-box',
   padding: 0,
-  fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-  color: '#111',
-  backgroundColor: '#f7f7f6',
+  fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
+  color: '#12131A',
+  backgroundColor: '#F4F5F7',
   minHeight: '100vh',
 };
 
 const HEADER = {
   backgroundColor: '#fff',
-  borderBottom: '1px solid #e8e8e6',
+  borderBottom: '1px solid #E3E5EA',
   padding: '20px 24px 14px',
   display: 'flex',
   justifyContent: 'space-between',
@@ -29,20 +29,20 @@ const HEADER = {
 
 const CARD = {
   backgroundColor: '#fff',
-  border: '1px solid #e2e2e0',
-  borderRadius: 8,
+  border: '1px solid #E3E5EA',
+  borderRadius: 12,
   boxSizing: 'border-box',
   padding: '16px 18px',
   marginBottom: 14,
 };
 
-const CARD_TITLE = { fontSize: 14, fontWeight: 600, color: '#111' };
+const CARD_TITLE = { fontSize: 14, fontWeight: 600, color: '#12131A' };
 
 const LABEL = {
   display: 'block',
   fontSize: 11,
   fontWeight: 500,
-  color: '#8a8a88',
+  color: '#5B6070',
   letterSpacing: '0.04em',
   textTransform: 'uppercase',
   marginBottom: 4,
@@ -52,31 +52,31 @@ const FIELD = {
   width: '100%',
   boxSizing: 'border-box',
   padding: '9px 12px',
-  borderRadius: 6,
-  border: '1px solid #e2e2e0',
-  backgroundColor: '#f5f5f3',
-  color: '#111',
+  borderRadius: 10,
+  border: '1px solid #E3E5EA',
+  backgroundColor: '#F4F5F7',
+  color: '#12131A',
   fontFamily: 'inherit',
   fontSize: 13,
   outline: 'none',
-  boxShadow: '0 0 0 1000px #f5f5f3 inset',
-  WebkitTextFillColor: '#111',
+  boxShadow: '0 0 0 1000px #F4F5F7 inset',
+  WebkitTextFillColor: '#12131A',
 };
 
 const FIELD_WHITE = {
   ...FIELD,
   width: 'auto',
-  border: '1px solid #d4d4d2',
+  border: '1px solid #D9DCE3',
   backgroundColor: '#fff',
   boxShadow: '0 0 0 1000px #fff inset',
 };
 
 const BTN_P = {
   padding: '9px 16px',
-  backgroundColor: '#111',
+  backgroundColor: '#5B4BFF',
   color: '#fff',
-  border: '1px solid #111',
-  borderRadius: 6,
+  border: '1px solid #5B4BFF',
+  borderRadius: 10,
   cursor: 'pointer',
   fontFamily: 'inherit',
   fontSize: 13,
@@ -86,9 +86,9 @@ const BTN_P = {
 const BTN_S = {
   padding: '9px 16px',
   backgroundColor: '#fff',
-  color: '#111',
-  border: '1px solid #d4d4d2',
-  borderRadius: 6,
+  color: '#12131A',
+  border: '1px solid #D9DCE3',
+  borderRadius: 10,
   cursor: 'pointer',
   fontFamily: 'inherit',
   fontSize: 13,
@@ -100,10 +100,10 @@ const BTN_SM = { padding: '6px 12px', fontSize: 12 };
 const dim = on => ({ opacity: on ? 0.6 : 1 });
 
 const BANNER_ERR = {
-  color: '#dc2626',
+  color: '#DC2626',
   backgroundColor: '#fef2f2',
   border: '1px solid #fecaca',
-  borderRadius: 6,
+  borderRadius: 10,
   padding: '10px 12px',
   fontSize: 13,
   marginBottom: 14,
@@ -111,10 +111,10 @@ const BANNER_ERR = {
 };
 
 const BANNER_OK = {
-  color: '#15803d',
+  color: '#15803D',
   backgroundColor: '#f0fdf4',
   border: '1px solid #bbf7d0',
-  borderRadius: 6,
+  borderRadius: 10,
   padding: '10px 12px',
   fontSize: 13,
   marginBottom: 14,
@@ -321,10 +321,10 @@ export default function Payment() {
       {/* Header: title on the left, month picker on the right */}
       <div style={HEADER}>
         <div>
-          <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#111' }}>
+          <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#12131A' }}>
             To'lovlar
           </h1>
-          <p style={{ color: '#8a8a88', margin: 0, fontSize: 13 }}>
+          <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>
             Kurs narxlari va oylik to'lovlar
           </p>
         </div>
@@ -375,14 +375,14 @@ export default function Payment() {
           }}
         >
           <div style={{ ...CARD, marginBottom: 0, padding: '14px 16px' }}>
-            <div style={{ fontSize: 20, fontWeight: 600, color: '#15803d', marginBottom: 4 }}>
+            <div style={{ fontSize: 20, fontWeight: 600, color: '#15803D', marginBottom: 4 }}>
               {fm(totals.received)}
             </div>
             <div style={{ ...LABEL, marginBottom: 0 }}>Tushgan</div>
           </div>
 
           <div style={{ ...CARD, marginBottom: 0, padding: '14px 16px' }}>
-            <div style={{ fontSize: 20, fontWeight: 600, color: debt > 0 ? '#dc2626' : '#111', marginBottom: 4 }}>
+            <div style={{ fontSize: 20, fontWeight: 600, color: debt > 0 ? '#DC2626' : '#12131A', marginBottom: 4 }}>
               {fm(debt)}
             </div>
             <div style={{ ...LABEL, marginBottom: 0 }}>Qarz</div>
@@ -440,10 +440,10 @@ export default function Payment() {
 
         {/* Payment editor */}
         {ed && (
-          <div style={{ ...CARD, border: '1px solid #111' }}>
+          <div style={{ ...CARD, border: '1px solid #5B4BFF' }}>
             <b style={CARD_TITLE}>{ed.s.name} · {ym}</b>
 
-            <small style={{ display: 'block', color: '#8a8a88', fontSize: 12, marginTop: 2 }}>
+            <small style={{ display: 'block', color: '#5B6070', fontSize: 12, marginTop: 2 }}>
               Narx: {fm(getStudentPrice(ed.s))}
             </small>
 
@@ -528,7 +528,7 @@ export default function Payment() {
         )}
 
         {loading && (
-          <div style={{ color: '#8a8a88', fontSize: 13 }}>
+          <div style={{ color: '#5B6070', fontSize: 13 }}>
             To‘lovlar yuklanmoqda...
           </div>
         )}
@@ -558,7 +558,7 @@ export default function Payment() {
               <div>
                 <b style={{ fontSize: 14 }}>{student.name}</b>
 
-                <div style={{ fontSize: 12, color: '#8a8a88', marginTop: 2 }}>
+                <div style={{ fontSize: 12, color: '#5B6070', marginTop: 2 }}>
                   {price
                     ? fm(net) + (p.discount ? ` (−${p.discount}%)` : '')
                     : 'Narx belgilanmagan'}

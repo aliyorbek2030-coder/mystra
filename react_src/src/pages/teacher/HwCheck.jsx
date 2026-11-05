@@ -8,15 +8,15 @@ const PAGE = {
     margin: 0,
     boxSizing: 'border-box',
     padding: 0,
-    fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-    color: '#111',
-    backgroundColor: '#f7f7f6',
+    fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
+    color: '#12131A',
+    backgroundColor: '#F4F5F7',
     minHeight: '100vh',
 };
 
 const HEADER = {
     backgroundColor: '#fff',
-    borderBottom: '1px solid #e8e8e6',
+    borderBottom: '1px solid #E3E5EA',
     padding: '20px 24px 14px',
     display: 'flex',
     justifyContent: 'space-between',
@@ -27,31 +27,31 @@ const HEADER = {
 
 const CARD = {
     backgroundColor: '#fff',
-    border: '1px solid #e2e2e0',
-    borderRadius: 8,
+    border: '1px solid #E3E5EA',
+    borderRadius: 12,
     boxSizing: 'border-box',
 };
 
 const FIELD = {
     boxSizing: 'border-box',
     padding: '9px 12px',
-    borderRadius: 6,
-    border: '1px solid #d4d4d2',
+    borderRadius: 10,
+    border: '1px solid #D9DCE3',
     backgroundColor: '#fff',
-    color: '#111',
+    color: '#12131A',
     fontFamily: 'inherit',
     fontSize: 13,
     outline: 'none',
     boxShadow: '0 0 0 1000px #fff inset',
-    WebkitTextFillColor: '#111',
+    WebkitTextFillColor: '#12131A',
 };
 
 const BTN_P = {
     padding: '9px 16px',
-    backgroundColor: '#111',
+    backgroundColor: '#5B4BFF',
     color: '#fff',
-    border: '1px solid #111',
-    borderRadius: 6,
+    border: '1px solid #5B4BFF',
+    borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
     fontSize: 13,
@@ -61,9 +61,9 @@ const BTN_P = {
 const BTN_S = {
     padding: '9px 16px',
     backgroundColor: '#fff',
-    color: '#111',
-    border: '1px solid #d4d4d2',
-    borderRadius: 6,
+    color: '#12131A',
+    border: '1px solid #D9DCE3',
+    borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
     fontSize: 13,
@@ -74,21 +74,21 @@ const MARK_BTN = active => ({
     width: 34,
     height: 34,
     padding: 0,
-    borderRadius: 6,
+    borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
     fontSize: 14,
     fontWeight: 600,
-    backgroundColor: active ? '#111' : '#fff',
-    color: active ? '#fff' : '#111',
-    border: active ? '1px solid #111' : '1px solid #d4d4d2',
+    backgroundColor: active ? '#12131A' : '#fff',
+    color: active ? '#fff' : '#12131A',
+    border: active ? '1px solid #12131A' : '1px solid #D9DCE3',
 });
 
 const BANNER_ERR = {
-    color: '#dc2626',
+    color: '#DC2626',
     backgroundColor: '#fef2f2',
     border: '1px solid #fecaca',
-    borderRadius: 6,
+    borderRadius: 10,
     padding: '10px 12px',
     fontSize: 13,
     marginBottom: 12,
@@ -96,10 +96,10 @@ const BANNER_ERR = {
 };
 
 const BANNER_OK = {
-    color: '#15803d',
+    color: '#15803D',
     backgroundColor: '#f0fdf4',
     border: '1px solid #bbf7d0',
-    borderRadius: 6,
+    borderRadius: 10,
     padding: '10px 12px',
     fontSize: 13,
     marginBottom: 12,
@@ -109,7 +109,7 @@ const Empty = ({ icon, children }) => (
     <div
         style={{
             textAlign: 'center',
-            color: '#9a9a98',
+            color: '#6B7080',
             fontSize: 14,
             padding: '28px 16px',
         }}
@@ -122,10 +122,10 @@ const Empty = ({ icon, children }) => (
 const PageHeader = ({ children }) => (
     <div style={HEADER}>
         <div>
-            <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#111' }}>
+            <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#12131A' }}>
                 Dars tekshiruvi
             </h1>
-            <p style={{ color: '#8a8a88', margin: 0, fontSize: 13 }}>
+            <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>
                 Vazifalarni belgilang va natijani saqlang
             </p>
         </div>
@@ -242,7 +242,7 @@ function AuthenticatedMedia({ path, mime, name }) {
 
     if (loading) {
         return (
-            <div style={{ fontSize: 13, color: '#8a8a88', marginTop: 6 }}>
+            <div style={{ fontSize: 13, color: '#5B6070', marginTop: 6 }}>
                 {name || 'Fayl'} yuklanmoqda...
             </div>
         );
@@ -253,7 +253,7 @@ function AuthenticatedMedia({ path, mime, name }) {
             <div
                 style={{
                     fontSize: 13,
-                    color: '#dc2626',
+                    color: '#DC2626',
                     overflowWrap: 'anywhere',
                     marginTop: 6,
                 }}
@@ -271,7 +271,7 @@ function AuthenticatedMedia({ path, mime, name }) {
                 href={url}
                 target="_blank"
                 rel="noreferrer"
-                style={{ display: 'block', marginTop: 6, color: '#111', fontSize: 12 }}
+                style={{ display: 'block', marginTop: 6, color: '#12131A', fontSize: 12 }}
             >
                 <img
                     src={url}
@@ -281,8 +281,8 @@ function AuthenticatedMedia({ path, mime, name }) {
                         maxWidth: '100%',
                         maxHeight: 320,
                         objectFit: 'contain',
-                        borderRadius: 8,
-                        border: '1px solid #e2e2e0',
+                        borderRadius: 12,
+                        border: '1px solid #E3E5EA',
                     }}
                 />
                 <small>Rasmni kattalashtirish</small>
@@ -337,11 +337,11 @@ function AuthenticatedMedia({ path, mime, name }) {
                     style={{
                         width: '100%',
                         height: 360,
-                        border: '1px solid #e2e2e0',
-                        borderRadius: 8,
+                        border: '1px solid #E3E5EA',
+                        borderRadius: 12,
                     }}
                 />
-                <a href={url} target="_blank" rel="noreferrer" style={{ color: '#111', fontSize: 13 }}>
+                <a href={url} target="_blank" rel="noreferrer" style={{ color: '#12131A', fontSize: 13 }}>
                     PDFni alohida oynada ochish
                 </a>
             </div>
@@ -351,7 +351,7 @@ function AuthenticatedMedia({ path, mime, name }) {
     return (
         <div style={{ marginTop: 6, fontSize: 13 }}>
             📎{' '}
-            <a href={url} download={name || 'student-file'} style={{ color: '#111' }}>
+            <a href={url} download={name || 'student-file'} style={{ color: '#12131A' }}>
                 {name || 'Faylni yuklab olish'}
             </a>
         </div>
@@ -365,9 +365,9 @@ function StudentSubmissions({ submissions }) {
                 style={{
                     marginTop: 14,
                     paddingTop: 12,
-                    borderTop: '1px solid #eeeeec',
+                    borderTop: '1px solid #EEF0F3',
                     fontSize: 13,
-                    color: '#9a9a98',
+                    color: '#6B7080',
                 }}
             >
                 Hozircha yuborilgan online javoblar yo‘q.
@@ -380,7 +380,7 @@ function StudentSubmissions({ submissions }) {
             style={{
                 marginTop: 14,
                 paddingTop: 12,
-                borderTop: '1px solid #eeeeec',
+                borderTop: '1px solid #EEF0F3',
             }}
         >
             <b style={{ fontSize: 13 }}>📥 O‘quvchi yuborgan javoblar ({submissions.length})</b>
@@ -391,9 +391,9 @@ function StudentSubmissions({ submissions }) {
                     style={{
                         marginTop: 10,
                         padding: 12,
-                        borderRadius: 8,
-                        background: '#f7f7f6',
-                        border: '1px solid #eeeeec',
+                        borderRadius: 12,
+                        background: '#F4F5F7',
+                        border: '1px solid #EEF0F3',
                         minWidth: 0,
                     }}
                 >
@@ -403,7 +403,7 @@ function StudentSubmissions({ submissions }) {
                         style={{
                             marginTop: 4,
                             fontSize: 12,
-                            color: '#8a8a88',
+                            color: '#5B6070',
                         }}
                     >
                         Topshirilgan sana: {sub.date || '—'}
@@ -670,7 +670,7 @@ export default function HwCheck() {
             <div style={PAGE}>
                 <PageHeader />
                 <div style={{ padding: 24 }}>
-                    <div style={{ ...CARD, padding: '16px 18px', fontSize: 13, color: '#8a8a88' }}>
+                    <div style={{ ...CARD, padding: '16px 18px', fontSize: 13, color: '#5B6070' }}>
                         Ma'lumotlar yuklanmoqda...
                     </div>
                 </div>
@@ -753,7 +753,7 @@ export default function HwCheck() {
                 )}
 
                 {submissionsLoading && (
-                    <div style={{ marginBottom: 12, fontSize: 13, color: '#8a8a88' }}>
+                    <div style={{ marginBottom: 12, fontSize: 13, color: '#5B6070' }}>
                         O‘quvchi javoblari yuklanmoqda...
                     </div>
                 )}
@@ -813,7 +813,7 @@ export default function HwCheck() {
                                     <b style={{ fontSize: 15 }}>{student.name}</b>
 
                                     {saved && (
-                                        <small style={{ color: '#8a8a88', fontSize: 12 }}>
+                                        <small style={{ color: '#5B6070', fontSize: 12 }}>
                                             {' '}(saqlangan: {saved.avgScore}%)
                                         </small>
                                     )}
@@ -827,7 +827,7 @@ export default function HwCheck() {
                                             gap: 8,
                                             alignItems: 'center',
                                             padding: '8px 0',
-                                            borderTop: '1px solid #eeeeec',
+                                            borderTop: '1px solid #EEF0F3',
                                         }}
                                     >
                                         <span style={{ flex: 1, minWidth: 0, fontSize: 13 }}>
@@ -902,7 +902,7 @@ export default function HwCheck() {
                                         justifyContent: 'space-between',
                                         marginTop: 10,
                                         paddingTop: 12,
-                                        borderTop: '1px solid #eeeeec',
+                                        borderTop: '1px solid #EEF0F3',
                                         alignItems: 'center',
                                         gap: 8,
                                     }}

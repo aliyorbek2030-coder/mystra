@@ -1,16 +1,16 @@
 import {useState} from 'react';import ChangePassword from '../../components/ChangePassword';import {S,today} from '../../lib/storage';
 
 // --- DESIGN ONLY (no logic) ---
-const PAGE={width:'100%',maxWidth:'none',margin:0,boxSizing:'border-box',padding:0,fontFamily:"'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",color:'#111',backgroundColor:'#f7f7f6',minHeight:'100vh'};
-const HEADER={backgroundColor:'#fff',borderBottom:'1px solid #e8e8e6',padding:'24px 24px 14px'};
-const CARD={backgroundColor:'#fff',border:'1px solid #e2e2e0',borderRadius:8,padding:'16px 18px',boxSizing:'border-box',marginBottom:14};
-const CARD_TITLE={display:'block',fontSize:14,fontWeight:600,color:'#111',marginBottom:12};
-const LABEL={display:'block',fontSize:11,fontWeight:500,color:'#8a8a88',letterSpacing:'0.04em',textTransform:'uppercase',marginBottom:4};
-const FIELD={width:'100%',boxSizing:'border-box',padding:'9px 12px',borderRadius:6,border:'1px solid #e2e2e0',backgroundColor:'#f5f5f3',color:'#111',fontFamily:'inherit',fontSize:13,outline:'none',boxShadow:'0 0 0 1000px #f5f5f3 inset',WebkitTextFillColor:'#111'};
+const PAGE={width:'100%',maxWidth:'none',margin:0,boxSizing:'border-box',padding:0,fontFamily:"'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",color:'#12131A',backgroundColor:'#F4F5F7',minHeight:'100vh'};
+const HEADER={backgroundColor:'#fff',borderBottom:'1px solid #E3E5EA',padding:'24px 24px 14px'};
+const CARD={backgroundColor:'#fff',border:'1px solid #E3E5EA',borderRadius: 12,padding:'16px 18px',boxSizing:'border-box',marginBottom:14};
+const CARD_TITLE={display:'block',fontSize:14,fontWeight:600,color:'#12131A',marginBottom:12};
+const LABEL={display:'block',fontSize:11,fontWeight:500,color:'#5B6070',letterSpacing:'0.04em',textTransform:'uppercase',marginBottom:4};
+const FIELD={width:'100%',boxSizing:'border-box',padding:'9px 12px',borderRadius: 10,border:'1px solid #E3E5EA',backgroundColor:'#F4F5F7',color:'#12131A',fontFamily:'inherit',fontSize:13,outline:'none',boxShadow:'0 0 0 1000px #F4F5F7 inset',WebkitTextFillColor:'#12131A'};
 const GRID={display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(240px, 1fr))',gap:12};
-const BTN_P={padding:'9px 16px',backgroundColor:'#111',color:'#fff',border:'1px solid #111',borderRadius:6,cursor:'pointer',fontFamily:'inherit',fontSize:13,fontWeight:500};
-const BTN_S={padding:'9px 16px',backgroundColor:'#fff',color:'#111',border:'1px solid #d4d4d2',borderRadius:6,cursor:'pointer',fontFamily:'inherit',fontSize:13,fontWeight:500};
-const CHECK={display:'flex',alignItems:'center',gap:8,fontSize:13,color:'#111',marginTop:10,cursor:'pointer'};
+const BTN_P={padding:'9px 16px',backgroundColor:'#5B4BFF',color:'#fff',border:'1px solid #5B4BFF',borderRadius: 10,cursor:'pointer',fontFamily:'inherit',fontSize:13,fontWeight:500};
+const BTN_S={padding:'9px 16px',backgroundColor:'#fff',color:'#12131A',border:'1px solid #D9DCE3',borderRadius: 10,cursor:'pointer',fontFamily:'inherit',fontSize:13,fontWeight:500};
+const CHECK={display:'flex',alignItems:'center',gap:8,fontSize:13,color:'#12131A',marginTop:10,cursor:'pointer'};
 
 const F=({l,v,f})=><div><span style={LABEL}>{l}</span><input className="fi" type="number" min="0" value={v} onChange={f} style={FIELD}/></div>;
 export default function Settings(){const w0={q:50,r:25,g:15,t:10,xMax:10,...(S.get('rating_weights')||{})},[w,setW]=useState(w0),[lp,setLp]=useState(S.get('late_pen')??5),[bot,setBot]=useState(S.get('bot_cfg')||{token:'',gid:''}),[tg,setTg]=useState({teacher:1,tasks:1,...(S.get('tg_opts')||{})}),[theme,setTheme]=useState(S.get('theme')||'');
@@ -21,8 +21,8 @@ const exp=()=>{const data={};Object.keys(localStorage).filter(k=>k.startsWith('m
 const imp=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result),d=j.data||j,k=Object.keys(d).filter(x=>!['session','bot_cfg'].includes(x));if(!k.length||!confirm("Ma'lumotlar ALMASHTIRILADI. Davom etamizmi?"))return;k.forEach(x=>S.set(x,d[x]));location.reload()}catch{alert("Fayl noto'g'ri")}};r.readAsText(f)};
 return <div style={PAGE}>
 <div style={HEADER}>
-<h1 style={{fontSize:18,fontWeight:600,margin:'0 0 2px 0',color:'#111'}}>Sozlamalar</h1>
-<p style={{color:'#8a8a88',margin:0,fontSize:13}}>Reyting, Telegram, tema va zaxira nusxa</p>
+<h1 style={{fontSize:18,fontWeight:600,margin:'0 0 2px 0',color:'#12131A'}}>Sozlamalar</h1>
+<p style={{color:'#5B6070',margin:0,fontSize:13}}>Reyting, Telegram, tema va zaxira nusxa</p>
 </div>
 
 <div style={{padding:24}}>

@@ -14,9 +14,9 @@ const PAGE = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-    color: '#111',
-    backgroundColor: '#f7f7f6',
+    fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
+    color: '#12131A',
+    backgroundColor: '#F4F5F7',
 };
 
 const CARD = {
@@ -24,8 +24,8 @@ const CARD = {
     maxWidth: 400,
     boxSizing: 'border-box',
     backgroundColor: '#fff',
-    border: '1px solid #e2e2e0',
-    borderRadius: 12,
+    border: '1px solid #E3E5EA',
+    borderRadius: 16,
     padding: '28px 26px',
 };
 
@@ -35,14 +35,14 @@ const LOGO = {
     fontSize: 30,
     fontWeight: 500,
     margin: '0 0 4px',
-    color: '#111',
+    color: '#12131A',
     textAlign: 'center',
 };
 
 const SUB = {
     margin: '0 0 22px',
     fontSize: 13,
-    color: '#8a8a88',
+    color: '#5B6070',
     textAlign: 'center',
 };
 
@@ -50,24 +50,24 @@ const FIELD = {
     width: '100%',
     boxSizing: 'border-box',
     padding: '10px 12px',
-    borderRadius: 6,
-    border: '1px solid #e2e2e0',
-    backgroundColor: '#f5f5f3',
-    color: '#111',
+    borderRadius: 10,
+    border: '1px solid #E3E5EA',
+    backgroundColor: '#F4F5F7',
+    color: '#12131A',
     fontFamily: 'inherit',
     fontSize: 14,
     outline: 'none',
-    boxShadow: '0 0 0 1000px #f5f5f3 inset',
-    WebkitTextFillColor: '#111',
+    boxShadow: '0 0 0 1000px #F4F5F7 inset',
+    WebkitTextFillColor: '#12131A',
 };
 
 const BTN_P = {
     width: '100%',
     padding: '11px 16px',
-    backgroundColor: '#111',
+    backgroundColor: '#5B4BFF',
     color: '#fff',
-    border: '1px solid #111',
-    borderRadius: 6,
+    border: '1px solid #5B4BFF',
+    borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
     fontSize: 14,
@@ -78,9 +78,9 @@ const BTN_S = {
     width: '100%',
     padding: '11px 16px',
     backgroundColor: '#fff',
-    color: '#111',
-    border: '1px solid #d4d4d2',
-    borderRadius: 6,
+    color: '#12131A',
+    border: '1px solid #D9DCE3',
+    borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
     fontSize: 14,
@@ -317,7 +317,7 @@ export default function Login() {
                             textAlign: 'center',
                             fontSize: 13,
                             lineHeight: 1.6,
-                            color: '#666',
+                            color: '#4A4E5C',
                             margin: '0 0 20px',
                         }}
                     >
@@ -362,10 +362,10 @@ export default function Login() {
                     <div
                         role="alert"
                         style={{
-                            color: '#dc2626',
+                            color: '#DC2626',
                             backgroundColor: '#fef2f2',
                             border: '1px solid #fecaca',
-                            borderRadius: 6,
+                            borderRadius: 10,
                             padding: '10px 12px',
                             fontSize: 13,
                             marginBottom: 14,

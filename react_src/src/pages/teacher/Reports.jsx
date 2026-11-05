@@ -9,15 +9,15 @@ const PAGE = {
   margin: 0,
   boxSizing: 'border-box',
   padding: 0,
-  fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-  color: '#111',
-  backgroundColor: '#f7f7f6',
+  fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
+  color: '#12131A',
+  backgroundColor: '#F4F5F7',
   minHeight: '100vh',
 };
 
 const HEADER = {
   backgroundColor: '#fff',
-  borderBottom: '1px solid #e8e8e6',
+  borderBottom: '1px solid #E3E5EA',
   padding: '20px 24px 14px',
   display: 'flex',
   justifyContent: 'space-between',
@@ -28,29 +28,29 @@ const HEADER = {
 
 const CARD = {
   backgroundColor: '#fff',
-  border: '1px solid #e2e2e0',
-  borderRadius: 8,
+  border: '1px solid #E3E5EA',
+  borderRadius: 12,
   boxSizing: 'border-box',
 };
 
 const FIELD = {
   boxSizing: 'border-box',
   padding: '9px 12px',
-  borderRadius: 6,
-  border: '1px solid #d4d4d2',
+  borderRadius: 10,
+  border: '1px solid #D9DCE3',
   backgroundColor: '#fff',
-  color: '#111',
+  color: '#12131A',
   fontFamily: 'inherit',
   fontSize: 13,
   outline: 'none',
   boxShadow: '0 0 0 1000px #fff inset',
-  WebkitTextFillColor: '#111',
+  WebkitTextFillColor: '#12131A',
 };
 
 const SECTION_TITLE = {
   fontSize: 14,
   fontWeight: 600,
-  color: '#111',
+  color: '#12131A',
   margin: '0 0 12px',
 };
 
@@ -59,22 +59,22 @@ const TH = {
   padding: '10px 14px',
   fontSize: 11,
   fontWeight: 500,
-  color: '#8a8a88',
+  color: '#5B6070',
   letterSpacing: '0.05em',
   textTransform: 'uppercase',
-  backgroundColor: '#f5f5f3',
+  backgroundColor: '#F4F5F7',
   whiteSpace: 'nowrap',
 };
 
 const TD = {
   padding: '12px 14px',
   fontSize: 13,
-  color: '#111',
+  color: '#12131A',
 };
 
 const EMPTY = {
   textAlign: 'center',
-  color: '#9a9a98',
+  color: '#6B7080',
   fontSize: 13,
   padding: '18px 14px',
 };
@@ -250,10 +250,10 @@ export default function Reports() {
       {/* Header: title on the left, month picker on the right */}
       <div style={HEADER}>
         <div>
-          <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#111' }}>
+          <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#12131A' }}>
             📅 Oylik hisobot
           </h1>
-          <p style={{ color: '#8a8a88', margin: 0, fontSize: 13 }}>
+          <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>
             Har oy alohida saqlanadi — hisobot va progress
           </p>
         </div>
@@ -271,10 +271,10 @@ export default function Reports() {
         {error && (
           <div
             style={{
-              color: 'var(--danger, #dc2626)',
+              color: 'var(--danger, #DC2626)',
               backgroundColor: '#fef2f2',
               border: '1px solid #fecaca',
-              borderRadius: 6,
+              borderRadius: 10,
               padding: '10px 12px',
               fontSize: 13,
               marginBottom: 14,
@@ -288,9 +288,9 @@ export default function Reports() {
                 marginLeft: 8,
                 padding: '4px 10px',
                 backgroundColor: '#fff',
-                color: '#111',
-                border: '1px solid #d4d4d2',
-                borderRadius: 6,
+                color: '#12131A',
+                border: '1px solid #D9DCE3',
+                borderRadius: 10,
                 cursor: 'pointer',
                 fontFamily: 'inherit',
                 fontSize: 13,
@@ -312,15 +312,15 @@ export default function Reports() {
             }}
           >
             {[
-              ['Faol talabalar', rows.length, '#111'],
-              ['Yozuvlar', rows.reduce((sum, row) => sum + (Number(row.n) || 0), 0), '#111'],
+              ['Faol talabalar', rows.length, '#12131A'],
+              ['Yozuvlar', rows.reduce((sum, row) => sum + (Number(row.n) || 0), 0), '#12131A'],
               ['Sertifikatlar', rows.reduce((sum, row) => sum + (Number(row.certs) || 0), 0), '#b8860b'],
               [
                 "O'rtacha %",
                 rows.length
                   ? Math.round(rows.reduce((sum, row) => sum + (Number(row.avg) || 0), 0) / rows.length) + '%'
                   : '—',
-                rows.length ? '#111' : '#dc2626',
+                rows.length ? '#12131A' : '#DC2626',
               ],
             ].map(([label, value, color]) => (
               <div key={label} style={{ ...CARD, padding: '14px 16px' }}>
@@ -328,7 +328,7 @@ export default function Reports() {
                 <div
                   style={{
                     fontSize: 11,
-                    color: '#8a8a88',
+                    color: '#5B6070',
                     letterSpacing: '0.05em',
                     textTransform: 'uppercase',
                   }}
@@ -344,7 +344,7 @@ export default function Reports() {
         <h2 style={SECTION_TITLE}>Oylik hisobot — {ym}</h2>
 
         {loading ? (
-          <div style={{ color: 'var(--text3, #8a8a88)', fontSize: 13 }}>
+          <div style={{ color: 'var(--text3, #5B6070)', fontSize: 13 }}>
             Hisobot yuklanmoqda...
           </div>
         ) : (
@@ -376,7 +376,7 @@ export default function Reports() {
                   return (
                     <tr
                       key={student.id}
-                      style={{ borderTop: '1px solid #eeeeec' }}
+                      style={{ borderTop: '1px solid #EEF0F3' }}
                     >
                       <td style={{ ...TD, fontWeight: 500 }}>{student.name}</td>
                       <td style={TD}>{getGroupName(student)}</td>
@@ -395,7 +395,7 @@ export default function Reports() {
             </table>
 
             {!rows.length && (
-              <div style={{ ...EMPTY, borderTop: '1px solid #eeeeec' }}>
+              <div style={{ ...EMPTY, borderTop: '1px solid #EEF0F3' }}>
                 Bu oy uchun hisobot topilmadi.
               </div>
             )}
@@ -431,7 +431,7 @@ export default function Reports() {
 
         <div style={{ ...CARD, padding: '16px 18px', marginBottom: 32 }}>
           <Chart pts={progress} />
-          <small style={{ display: 'block', marginTop: 8, fontSize: 12, color: '#8a8a88' }}>
+          <small style={{ display: 'block', marginTop: 8, fontSize: 12, color: '#5B6070' }}>
             Yashil chiziq — 95% (sertifikat chegarasi)
           </small>
         </div>

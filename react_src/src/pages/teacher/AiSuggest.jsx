@@ -55,7 +55,7 @@ export default function AiSuggest() {
       <h3>AI takliflari ({list.length})</h3>
 
       {error && (
-        <div className="card" style={{ color: 'var(--danger, #dc2626)' }}>
+        <div className="card" style={{ color: 'var(--danger, #DC2626)' }}>
           {error}
           <button
             className="btn"
