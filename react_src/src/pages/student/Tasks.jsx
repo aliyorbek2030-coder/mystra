@@ -617,38 +617,66 @@ export default function Tasks() {
         </div>
       )}
 
-      <div
-        className="card"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          textAlign: 'center',
-        }}
-      >
-        <div>
-          <b style={{ fontSize: 20 }}>
-            🔥 {stats.streak ?? 0}
-          </b>
-          <br />
-          <small>KUN</small>
-        </div>
+      {(() => {
+        const total = dailyTasks.length;
+        const ringPct = total ? Math.round((completed / total) * 100) : 0;
+        const left = total - completed;
+        const firstName = (me?.name || '').split(' ')[0];
+        return (
+          <section
+            aria-label="Bugungi holat"
+            style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 16 }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13, color: '#5B6070' }}>{me?.level ? `${me.level} daraja` : 'Bugun'}</div>
+                <h1 style={{ margin: '2px 0 0', fontSize: 24, fontWeight: 700, letterSpacing: '-0.02em' }}>Salom, {firstName}</h1>
+              </div>
+              <div
+                title="Ketma-ket kunlar"
+                style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#12131A', color: '#D4F74A', padding: '8px 14px', borderRadius: 99, fontWeight: 700, fontSize: 14, whiteSpace: 'nowrap' }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4F74A" strokeWidth="2" aria-hidden="true"><path d="M12 2c1 4 5 6 5 11a5 5 0 0 1-10 0c0-3 2-4 2-7 2 1 3 3 3 3s1-3 0-7z" /></svg>
+                {stats.streak ?? 0} kun
+              </div>
+            </div>
 
-        <div>
-          <b style={{ fontSize: 20 }}>
-            ⭐ {stats.xp ?? 0}
-          </b>
-          <br />
-          <small>XP · {stats.lvl ?? 1}-daraja</small>
-        </div>
+            <div style={{ background: '#12131A', color: '#fff', borderRadius: 22, padding: 20, display: 'flex', alignItems: 'center', gap: 18 }}>
+              <div
+                role="img"
+                aria-label={`Bugun ${completed} / ${total} vazifa bajarildi`}
+                style={{ width: 84, height: 84, borderRadius: 99, background: `conic-gradient(#D4F74A ${ringPct * 3.6}deg, #2A2C38 0)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
+              >
+                <div style={{ width: 66, height: 66, borderRadius: 99, background: '#12131A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 20 }}>
+                  {completed}/{total}
+                </div>
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 13, color: '#C9CBD6' }}>Bugungi reja</div>
+                <div style={{ fontSize: 20, fontWeight: 700, marginTop: 2 }}>
+                  {total === 0 ? 'Bugun vazifa yo‘q' : left === 0 ? 'Hammasi bajarildi!' : `${left} ta vazifa qoldi`}
+                </div>
+                <div style={{ fontSize: 13, color: '#D4F74A', marginTop: 6, fontWeight: 600 }}>
+                  {stats.xp ?? 0} XP · {stats.lvl ?? 1}-daraja
+                </div>
+              </div>
+            </div>
 
-        <div>
-          <b style={{ fontSize: 20 }}>
-            {att.t ? `${att.p}/${att.t}` : '—'}
-          </b>
-          <br />
-          <small>DAVOMAT</small>
-        </div>
-      </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 10 }}>
+              {[
+                ['Ketma-ketlik', `${stats.streak ?? 0} kun`],
+                ['Davomat', att.t ? `${att.p}/${att.t}` : '—'],
+                ['Obuna', sb.active ? `${sb.days} kun` : 'Tugagan'],
+              ].map(([label, value]) => (
+                <div key={label} style={{ background: '#fff', border: '1px solid #E3E5EA', borderRadius: 16, padding: '12px 14px' }}>
+                  <div style={{ fontSize: 12, color: '#5B6070' }}>{label}</div>
+                  <div style={{ fontSize: 17, fontWeight: 700, marginTop: 2 }}>{value}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+      })()}
 
       {days.length > 1 && (
         <select
