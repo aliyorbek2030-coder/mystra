@@ -5,6 +5,7 @@ import { useAuth, apiRequest } from './lib/auth';
 import NotifBar from './components/NotifBar';
 import Login from './pages/Login';
 import LangSwitch from './components/LangSwitch';
+import ParentView from './pages/public/ParentView';
 import InstallApp from './components/InstallApp';
 
 // Student pages
@@ -234,6 +235,16 @@ const T = [
 
 export default function App() {
     const { user } = useAuth();
+    const { pathname } = useLocation();
+
+    // Ota-ona kabineti: login talab qilinmaydi
+    if (pathname.startsWith('/p/')) {
+        return (
+            <Routes>
+                <Route path="/p/:token" element={<ParentView />} />
+            </Routes>
+        );
+    }
 
     if (!user) {
         return <Login />;

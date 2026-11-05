@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import ParentLinks from '../../components/ParentLinks';
 import { apiRequest } from '../../lib/auth';
 
 // --- DESIGN ONLY (no logic) ---
@@ -230,6 +231,7 @@ export default function Parent() {
 
     return (
         <div style={PAGE}>
+            <ParentLinks />
             {/* Header: title on the left, month picker on the right */}
             <div style={HEADER}>
                 <div>

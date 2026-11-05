@@ -32,5 +32,8 @@ urlpatterns = [
     path("api/subscriptions/<str:sid>/extend", v.sub_extend), path("api/subscriptions/<str:sid>", v.sub_set),
     path("api/attendance", v.attendance), path("api/settings", v.settings_view), path("api/rating", v.rating),
     path("api/reports/month", v.reports_month), path("api/certificates", v.certificates), path("api/telegram/send", v.telegram_send),
+    # ota-onalar
+    path("api/parent/<str:token>", v.parent_view), path("api/parent-links", v.parent_links), path("api/students/<str:id>/parent-link", v.parent_link),
+    path("api/telegram/connect", v.telegram_connect), path("api/telegram/webhook/<str:secret>", v.telegram_webhook),
     path("uploads/<str:name>", v.upload),
 ]

@@ -50,6 +50,7 @@ class Student(Base):
     password = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)
     sub_until = models.DateTimeField(default=trial_end)  # sayt obunasi tugash vaqti
+    parent_token = models.CharField(max_length=40, blank=True, default="", db_index=True)  # ota-ona havolasi
 
     def __str__(self):
         return self.name
@@ -192,3 +193,14 @@ class StoredFile(models.Model):
     mime = models.CharField(max_length=100)
     data = models.BinaryField()
     created = models.DateTimeField(auto_now_add=True)
+
+
+class ParentChat(models.Model):
+    """Ota-onaning Telegram chati (bot orqali /start <token> bilan ulanadi)."""
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="parent_chats")
+    chat_id = models.CharField(max_length=40)
+    name = models.CharField(max_length=120, blank=True, default="")
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = [("student", "chat_id")]

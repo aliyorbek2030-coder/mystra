@@ -18,7 +18,7 @@ from . import logic as L
 from . import scoring
 from .auth import TokenAuth, check_password, make_password, make_token, role_permission
 from .errors import E
-from .models import (Account, Attendance, Certificate, DaySubmit, Group, HwRecord, Homework, Notification, Payment, Signup, StoredFile, Student,
+from .models import (Account, Attendance, Certificate, DaySubmit, Group, HwRecord, Homework, Notification, ParentChat, Payment, Signup, StoredFile, Student,
                      Submission, SugLog, Task)
 
 T = ["teacher", "admin"]
@@ -618,7 +618,10 @@ def attendance(request):
     st = Student.objects.filter(id=b.get("studentId")).first()
     if b.get("v") not in ("p", "a") or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(b.get("date"))) or not st:
         raise E(400, "Noto'g'ri qiymat")
+    prev = Attendance.objects.filter(date=b["date"], student=st).values_list("v", flat=True).first()
     Attendance.objects.update_or_create(date=b["date"], student=st, defaults={"v": b["v"]})
+    if b["v"] == "a" and prev != "a" and b["date"] == L.today():
+        L.notify_parents(st, f"❗️ <b>{st.name}</b> bugun ({b['date']}) darsga kelmadi.")
     return {"ok": True}
 
 
@@ -687,6 +690,93 @@ def upload(request, name):
     if not f.exists():
         raise E(404, "Topilmadi")
     return FileResponse(open(f, "rb"), content_type=mimetypes.guess_type(f.name)[0] or "application/octet-stream")
+
+
+# ───────── Ota-onalar
+@api(["GET"])
+def parent_view(request, token):
+    st = Student.objects.select_related("group").filter(parent_token=token).first() if len(token) >= 16 else None
+    if not st:
+        raise E(404, "Havola noto'g'ri yoki eskirgan")
+    return L.parent_report(st, 7 if request.query_params.get("p") != "month" else 30)
+
+
+@api(["GET", "POST"], T)
+def parent_link(request, id):
+    st = Student.objects.filter(id=id).first()
+    if not st:
+        raise E(404, "Topilmadi")
+    if request.method == "POST":  # yangi havola (eskisi ishlamay qoladi)
+        st.parent_token = ""
+        st.save(update_fields=["parent_token"])
+        ParentChat.objects.filter(student=st).delete()
+    tok = L.parent_token(st)
+    bot = L.bot_cfg()
+    return {"token": tok, "path": f"/#/p/{tok}", "telegram": f"https://t.me/{bot['username']}?start={tok}" if bot.get("username") else None,
+            "chats": ParentChat.objects.filter(student=st).count()}
+
+
+@api(["GET"], T)
+def parent_links(request):
+    bot = L.bot_cfg()
+    out = []
+    for st in Student.objects.select_related("group").order_by("name"):
+        tok = L.parent_token(st)
+        out.append({"student": L.pub_student(st), "group": st.group.name if st.group_id else "", "token": tok, "path": f"/#/p/{tok}",
+                    "telegram": f"https://t.me/{bot['username']}?start={tok}" if bot.get("username") else None,
+                    "chats": st.parent_chats.count()})
+    return {"bot": {"configured": bool(bot.get("token")), "username": bot.get("username"), "connected": bool(bot.get("webhook"))}, "items": out}
+
+
+@api(["POST"], T)
+def telegram_connect(request):
+    """Botni ota-onalar uchun ulaydi: webhook o'rnatadi va bot nomini saqlaydi."""
+    bot = L.bot_cfg()
+    if not bot.get("token"):
+        raise E(400, "Avval Sozlamalarda bot tokenini kiriting")
+    me = L.tg_api("getMe", {})
+    if not me or not me.get("ok"):
+        raise E(400, "Bot token noto'g'ri yoki Telegram javob bermadi")
+    url = request.build_absolute_uri(f"/api/telegram/webhook/{L.webhook_secret()}").replace("http://", "https://")
+    r = L.tg_api("setWebhook", {"url": url, "allowed_updates": ["message"]})
+    if not r or not r.get("ok"):
+        raise E(400, "Webhook o'rnatilmadi: " + str((r or {}).get("description", "Telegram xatosi")))
+    L.tg_api("setMyCommands", {"commands": [{"command": "hisobot", "description": "Farzandim haftalik hisoboti"},
+                                            {"command": "start", "description": "Boshlash"}]})
+    L.set_cfg("bot_cfg", {**bot, "username": me["result"].get("username"), "webhook": url})
+    return {"ok": True, "username": me["result"].get("username")}
+
+
+@api(["POST"])
+def telegram_webhook(request, secret):
+    if secret != L.webhook_secret():
+        raise E(404, "Topilmadi")
+    msg = (body(request).get("message") or {})
+    chat = msg.get("chat") or {}
+    chat_id, text = str(chat.get("id") or ""), str(msg.get("text") or "").strip()
+    if not chat_id or not text:
+        return {"ok": True}
+    name = " ".join(x for x in [chat.get("first_name"), chat.get("last_name")] if x)[:120]
+    if text.startswith("/start"):
+        tok = text.split(" ", 1)[1].strip() if " " in text else ""
+        st = Student.objects.filter(parent_token=tok).first() if len(tok) >= 16 else None
+        if not st:
+            L.tg_to(chat_id, "Salom! 👋 Farzandingiz hisobotini olish uchun ustoz bergan maxsus havola orqali kiring.")
+            return {"ok": True}
+        ParentChat.objects.get_or_create(student=st, chat_id=chat_id, defaults={"name": name})
+        L.tg_to(chat_id, f"✅ Ulandingiz! Endi <b>{st.name}</b> natijalari, davomati va tasdiqlangan vazifalari haqida shu yerga xabar keladi.\n\n"
+                         "Haftalik hisobot uchun /hisobot yozing.")
+        L.tg_to(chat_id, L.parent_report_text(st))
+        return {"ok": True}
+    if text.startswith("/hisobot"):
+        chats = ParentChat.objects.select_related("student").filter(chat_id=chat_id)
+        if not chats:
+            L.tg_to(chat_id, "Siz hali hech bir o'quvchiga ulanmagansiz. Ustoz bergan havola orqali kiring.")
+        for c in chats:
+            L.tg_to(chat_id, L.parent_report_text(c.student))
+        return {"ok": True}
+    L.tg_to(chat_id, "Buyruqlar: /hisobot — haftalik hisobot")
+    return {"ok": True}
 
 
 @api(["GET"])

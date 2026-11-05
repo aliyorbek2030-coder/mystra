@@ -17,7 +17,7 @@ from django.utils import timezone
 
 from . import scoring
 from .errors import E
-from .models import (Attendance, Certificate, DaySubmit, Group, HwRecord, Homework, Notification, Setting, Student,
+from .models import (Attendance, ParentChat, Certificate, DaySubmit, Group, HwRecord, Homework, Notification, Setting, Student,
                      Submission, SugLog, Task)
 
 log = logging.getLogger("mystra")
@@ -99,6 +99,99 @@ def tg_sync(kind, text):
 def tg(kind, text):
     """Foydalanuvchini kutdirmaslik uchun fonda yuboradi."""
     threading.Thread(target=tg_sync, args=(kind, text), daemon=True).start()
+
+
+# ── Ota-onalar: havola va Telegram
+import hashlib
+import secrets as _secrets
+
+
+def parent_token(st):
+    if not st.parent_token:
+        st.parent_token = _secrets.token_urlsafe(18)
+        st.save(update_fields=["parent_token"])
+    return st.parent_token
+
+
+def bot_cfg():
+    return cfg("bot_cfg") or {}
+
+
+def webhook_secret():
+    tok = bot_cfg().get("token") or ""
+    return hashlib.sha256(("mystra-webhook:" + tok).encode()).hexdigest()[:32]
+
+
+def tg_api(method, payload, token=None):
+    token = token or bot_cfg().get("token")
+    if not token:
+        return None
+    try:
+        req = urllib.request.Request(f"https://api.telegram.org/bot{token}/{method}", method="POST",
+                                     headers={"Content-Type": "application/json"}, data=json.dumps(payload).encode())
+        with urllib.request.urlopen(req, timeout=12) as r:
+            return json.loads(r.read().decode())
+    except Exception as e:  # noqa: BLE001
+        log.warning("Telegram %s xato: %s", method, e)
+        return None
+
+
+def tg_to(chat_id, text):
+    return tg_api("sendMessage", {"chat_id": chat_id, "text": text, "parse_mode": "HTML", "disable_web_page_preview": True})
+
+
+def notify_parents(st, text):
+    """O'quvchining barcha ulangan ota-onalariga fonda xabar yuboradi."""
+    chats = list(ParentChat.objects.filter(student=st).values_list("chat_id", flat=True))
+    if not chats or not bot_cfg().get("token"):
+        return
+
+    def run():
+        for c in chats:
+            tg_to(c, text)
+    threading.Thread(target=run, daemon=True).start()
+
+
+def parent_report(st, days=7):
+    """Ota-ona uchun qisqa hisobot (oxirgi N kun + shu oy)."""
+    since = (timezone.localdate() - timedelta(days=days - 1)).isoformat()
+    recs = list(HwRecord.objects.filter(student=st, date__gte=since).order_by("-date"))
+    att = list(Attendance.objects.filter(student=st, date__gte=since).order_by("date").values("date", "v"))
+    results = [{"date": r.date[:10], "title": (r.items[0].get("title") if r.items else r.note) or r.note, "n": len(r.items or []), "score": r.avg_score,
+                "extra": r.extra} for r in recs[:20]]
+    avg = scoring.r(sum(r.avg_score for r in recs) / len(recs)) if recs else None
+    from .models import Payment
+    pay = Payment.objects.filter(student=st, ym=ym_now()).first()
+    rating = calc_rating(st)
+    rank = None
+    try:
+        scores = sorted((calc_rating(o)["score"] for o in Student.objects.filter(group_id=st.group_id)), reverse=True)
+        rank = scores.index(rating["score"]) + 1 if rating["score"] else None
+    except Exception:  # noqa: BLE001
+        pass
+    return {
+        "student": {"name": st.name, "level": st.level, "group": st.group.name if st.group_id else ""},
+        "period": {"from": since, "to": today(), "days": days},
+        "avg": avg, "results": results,
+        "attendance": att, "attMonth": att_stats(st),
+        "streak": streak_xp(st), "rating": rating, "rank": rank,
+        "sub": sub_info(st),
+        "payment": {"status": pay.status if pay else "unpaid", "paid": pay.paid if pay else 0},
+        "certificates": Certificate.objects.filter(student=st).count(),
+    }
+
+
+def parent_report_text(st):
+    r = parent_report(st)
+    lines = [f"📘 <b>{st.name}</b> — haftalik hisobot", f"Guruh: {r['student']['group'] or '—'} · {st.level}", ""]
+    lines.append(f"⭐ O'rtacha natija: <b>{r['avg']}%</b>" if r["avg"] is not None else "⭐ Bu hafta natija yo'q")
+    lines.append(f"🔥 Ketma-ket kunlar: {r['streak']['streak']} · XP: {r['streak']['xp']}")
+    if r["rank"]:
+        lines.append(f"🏆 Guruhdagi o'rni: {r['rank']}")
+    p = sum(1 for a in r["attendance"] if a["v"] == "p")
+    lines.append(f"📅 Davomat: {p}/{len(r['attendance'])}" if r["attendance"] else "📅 Davomat: belgilanmagan")
+    lines.append("💳 To'lov: " + {"paid": "to'langan ✅", "partial": "qisman", "unpaid": "to'lanmagan"}.get(r["payment"]["status"], "—"))
+    return "\n".join(lines)
 
 
 # ── fayllar
@@ -331,6 +424,7 @@ def approve_day(ds_id, scores):
     rid = add_record(st, date, items, avg, "Kunlik vazifalar (online)")
     cert = give_cert(st, rid, avg, date)
     notify(st.id, f"{ds.day} kunlik vazifalari tasdiqlandi: {avg}%" + (" 🏆 Sertifikat berildi!" if cert else ""), "/certs" if cert else "/tasks")
+    notify_parents(st, f"✅ <b>{st.name}</b>: {ds.day} kunlik vazifalari tasdiqlandi — <b>{avg}%</b>" + (" 🏆 Sertifikat oldi!" if cert else ""))
     return {"avg": avg, "cert": cert}
 
 
