@@ -102,6 +102,8 @@ const RAW = {
   'Kamaytirish': ['Уменьшить', 'Decrease'],
   'Oshirish': ['Увеличить', 'Increase'],
 
+  "ta to'lagan": ['оплатили', 'paid'],
+  'ta qarzdor': ['должников', 'in debt'],
   // ── Kirish
   'Xush kelibsiz!': ['Добро пожаловать!', 'Welcome!'],
   'Kirish': ['Войти', 'Sign in'],
