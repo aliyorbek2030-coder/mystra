@@ -104,6 +104,8 @@ const RAW = {
 
   "ta to'lagan": ['оплатили', 'paid'],
   'ta qarzdor': ['должников', 'in debt'],
+  "Ilovani o'rnatish": ['Установить приложение', 'Install app'],
+  "iPhone: Safari'da «Ulashish» tugmasini bosing → «Bosh ekranga qo'shish».": ['iPhone: в Safari нажмите «Поделиться» → «На экран „Домой“».', 'iPhone: in Safari tap Share → “Add to Home Screen”.'],
   // ── Kirish
   'Xush kelibsiz!': ['Добро пожаловать!', 'Welcome!'],
   'Kirish': ['Войти', 'Sign in'],

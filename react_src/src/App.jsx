@@ -5,6 +5,7 @@ import { useAuth, apiRequest } from './lib/auth';
 import NotifBar from './components/NotifBar';
 import Login from './pages/Login';
 import LangSwitch from './components/LangSwitch';
+import InstallApp from './components/InstallApp';
 
 // Student pages
 import Tasks from './pages/student/Tasks';
@@ -197,12 +198,14 @@ function Shell({ tabs, notifTo, children }) {
                             </button>
                         </div>
                         <LangSwitch style={{ alignSelf: 'stretch', justifyContent: 'space-between', background: '#fff' }} />
+                        <InstallApp />
                     </div>
                 </aside>
 
                 <main className="app-main">
                     <div className="sb-mlang" style={{ display: 'none', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '10px 16px 0' }}>
                         <LangSwitch />
+                        <div style={{ flex: 1, maxWidth: 190 }}><InstallApp compact /></div>
                         <button type="button" onClick={logout} aria-label="Chiqish" title="Chiqish" style={{ border: 0, background: '#fff', borderRadius: 10, height: 36, padding: '0 12px', font: 'inherit', fontWeight: 600, fontSize: 13, color: '#3D4150', cursor: 'pointer' }}>Chiqish</button>
                     </div>
                     <NotifBar to={notifTo} />

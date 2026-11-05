@@ -25,9 +25,16 @@ createRoot(document.getElementById('root')).render(
 // Tanlangan til (rus / ingliz) bo'lsa, interfeysni avtomatik tarjima qilish
 startAutoTranslate();
 
+// "Ilovani o'rnatish" tugmasi uchun brauzer taklifini saqlab qo'yamiz
+window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    window.__mystraInstall = e;
+    window.dispatchEvent(new Event('mystra-installable'));
+});
+
 // Register the service worker
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(() => {});
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
     });
 }
