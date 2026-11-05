@@ -1,0 +1,31 @@
+# Render.com Blueprint: sayt bitta bepul web-servisda ishlaydi (Django + React).
+# Ma'lumotlar bazasi — tashqi bepul PostgreSQL (Neon), DATABASE_URL orqali.
+services:
+  - type: web
+    name: mystra
+    runtime: python
+    plan: free
+    region: frankfurt
+    buildCommand: ./build.sh
+    startCommand: gunicorn config.wsgi:application --chdir mystra-django --workers 2 --timeout 120
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.10
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: DEBUG
+        value: "0"
+      - key: DATABASE_URL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: TEACHER_PASSWORD
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        sync: false

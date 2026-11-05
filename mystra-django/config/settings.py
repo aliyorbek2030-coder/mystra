@@ -27,6 +27,13 @@ ALLOWED_HOSTS = [
     if h.strip()
 ]
 
+# Render.com avtomatik beradigan domen (masalan mystra.onrender.com)
+RENDER_HOST = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_HOST:
+    ALLOWED_HOSTS.append(RENDER_HOST)
+
+CSRF_TRUSTED_ORIGINS = [f"https://{h}" for h in ALLOWED_HOSTS if h not in ("localhost", "127.0.0.1")]
+
 ALLOWED_ORIGINS = [
     o.strip()
     for o in os.environ.get("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
@@ -49,6 +56,7 @@ INSTALLED_APPS = [
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -79,7 +87,28 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 # Database configuration
-if os.environ.get("DB_NAME"):
+# 1) DATABASE_URL (Neon / Render / boshqa PostgreSQL) — hostingda
+# 2) DB_NAME ... — o'z serveringizdagi PostgreSQL
+# 3) aks holda SQLite (kompyuterda sinov uchun)
+if os.environ.get("DATABASE_URL"):
+    from urllib.parse import parse_qs, unquote, urlparse
+
+    _u = urlparse(os.environ["DATABASE_URL"])
+    _q = {k: v[0] for k, v in parse_qs(_u.query).items()}
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": unquote(_u.path.lstrip("/")),
+            "USER": unquote(_u.username or ""),
+            "PASSWORD": unquote(_u.password or ""),
+            "HOST": _u.hostname or "",
+            "PORT": str(_u.port or 5432),
+            "CONN_MAX_AGE": 60,
+            "CONN_HEALTH_CHECKS": True,
+            "OPTIONS": {"sslmode": _q.get("sslmode", "require")},
+        }
+    }
+elif os.environ.get("DB_NAME"):
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
@@ -113,6 +142,14 @@ USE_TZ = True
 # Static files
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
+}
+
+# React build (npm run build) shu papkaga tushadi; WhiteNoise uni sayt ildizidan beradi
+FRONTEND_DIST = BASE_DIR / "frontend_dist"
+WHITENOISE_ROOT = FRONTEND_DIST if FRONTEND_DIST.exists() else None
 
 # Uploads
 UPLOAD_DIR = Path(
@@ -144,6 +181,10 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 14 * 1024 * 1024
 
 # Security
 SECURE_CONTENT_TYPE_NOSNIFF = True
+if RENDER_HOST or os.environ.get("HTTPS") == "1":
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 # Cache
 CACHES = {
@@ -153,3 +194,10 @@ CACHES = {
 }
 
 CORS_ALLOWED_ORIGINS = ALLOWED_ORIGINS  # .env dagi ALLOWED_ORIGINS dan olinadi
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "root": {"handlers": ["console"], "level": "INFO"},
+}

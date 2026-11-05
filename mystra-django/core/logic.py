@@ -121,9 +121,10 @@ def save_data_url(data_url, max_bytes=3_000_000):
         raise E(400, "Fayl formati noto'g'ri")
     if len(buf) > max_bytes:
         raise E(413, "Fayl juda katta")
-    settings.UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    from .models import StoredFile
+
     name = uuid.uuid4().hex[:16] + "." + OK_TYPES[mime]
-    (settings.UPLOAD_DIR / name).write_bytes(buf)
+    StoredFile.objects.create(name=name, mime=mime, data=buf)
     return {"name": name, "mime": mime, "buf": buf}
 
 

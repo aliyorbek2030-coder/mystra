@@ -7,7 +7,7 @@ from pathlib import Path
 
 from django.conf import settings
 from django.core.cache import cache
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 from django.http.response import HttpResponseBase
 from django.utils import timezone
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -18,7 +18,7 @@ from . import logic as L
 from . import scoring
 from .auth import TokenAuth, check_password, make_password, make_token, role_permission
 from .errors import E
-from .models import (Account, Attendance, Certificate, DaySubmit, Group, HwRecord, Homework, Notification, Payment, Signup, Student,
+from .models import (Account, Attendance, Certificate, DaySubmit, Group, HwRecord, Homework, Notification, Payment, Signup, StoredFile, Student,
                      Submission, SugLog, Task)
 
 T = ["teacher", "admin"]
@@ -677,7 +677,13 @@ def telegram_send(request):
 
 @api(["GET"], ANY)
 def upload(request, name):
-    f = settings.UPLOAD_DIR / Path(name).name
+    name = Path(name).name
+    sf = StoredFile.objects.filter(name=name).first()
+    if sf:
+        resp = HttpResponse(bytes(sf.data), content_type=sf.mime)
+        resp["Cache-Control"] = "private, max-age=86400"
+        return resp
+    f = settings.UPLOAD_DIR / name  # eski fayllar (diskda)
     if not f.exists():
         raise E(404, "Topilmadi")
     return FileResponse(open(f, "rb"), content_type=mimetypes.guess_type(f.name)[0] or "application/octet-stream")

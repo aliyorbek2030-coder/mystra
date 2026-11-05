@@ -143,9 +143,7 @@ const today = () => {
 };
 
 // Backend root used for authenticated media requests.
-const API_ROOT = (
-    import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
-).replace(/\/api\/?$/, '').replace(/\/$/, '');
+import { API_ROOT } from '../../lib/config';
 
 function getMime(path, explicitMime) {
     if (explicitMime) return explicitMime;

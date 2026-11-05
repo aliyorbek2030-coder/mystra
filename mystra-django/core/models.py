@@ -183,3 +183,11 @@ class Notification(Base):
 class SugLog(models.Model):
     student = models.OneToOneField(Student, on_delete=models.CASCADE, primary_key=True)
     ts = models.BigIntegerField()
+
+
+class StoredFile(models.Model):
+    """Yuklangan fayllar bazada saqlanadi — bepul hostingda disk har safar tozalanadi."""
+    name = models.CharField(max_length=64, primary_key=True)
+    mime = models.CharField(max_length=100)
+    data = models.BinaryField()
+    created = models.DateTimeField(auto_now_add=True)

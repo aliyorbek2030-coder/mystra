@@ -128,7 +128,7 @@ const Empty = ({ icon, children }) => (
     </div>
 );
 
-const API_BASE = 'http://127.0.0.1:8000';
+import { API_ROOT as API_BASE } from '../../lib/config';
 
 const mediaUrl = (path) => {
     if (!path) return '';

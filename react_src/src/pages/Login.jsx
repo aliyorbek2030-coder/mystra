@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../lib/auth';
 
-const API = 'http://127.0.0.1:8000/api';
+import { API_URL as API } from '../lib/config';
 
 // --- DESIGN ONLY (no logic) ---
 const PAGE = {
