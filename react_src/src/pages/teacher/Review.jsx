@@ -695,7 +695,7 @@ export default function Review() {
                         const student = person(submission);
                         return (
                             <article className="rv-card" key={submission.id}>
-                                {Head({ student, meta: `${student.level ? student.level + ' · ' : ''}${submission.title || 'Extra work'}`, right: <span className="rv-chip" style={{ fontSize: 13 }}><Svg d={I.spark} size={14 })} AI {submission.ai?.score ?? 0}%</span>} />
+                                {Head({ student, meta: `${student.level ? student.level + ' · ' : ''}${submission.title || 'Extra work'}`, right: <span className="rv-chip" style={{ fontSize: 13 }}><Svg d={I.spark} size={14} /> AI {submission.ai?.score ?? 0}%</span> })}
                                 <div className="rv-item">
                                     <Media s={submission} />
                                     {AiNote({ ai: submission.ai })}
