@@ -106,6 +106,9 @@ const RAW = {
   'ta qarzdor': ['должников', 'in debt'],
   "Ilovani o'rnatish": ['Установить приложение', 'Install app'],
   "iPhone: Safari'da «Ulashish» tugmasini bosing → «Bosh ekranga qo'shish».": ['iPhone: в Safari нажмите «Поделиться» → «На экран „Домой“».', 'iPhone: in Safari tap Share → “Add to Home Screen”.'],
+  'Grammatika': ['Грамматика', 'Grammar'], 'Zamon': ['Время', 'Tense'], 'Artikl': ['Артикль', 'Article'], 'Predlog': ['Предлог', 'Preposition'],
+  "Lug'at": ['Лексика', 'Vocabulary'], 'Imlo': ['Орфография', 'Spelling'], 'Tinish belgisi': ['Пунктуация', 'Punctuation'], 'Uslub': ['Стиль', 'Style'],
+  'Vazifaga javob': ['Ответ на задание', 'Task response'], 'Izchillik': ['Связность', 'Coherence'],
   // ── Kirish
   'Xush kelibsiz!': ['Добро пожаловать!', 'Welcome!'],
   'Kirish': ['Войти', 'Sign in'],
@@ -415,6 +418,7 @@ const PATTERNS = [
   [/^Ustoz tasdiqladi: (\d+)%$/, 'Учитель подтвердил: $1%', 'Teacher approved: $1%'],
   [/^(\d+)\/(\d+) vazifa bajarildi$/, 'Выполнено заданий: $1/$2', '$1/$2 tasks done'],
   [/^(.+) obunasi 30 kunga uzaytirildi$/, 'Подписка $1 продлена на 30 дней', "$1's subscription extended by 30 days"],
+  [/^Topilgan xatolar · (\d+)$/, 'Найдено ошибок: $1', 'Errors found: $1'],
   [/^Chiqish \((.+)\)$/, 'Выйти ($1)', 'Log out ($1)'],
   [/^(Dushanba|Seshanba|Chorshanba|Payshanba|Juma|Shanba|Yakshanba), (\d+)-(\w+)$/, null, null], // sana — alohida
 ];

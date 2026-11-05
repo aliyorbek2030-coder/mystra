@@ -190,25 +190,62 @@ def _gemini(parts):
     return json.loads(txt.strip())
 
 
+ERROR_TYPES = {"grammar", "vocabulary", "article", "spelling", "punctuation", "style", "tense", "preposition"}
+
+
+def _clean_details(o, text):
+    """AI qaytargan xatolar ro'yxatini tekshirib, faqat matnda haqiqatan bor bo'laklarni qoldiradi."""
+    errors = []
+    for e in (o.get("errors") or [])[:30]:
+        if not isinstance(e, dict):
+            continue
+        wrong = str(e.get("wrong") or "").strip()[:120]
+        if not wrong or (text and wrong.lower() not in text.lower()):
+            continue
+        typ = str(e.get("type") or "grammar").lower().strip()
+        errors.append({
+            "type": typ if typ in ERROR_TYPES else "grammar",
+            "wrong": wrong,
+            "right": str(e.get("right") or "").strip()[:160],
+            "why": str(e.get("why") or "").strip()[:240],
+        })
+    crit = {}
+    for k in ("task", "coherence", "vocabulary", "grammar"):
+        try:
+            v = (o.get("criteria") or {}).get(k)
+            if v is not None:
+                crit[k] = max(0, min(100, int(v)))
+        except (TypeError, ValueError):
+            pass
+    return {"errors": errors, "criteria": crit}
+
+
 def ai_check(text, answers, audio, files, task):
     if task["type"] == "test" and task["questions"]:
         score, ok = scoring.test_score(task["questions"], answers)
-        return {"score": score, "feedback": f"Avto-tekshiruv: {ok}/{len(task['questions'])} to'g'ri."}
+        return {"score": score, "feedback": f"Avto-tekshiruv: {ok}/{len(task['questions'])} to'g'ri.", "details": {}}
     if os.environ.get("GEMINI_API_KEY"):
         try:
-            parts = [{"text": f"Siz ingliz tili o'qituvchisisiz. Vazifa turi: {task['type']}. Vazifa: {task['title']}. {task['body']}\n"
-                              "Talaba javobini 0-100 ball bilan baholang va qisqa o'zbekcha izoh yozing. FAQAT JSON: {\"score\":number,\"feedback\":string}"}]
+            parts = [{"text": (
+                f"Siz tajribali ingliz tili o'qituvchisisiz. Vazifa turi: {task['type']}. Vazifa: {task['title']}. {task['body']}\n"
+                "Talaba javobini 0-100 ball bilan baholang, qisqa o'zbekcha izoh yozing va har bir xatoni toping.\n"
+                "FAQAT JSON qaytaring:\n"
+                '{"score":number,"feedback":string,'
+                '"criteria":{"task":number,"coherence":number,"vocabulary":number,"grammar":number},'
+                '"errors":[{"type":"grammar|tense|article|preposition|vocabulary|spelling|punctuation|style",'
+                '"wrong":"matndagi aynan xato bo\'lak (so\'zma-so\'z)","right":"to\'g\'ri varianti","why":"qisqa o\'zbekcha sabab"}]}'
+            )}]
             if text:
                 parts.append({"text": "Talaba javobi:\n" + text})
             for f in ([audio] if audio else []) + files:
                 if f["mime"].startswith(("audio/", "image/")) or f["mime"] == "application/pdf":
                     parts.append({"inlineData": {"mimeType": f["mime"], "data": base64.b64encode(f["buf"]).decode()}})
             o = _gemini(parts)
-            return {"score": max(0, min(100, int(o["score"]))), "feedback": str(o.get("feedback", ""))[:600]}
+            return {"score": max(0, min(100, int(o["score"]))), "feedback": str(o.get("feedback", ""))[:600], "details": _clean_details(o, text)}
         except Exception as e:  # noqa: BLE001
             log.warning("Gemini xato, namunaviy javob: %s", e)
     n = len(text or "") + (300 if audio else 0) + len(files) * 150
-    return {"score": min(95, 45 + scoring.r(n / 8)), "feedback": "AI (namuna javob): Gemini ulanmagan, ustoz tekshiradi."}
+    return {"score": min(95, 45 + scoring.r(n / 8)), "feedback": "AI (namuna javob): Gemini ulanmagan, ustoz tekshiradi.", "details": {}}
 
 
 def generate_task(prompt, type_="writing", count=10):

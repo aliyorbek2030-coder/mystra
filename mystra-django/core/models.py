@@ -106,6 +106,7 @@ class Submission(Base):
     status = models.CharField(max_length=10)  # done | ai | approved | retake
     ai_score = models.IntegerField(null=True)
     ai_feedback = models.TextField(blank=True, default="")
+    ai_details = models.JSONField(default=dict, blank=True)  # {"errors":[...], "criteria":{...}}
     final = models.IntegerField(null=True)
 
     class Meta:

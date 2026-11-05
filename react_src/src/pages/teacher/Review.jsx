@@ -267,6 +267,90 @@ const AuthenticatedFile = ({ path, name, type }) => {
     );
 };
 
+const ERR_STYLE = {
+    grammar: ['#FFE4D6', '#C2410C', 'Grammatika'],
+    tense: ['#FFE4D6', '#C2410C', 'Zamon'],
+    article: ['#E4E1FF', '#5B4BFF', 'Artikl'],
+    preposition: ['#E0F2FE', '#0369A1', 'Predlog'],
+    vocabulary: ['#ECFCCB', '#4D7C0F', "Lug'at"],
+    spelling: ['#FCE7F3', '#BE185D', 'Imlo'],
+    punctuation: ['#FEF3C7', '#B45309', 'Tinish belgisi'],
+    style: ['#EEF0F3', '#3D4150', 'Uslub'],
+};
+const errStyle = t => ERR_STYLE[t] || ERR_STYLE.grammar;
+
+// Matndagi xato bo'laklarini rangli belgilaydi
+function highlight(text, errors) {
+    if (!errors?.length) return text;
+    const marks = [];
+    const low = text.toLowerCase();
+    errors.forEach((e, i) => {
+        const at = low.indexOf(String(e.wrong).toLowerCase());
+        if (at >= 0 && !marks.some(m => at < m.end && at + e.wrong.length > m.start)) {
+            marks.push({ start: at, end: at + e.wrong.length, e, i });
+        }
+    });
+    marks.sort((a, b) => a.start - b.start);
+    const out = [];
+    let pos = 0;
+    marks.forEach(m => {
+        if (m.start > pos) out.push(text.slice(pos, m.start));
+        const [bg, fg] = errStyle(m.e.type);
+        out.push(
+            <mark key={m.i} title={`${m.e.right ? '→ ' + m.e.right + '. ' : ''}${m.e.why || ''}`}
+                style={{ background: bg, color: 'inherit', borderBottom: `2px solid ${fg}`, borderRadius: 4, padding: '0 2px', cursor: 'help' }}>
+                {text.slice(m.start, m.end)}
+                <sup style={{ color: fg, fontWeight: 800, fontSize: 10, fontFamily: 'Onest, sans-serif', marginLeft: 1 }}>{m.i + 1}</sup>
+            </mark>
+        );
+        pos = m.end;
+    });
+    if (pos < text.length) out.push(text.slice(pos));
+    return out;
+}
+
+const CRIT_LABEL = { task: 'Vazifaga javob', coherence: 'Izchillik', vocabulary: "Lug'at", grammar: 'Grammatika' };
+
+const AiDetails = ({ ai }) => {
+    const errors = ai?.errors || [];
+    const crit = ai?.criteria || {};
+    if (!errors.length && !Object.keys(crit).length) return null;
+    return (
+        <div style={{ display: 'grid', gap: 12 }}>
+            {Object.keys(crit).length > 0 && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: 10 }}>
+                    {Object.entries(crit).map(([k, v]) => (
+                        <div key={k} style={{ background: '#F8F9FB', border: '1px solid #EEF0F3', borderRadius: 12, padding: '10px 12px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, fontWeight: 600, color: '#4A4E5C' }}><span>{CRIT_LABEL[k] || k}</span><span style={{ color: '#12131A' }}>{v}</span></div>
+                            <div style={{ height: 6, background: '#EEF0F3', borderRadius: 99, marginTop: 6, overflow: 'hidden' }}>
+                                <div style={{ width: `${v}%`, height: '100%', borderRadius: 99, background: v >= 85 ? '#9BC31A' : v >= 65 ? '#5B4BFF' : '#FF7A45' }} />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+            {errors.length > 0 && (
+                <div style={{ display: 'grid', gap: 8 }}>
+                    <b style={{ fontSize: 14 }}>Topilgan xatolar · {errors.length}</b>
+                    {errors.map((e, i) => {
+                        const [bg, fg, label] = errStyle(e.type);
+                        return (
+                            <div key={i} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, padding: '10px 12px', borderRadius: 12, background: '#F8F9FB', border: '1px solid #EEF0F3', fontSize: 14 }}>
+                                <span style={{ fontWeight: 800, color: fg, width: 18 }}>{i + 1}</span>
+                                <span style={{ fontSize: 12, fontWeight: 700, padding: '3px 9px', borderRadius: 99, background: bg, color: fg }}>{label}</span>
+                                <span style={{ textDecoration: 'line-through', color: '#9A3412' }}>{e.wrong}</span>
+                                <span aria-hidden="true" style={{ color: '#6B7080' }}>→</span>
+                                <span style={{ color: '#15803D', fontWeight: 700 }}>{e.right}</span>
+                                {e.why && <span style={{ flex: '1 1 200px', fontSize: 13, color: '#5B6070' }}>{e.why}</span>}
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+};
+
 const Media = ({ s }) => (
     <div style={{ display: 'grid', gap: 10, marginTop: 8 }}>
         {s.text && (
@@ -285,7 +369,7 @@ const Media = ({ s }) => (
                     color: '#1E2030',
                 }}
             >
-                {s.text}
+                {highlight(s.text, s.ai?.errors)}
             </p>
         )}
 
@@ -667,6 +751,7 @@ export default function Review() {
                                         </div>
                                         <Media s={item} />
                                         {AiNote({ ai: item.ai })}
+                                        <AiDetails ai={item.ai} />
                                     </div>
                                 ))}
                                 <div className="rv-foot">
@@ -701,6 +786,7 @@ export default function Review() {
                                 <div className="rv-item">
                                     <Media s={submission} />
                                     {AiNote({ ai: submission.ai })}
+                                    <AiDetails ai={submission.ai} />
                                 </div>
                                 <div className="rv-foot">
                                     <span style={{ fontSize: 14, color: '#5B6070', flex: 1 }}>Yakuniy baho:</span>

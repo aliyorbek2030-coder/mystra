@@ -353,7 +353,7 @@ def task_submit(request, id):
     q.exclude(status="approved").delete()
     sub = Submission.objects.create(task_id=t["id"], student=st, kind=t["kind"], text=text, audio="/uploads/" + audio["name"] if audio else None,
                                     files=[{"n": f["n"], "u": "/uploads/" + f["name"], "mime": f["mime"]} for f in files], answers=answers,
-                                    date=L.today(), day=t["createdAt"], attempt=att, status="done" if daily else "ai", ai_score=ai["score"], ai_feedback=ai["feedback"])
+                                    date=L.today(), day=t["createdAt"], attempt=att, status="done" if daily else "ai", ai_score=ai["score"], ai_feedback=ai["feedback"], ai_details=ai.get("details") or {})
     if not daily:
         L.notify("teacher", f"{st.name} extra work topshirdi: {t['title']}", "/review")
         L.tg("teacher", f"🔔 {st.name} extra work topshirdi: {t['title']}")
@@ -431,13 +431,13 @@ def review(request):
         items = []
         for s in Submission.objects.filter(student=ds.student, day=ds.day, kind="daily"):
             t = L.find_task(s.task_id)
-            items.append({"id": s.id, "taskId": s.task_id, "title": (t or {}).get("title"), "ai": {"score": s.ai_score, "feedback": s.ai_feedback},
+            items.append({"id": s.id, "taskId": s.task_id, "title": (t or {}).get("title"), "ai": {"score": s.ai_score, "feedback": s.ai_feedback, **(s.ai_details or {})},
                           "suggested": L.suggested(s, t), "attempt": s.attempt, **media(s)})
         days.append({"id": ds.id, "day": ds.day, "total": ds.total, "student": L.pub_student(ds.student), "items": items})
     extra = []
     for s in Submission.objects.select_related("student").filter(status="ai", kind="extra"):
         t = L.find_task(s.task_id)
-        extra.append({"id": s.id, "student": L.pub_student(s.student), "title": (t or {}).get("title"), "ai": {"score": s.ai_score, "feedback": s.ai_feedback},
+        extra.append({"id": s.id, "student": L.pub_student(s.student), "title": (t or {}).get("title"), "ai": {"score": s.ai_score, "feedback": s.ai_feedback, **(s.ai_details or {})},
                       "suggested": L.suggested(s, t), **media(s)})
     return {"days": days, "extra": extra}
 
