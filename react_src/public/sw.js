@@ -1,6 +1,6 @@
 // MYSTRA service worker: ilova qobig'ini keshlaydi, API so'rovlarini doim tarmoqdan oladi.
 const CACHE = 'mystra-v1';
-const SHELL = ['/', '/manifest.webmanifest', '/icon-192.png', '/icon-512.png'];
+const SHELL = ['/', '/manifest.json', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));

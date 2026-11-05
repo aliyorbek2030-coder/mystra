@@ -692,6 +692,12 @@ def upload(request, name):
     return FileResponse(open(f, "rb"), content_type=mimetypes.guess_type(f.name)[0] or "application/octet-stream")
 
 
+# ───────── O'yin elementlari
+@api(["GET"], STU)
+def my_game(request):
+    return L.game_info(request.user.obj)
+
+
 # ───────── Ota-onalar
 @api(["GET"])
 def parent_view(request, token):

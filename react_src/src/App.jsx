@@ -14,6 +14,7 @@ import Results from './pages/student/Results';
 import Pay from './pages/student/Pay';
 import Certs from './pages/student/Certs';
 import Archive from './pages/student/Archive';
+import Game from './pages/student/Game';
 
 // Teacher pages
 import Overview from './pages/teacher/Overview';
@@ -55,6 +56,7 @@ const ICONS = {
     award: <><circle cx="12" cy="8" r="6" /><path d="M15.5 13.5L17 22l-5-3-5 3 1.5-8.5" /></>,
     archive: <><rect x="2" y="3" width="20" height="5" rx="1" /><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4" /></>,
     dot: <circle cx="12" cy="12" r="3" />,
+    trophy: <><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z" /><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3" /></>,
     logout: <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="M16 17l5-5-5-5M21 12H9" /></>,
 };
 
@@ -78,6 +80,7 @@ const ICON_FOR = {
     '/archive': 'archive',
     '/pay': 'card',
     '/certs': 'award',
+    '/game': 'trophy',
 };
 
 const Icon = ({ name }) => (
@@ -142,7 +145,7 @@ const TILE = {
     '/send': ['#FFE4D6', '#C2410C'], '/aitask': ['#F3E8FF', '#7E22CE'], '/parent': ['#FCE7F3', '#BE185D'],
     '/settings': ['#EEF0F3', '#3D4150'], '/admin': ['#ECEAFF', '#5B4BFF'],
     '/tasks': ['#ECEAFF', '#5B4BFF'], '/results': ['#ECFCCB', '#4D7C0F'], '/archive': ['#FEF3C7', '#B45309'],
-    '/pay': ['#E0F2FE', '#0369A1'], '/certs': ['#FCE7F3', '#BE185D'],
+    '/pay': ['#E0F2FE', '#0369A1'], '/certs': ['#FCE7F3', '#BE185D'], '/game': ['#FEF3C7', '#B45309'],
 };
 
 const ROLE_LABEL = { teacher: 'Ustoz', admin: 'Administrator', student: "O'quvchi" };
@@ -256,6 +259,7 @@ export default function App() {
                 notifTo={user.id}
                 tabs={[
                     ['/tasks', 'Vazifalar'],
+                    ['/game', 'Yutuqlar'],
                     ['/results', 'Natijalar'],
                     ['/archive', 'Arxiv'],
                     ['/pay', "To'lov"],
@@ -264,6 +268,7 @@ export default function App() {
             >
                 <Routes>
                     <Route path="/tasks" element={<Tasks />} />
+                    <Route path="/game" element={<Game />} />
                     <Route path="/results" element={<Results />} />
                     <Route path="/archive" element={<Archive />} />
                     <Route path="/pay" element={<Pay />} />

@@ -16,7 +16,7 @@ urlpatterns = [
     path("api/teachers", v.teachers), path("api/teachers/<str:id>", v.teacher_detail), path("api/admin/stats", v.admin_stats),
     # o'quvchi
     path("api/my/tasks", v.my_tasks), path("api/tasks/<str:id>/submit", v.task_submit), path("api/days/<str:day>/finish", v.day_finish),
-    path("api/my/certificates", v.my_certificates), path("api/my/payments", v.my_payments), path("api/my/archive", v.my_archive),
+    path("api/my/certificates", v.my_certificates), path("api/my/payments", v.my_payments), path("api/my/archive", v.my_archive), path("api/my/game", v.my_game),
     # xabarlar
     path("api/notifications", v.notifications), path("api/notifications/<str:id>/read", v.notification_read),
     # tekshirish

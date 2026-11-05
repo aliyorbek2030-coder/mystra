@@ -111,7 +111,7 @@ const RAW = {
   'Vazifaga javob': ['Ответ на задание', 'Task response'], 'Izchillik': ['Связность', 'Coherence'],
   // ── Ota-onalar
   'Ota-ona kabineti': ['Кабинет родителя', 'Parent portal'],
-  'Hafta': ['Неделя', 'Week'], 'Oy': ['Месяц', 'Month'],
+  'Hafta': ['Неделя', 'Week'], 'Olmos': ['Алмаз', 'Diamond'], 'Oltin': ['Золото', 'Gold'], 'Kumush': ['Серебро', 'Silver'], 'Bronza': ['Бронза', 'Bronze'], 'Oy': ['Месяц', 'Month'],
   "Guruhdagi o'rni": ['Место в группе', 'Rank in group'],
   'Natijalar': ['Результаты', 'Results'],
   "Bu davrda natija yo'q": ['За этот период результатов нет', 'No results for this period'],
@@ -131,6 +131,21 @@ const RAW = {
   'Telegram ulanmagan': ['Telegram не подключён', 'Telegram not connected'],
   "Havola noto'g'ri yoki eskirgan": ['Ссылка неверна или устарела', 'The link is invalid or expired'],
   "Ota-ona hisoboti": ['Отчёт для родителей', 'Parent report'],
+  // ── Yutuqlar
+  'Yutuqlar': ['Достижения', 'Achievements'], 'Mening yutuqlarim': ['Мои достижения', 'My achievements'],
+  'Daraja': ['Уровень', 'Level'], 'Haftalik liga': ['Лига недели', 'Weekly league'], 'XP shu hafta': ['XP за неделю', 'XP this week'],
+  'Nishonlar': ['Значки', 'Badges'], 'Olindi': ['Получен', 'Earned'],
+  'Birinchi qadam': ['Первый шаг', 'First step'], 'Birinchi vazifani topshir': ['Сдай первое задание', 'Submit your first task'],
+  'Mukammal': ['Идеально', 'Perfect'], 'Bir kunda 100% natija ol': ['Получи 100% за день', 'Score 100% in a day'],
+  'Uchqun': ['Искра', 'Spark'], '3 kun ketma-ket vazifa bajar': ['Выполняй задания 3 дня подряд', 'Do tasks 3 days in a row'],
+  'Olov': ['Огонь', 'On fire'], '7 kun ketma-ket vazifa bajar': ['Выполняй задания 7 дней подряд', 'Do tasks 7 days in a row'],
+  'Afsona': ['Легенда', 'Legend'], '30 kun ketma-ket vazifa bajar': ['Выполняй задания 30 дней подряд', 'Do tasks 30 days in a row'],
+  'Tirishqoq': ['Старательный', 'Hard worker'], "100 XP to'pla": ['Набери 100 XP', 'Earn 100 XP'],
+  'Bilimdon': ['Знаток', 'Scholar'], "500 XP to'pla": ['Набери 500 XP', 'Earn 500 XP'],
+  'Birinchi sertifikat': ['Первый сертификат', 'First certificate'], '95%+ natija bilan sertifikat ol': ['Получи сертификат за 95%+', 'Earn a certificate with 95%+'],
+  'Kolleksioner': ['Коллекционер', 'Collector'], "5 ta sertifikat to'pla": ['Собери 5 сертификатов', 'Collect 5 certificates'],
+  "Qo'shimcha kuch": ['Сверхсила', 'Extra power'], '5 ta extra work bajar': ['Выполни 5 extra work', 'Complete 5 extra works'],
+  'Intizomli': ['Дисциплина', 'Disciplined'], "Bu oy birorta ham darsni qoldirma (kamida 4 dars)": ['Не пропусти ни одного урока за месяц (минимум 4)', 'Miss no lessons this month (at least 4)'],
   // ── Kirish
   'Xush kelibsiz!': ['Добро пожаловать!', 'Welcome!'],
   'Kirish': ['Войти', 'Sign in'],
@@ -445,6 +460,9 @@ const PATTERNS = [
   [/^(.+) nusxalandi ✓$/, 'Скопировано ✓', 'Copied ✓'],
   [/^Bot ulandi: @(.+) ✓$/, 'Бот подключён: @$1 ✓', 'Bot connected: @$1 ✓'],
   [/^(.+)\. Ustozdan yangi havola so'rang\.$/, '$1. Попросите у учителя новую ссылку.', '$1. Ask the teacher for a new link.'],
+  [/^(.+) ligasi$/, 'Лига: $1', '$1 league'],
+  [/^(\d+) XP · keyingi darajagacha (\d+) XP$/, '$1 XP · до следующего уровня $2 XP', '$1 XP · $2 XP to next level'],
+  [/^(.+) \(sen\)$/, '$1 (ты)', '$1 (you)'],
   [/^Chiqish \((.+)\)$/, 'Выйти ($1)', 'Log out ($1)'],
   [/^(Dushanba|Seshanba|Chorshanba|Payshanba|Juma|Shanba|Yakshanba), (\d+)-(\w+)$/, null, null], // sana — alohida
 ];

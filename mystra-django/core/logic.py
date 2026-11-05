@@ -194,6 +194,74 @@ def parent_report_text(st):
     return "\n".join(lines)
 
 
+# ── O'yin elementlari: nishonlar, haftalik liga, daraja
+BADGES = [
+    # id, nom, tavsif, maqsad, o'lchov
+    ("first", "Birinchi qadam", "Birinchi vazifani topshir", 1, "records"),
+    ("perfect", "Mukammal", "Bir kunda 100% natija ol", 1, "perfect"),
+    ("streak3", "Uchqun", "3 kun ketma-ket vazifa bajar", 3, "streak"),
+    ("streak7", "Olov", "7 kun ketma-ket vazifa bajar", 7, "streak"),
+    ("streak30", "Afsona", "30 kun ketma-ket vazifa bajar", 30, "streak"),
+    ("xp100", "Tirishqoq", "100 XP to'pla", 100, "xp"),
+    ("xp500", "Bilimdon", "500 XP to'pla", 500, "xp"),
+    ("cert1", "Birinchi sertifikat", "95%+ natija bilan sertifikat ol", 1, "certs"),
+    ("cert5", "Kolleksioner", "5 ta sertifikat to'pla", 5, "certs"),
+    ("extra5", "Qo'shimcha kuch", "5 ta extra work bajar", 5, "extra"),
+    ("att", "Intizomli", "Bu oy birorta ham darsni qoldirma (kamida 4 dars)", 1, "att"),
+]
+
+LEAGUES = [(60, "Olmos", "#38BDF8"), (40, "Oltin", "#FACC15"), (20, "Kumush", "#A3A6B4"), (0, "Bronza", "#D97706")]
+
+
+def _week_start():
+    d = timezone.localdate()
+    return (d - timedelta(days=d.weekday())).isoformat()
+
+
+def week_xp(st, since=None):
+    since = since or _week_start()
+    rows = HwRecord.objects.filter(student=st, date__gte=since).values_list("avg_score", "extra")
+    return scoring.xp_level(list(rows))[0]
+
+
+def league_of(xp):
+    for need, name, color in LEAGUES:
+        if xp >= need:
+            return {"name": name, "color": color, "min": need}
+    return {"name": "Bronza", "color": "#D97706", "min": 0}
+
+
+def game_info(st):
+    recs = list(HwRecord.objects.filter(student=st).values_list("date", "avg_score", "extra"))
+    sx = streak_xp(st)
+    att = att_stats(st)
+    vals = {
+        "records": len(recs),
+        "perfect": 1 if any(a >= 100 for _, a, _ in recs) else 0,
+        "streak": sx["streak"],
+        "xp": sx["xp"],
+        "certs": Certificate.objects.filter(student=st).count(),
+        "extra": sum(1 for _, _, e in recs if e),
+        "att": 1 if att["t"] >= 4 and att["p"] == att["t"] else 0,
+    }
+    badges = [{"id": i, "title": t, "desc": d, "goal": g, "value": min(vals[k], g), "earned": vals[k] >= g} for i, t, d, g, k in BADGES]
+    lvl = sx["lvl"]
+    cur_min, next_min = 10 * (lvl - 1) ** 2, 10 * lvl ** 2
+    since = _week_start()
+    mates = Student.objects.filter(group_id=st.group_id) if st.group_id else Student.objects.filter(id=st.id)
+    board = sorted(({"id": m.id, "name": m.name, "xp": week_xp(m, since), "me": m.id == st.id} for m in mates), key=lambda x: -x["xp"])
+    for i, b in enumerate(board):
+        b["rank"] = i + 1
+    my_wxp = next((b["xp"] for b in board if b["me"]), 0)
+    return {
+        "level": {"lvl": lvl, "xp": sx["xp"], "from": cur_min, "to": next_min},
+        "badges": badges,
+        "earned": sum(1 for b in badges if b["earned"]),
+        "league": {**league_of(my_wxp), "weekXp": my_wxp, "weekStart": since, "board": board[:20],
+                   "rank": next((b["rank"] for b in board if b["me"]), None)},
+    }
+
+
 # ── fayllar
 OK_TYPES = {"audio/webm": "webm", "audio/mp4": "m4a", "audio/mpeg": "mp3", "audio/ogg": "ogg", "audio/wav": "wav", "audio/x-m4a": "m4a", "image/png": "png",
             "image/jpeg": "jpg", "image/webp": "webp", "application/pdf": "pdf", "application/msword": "doc",
