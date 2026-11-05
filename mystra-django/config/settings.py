@@ -105,6 +105,8 @@ if os.environ.get("DATABASE_URL"):
             "PORT": str(_u.port or 5432),
             "CONN_MAX_AGE": 60,
             "CONN_HEALTH_CHECKS": True,
+            # Neon "-pooler" (PgBouncer) bilan server kursorlari ishlamaydi
+            "DISABLE_SERVER_SIDE_CURSORS": True,
             "OPTIONS": {"sslmode": _q.get("sslmode", "require")},
         }
     }
