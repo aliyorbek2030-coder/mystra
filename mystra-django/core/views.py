@@ -692,6 +692,82 @@ def upload(request, name):
     return FileResponse(open(f, "rb"), content_type=mimetypes.guess_type(f.name)[0] or "application/octet-stream")
 
 
+# ───────── Moliya
+@api(["GET"], T)
+def finance(request):
+    from datetime import date as _d
+    today_ = timezone.localdate()
+    months = []
+    y, m = today_.year, today_.month
+    for _ in range(6):
+        months.append(f"{y:04d}-{m:02d}")
+        m -= 1
+        if m == 0:
+            y, m = y - 1, 12
+    months.reverse()
+    students = list(Student.objects.select_related("group").all())
+    pays = {(p.student_id, p.ym): p for p in Payment.objects.filter(ym__in=months)}
+    series = []
+    for ym in months:
+        paid = expected = 0
+        for st in students:
+            if st.created.strftime("%Y-%m") > ym:
+                continue
+            p = pays.get((st.id, ym))
+            disc = p.discount if p else 0
+            expected += scoring.net_price(price_of(st.level), disc)
+            paid += p.paid if p else 0
+        series.append({"ym": ym, "paid": paid, "expected": expected})
+    cur = months[-1]
+    debtors, by_level = [], {}
+    for st in students:
+        p = pays.get((st.id, cur))
+        net = scoring.net_price(price_of(st.level), p.discount if p else 0)
+        paid = p.paid if p else 0
+        lv = by_level.setdefault(st.level, {"level": st.level, "students": 0, "paid": 0, "expected": 0})
+        lv["students"] += 1
+        lv["paid"] += paid
+        lv["expected"] += net
+        if net > 0 and paid < net:
+            debtors.append({"student": L.pub_student(st), "group": st.group.name if st.group_id else "", "net": net, "paid": paid, "debt": net - paid})
+    debtors.sort(key=lambda x: -x["debt"])
+    now_, prev_ = series[-1], series[-2] if len(series) > 1 else {"paid": 0}
+    new_students = sum(1 for st in students if st.created.strftime("%Y-%m") == cur)
+    return {"months": series, "current": {**now_, "debt": max(0, now_["expected"] - now_["paid"]),
+            "growth": (round((now_["paid"] - prev_["paid"]) / prev_["paid"] * 100) if prev_["paid"] else None), "newStudents": new_students,
+            "students": len(students)}, "debtors": debtors[:50], "byLevel": sorted(by_level.values(), key=lambda x: -x["paid"])}
+
+
+@api(["POST"], T)
+def remind_debtors(request):
+    """Qarzdorlarning ota-onalariga (Telegram ulangan bo'lsa) eslatma yuboradi."""
+    cur = L.ym_now()
+    n = 0
+    for st in Student.objects.all():
+        p = Payment.objects.filter(student=st, ym=cur).first()
+        net = scoring.net_price(price_of(st.level), p.discount if p else 0)
+        if net > 0 and (p.paid if p else 0) < net:
+            L.notify(st.id, "Eslatma: shu oy uchun to'lov hali to'liq qilinmagan.", "/pay")
+            if st.parent_chats.exists():
+                L.notify_parents(st, f"💳 Eslatma: <b>{st.name}</b> uchun {cur} oyi to'lovi hali to'liq qilinmagan. Qoldiq: {net - (p.paid if p else 0):,} so'm".replace(",", " "))
+            n += 1
+    return {"sent": n}
+
+
+# ───────── So'z kartochkalari (AI topgan xatolardan)
+@api(["GET"], STU)
+def my_cards(request):
+    st, seen, cards = request.user.obj, set(), []
+    for s in Submission.objects.filter(student=st).exclude(ai_details={}).order_by("-date")[:80]:
+        for e in (s.ai_details or {}).get("errors", []):
+            key = (e.get("wrong", "").lower(), e.get("right", "").lower())
+            if not e.get("right") or key in seen:
+                continue
+            seen.add(key)
+            cards.append({"id": f"{s.id}-{len(cards)}", "type": e.get("type"), "wrong": e.get("wrong"), "right": e.get("right"), "why": e.get("why", ""), "date": s.date})
+    return cards[:120]
+
+
 # ───────── O'yin elementlari
 @api(["GET"], STU)
 def my_game(request):

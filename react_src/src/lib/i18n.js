@@ -146,6 +146,20 @@ const RAW = {
   'Kolleksioner': ['Коллекционер', 'Collector'], "5 ta sertifikat to'pla": ['Собери 5 сертификатов', 'Collect 5 certificates'],
   "Qo'shimcha kuch": ['Сверхсила', 'Extra power'], '5 ta extra work bajar': ['Выполни 5 extra work', 'Complete 5 extra works'],
   'Intizomli': ['Дисциплина', 'Disciplined'], "Bu oy birorta ham darsni qoldirma (kamida 4 dars)": ['Не пропусти ни одного урока за месяц (минимум 4)', 'Miss no lessons this month (at least 4)'],
+  // ── Moliya va kartochkalar
+  'Moliya': ['Финансы', 'Finance'], 'Tushum va qarzdorlik': ['Доход и долги', 'Revenue and debts'],
+  "To'lovlarni kiritish": ['Внести оплаты', 'Enter payments'], 'Kutilgan tushum': ['Ожидаемый доход', 'Expected revenue'],
+  'Qarzdorlik': ['Задолженность', 'Outstanding'], "O'tgan oyga nisbatan": ['К прошлому месяцу', 'vs last month'],
+  'Kutilgan': ['Ожидалось', 'Expected'], "Darajalar bo'yicha": ['По уровням', 'By level'],
+  'Hammasiga eslatma yuborish': ['Напомнить всем', 'Remind everyone'], "Qarzdor yo'q — hammasi to'lagan!": ['Должников нет — все оплатили!', 'No debtors — everyone has paid!'],
+  'Kartochkalar': ['Карточки', 'Flashcards'], 'Takrorlash': ['Повторение', 'Review'], 'Xatolarim kartochkalari': ['Карточки моих ошибок', 'My mistake cards'],
+  "AI sening vazifalaringdan topgan xatolar. Kartani bos — to'g'ri javobni ko'r.": ['Ошибки, которые AI нашёл в твоих заданиях. Нажми на карточку — увидишь правильный ответ.', 'Mistakes AI found in your work. Tap a card to see the right answer.'],
+  "Hali kartochka yo'q": ['Карточек пока нет', 'No cards yet'],
+  "Yozma vazifa topshirganingda, AI topgan xatolar shu yerda kartochkaga aylanadi.": ['Когда сдашь письменное задание, ошибки от AI появятся здесь как карточки.', 'When you submit written work, AI-found mistakes turn into cards here.'],
+  'Barakalla! Hammasini bilasan': ['Молодец! Ты знаешь всё', 'Well done! You know them all'],
+  'Qaytadan boshlash': ['Начать заново', 'Start over'], 'Xato': ['Ошибка', 'Mistake'], "To'g'ri": ['Правильно', 'Correct'],
+  "Bos — to'g'risini ko'r": ['Нажми — посмотри ответ', 'Tap to see the answer'],
+  'Yana takrorlayman': ['Повторю ещё', 'Repeat again'], 'Bilaman ✓': ['Знаю ✓', 'I know it ✓'],
   // ── Kirish
   'Xush kelibsiz!': ['Добро пожаловать!', 'Welcome!'],
   'Kirish': ['Войти', 'Sign in'],
@@ -463,6 +477,10 @@ const PATTERNS = [
   [/^(.+) ligasi$/, 'Лига: $1', '$1 league'],
   [/^(\d+) XP · keyingi darajagacha (\d+) XP$/, '$1 XP · до следующего уровня $2 XP', '$1 XP · $2 XP to next level'],
   [/^(.+) \(sen\)$/, '$1 (ты)', '$1 (you)'],
+  [/^so'm · (\d+)% reja$/, 'сум · $1% плана', 'UZS · $1% of plan'],
+  [/^(\d+) ta o'quvchi$/, 'учеников: $1', '$1 students'],
+  [/^\+(\d+) yangi o'quvchi$/, '+$1 новых учеников', '+$1 new students'],
+  [/^Eslatma yuborildi: (\d+) ta o'quvchi$/, 'Напоминание отправлено: $1 уч.', 'Reminder sent: $1 students'],
   [/^Chiqish \((.+)\)$/, 'Выйти ($1)', 'Log out ($1)'],
   [/^(Dushanba|Seshanba|Chorshanba|Payshanba|Juma|Shanba|Yakshanba), (\d+)-(\w+)$/, null, null], // sana — alohida
 ];
