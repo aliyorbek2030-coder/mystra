@@ -3,94 +3,141 @@ import { useAuth } from '../lib/auth';
 
 import { API_URL as API } from '../lib/config';
 
-// --- DESIGN ONLY (no logic) ---
-const PAGE = {
-    width: '100%',
-    maxWidth: 'none',
-    margin: 0,
-    boxSizing: 'border-box',
-    minHeight: '100vh',
-    padding: 24,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-    color: '#12131A',
-    backgroundColor: '#F4F5F7',
-};
+// --- DIZAYN (MYSTRA 2.0) ---
+const LOGIN_CSS = `
+.lg-root{min-height:100vh;display:flex;background:#F4F5F7;font-family:'Onest',system-ui,sans-serif;color:#12131A}
+.lg-brand{flex:1 1 50%;background:#12131A;color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.lg-brand:after{content:'';position:absolute;right:-120px;bottom:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,#5B4BFF 0%,rgba(91,75,255,0) 70%);opacity:.55}
+.lg-form{flex:1 1 50%;display:flex;align-items:center;justify-content:center;padding:32px 20px}
+.lg-feat{display:flex;gap:12px;align-items:flex-start;font-size:15px;line-height:1.5;color:#C9CBD6}
+.lg-dot{width:28px;height:28px;border-radius:9px;background:#1E2030;color:#D4F74A;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;font-size:13px}
+.lg-label{display:block;font-size:13px;font-weight:600;color:#3D4150;margin:0 0 6px}
+.lg-field:focus{border-color:#5B4BFF !important;box-shadow:0 0 0 3px rgba(91,75,255,.15) !important}
+@media (max-width:900px){.lg-brand{display:none}}
+`;
+
+const PAGE = {};
 
 const CARD = {
     width: '100%',
-    maxWidth: 400,
+    maxWidth: 420,
     boxSizing: 'border-box',
     backgroundColor: '#fff',
     border: '1px solid #E3E5EA',
-    borderRadius: 16,
-    padding: '28px 26px',
+    borderRadius: 24,
+    padding: '36px 32px',
+    boxShadow: '0 20px 60px rgba(18,19,26,.06)',
 };
 
 const LOGO = {
-    fontFamily: "'Playfair Display', Georgia, 'Times New Roman', serif",
-    fontStyle: 'italic',
-    fontSize: 30,
-    fontWeight: 500,
-    margin: '0 0 4px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    margin: '0 0 22px',
+    fontSize: 22,
+    fontWeight: 700,
+    letterSpacing: '-0.02em',
     color: '#12131A',
-    textAlign: 'center',
 };
 
 const SUB = {
     margin: '0 0 22px',
-    fontSize: 13,
-    color: '#5B6070',
-    textAlign: 'center',
+    fontSize: 26,
+    fontWeight: 700,
+    letterSpacing: '-0.02em',
+    color: '#12131A',
 };
 
 const FIELD = {
     width: '100%',
     boxSizing: 'border-box',
-    padding: '10px 12px',
-    borderRadius: 10,
+    padding: '0 14px',
+    height: 46,
+    borderRadius: 12,
     border: '1px solid #E3E5EA',
-    backgroundColor: '#F4F5F7',
+    backgroundColor: '#F8F9FB',
     color: '#12131A',
     fontFamily: 'inherit',
-    fontSize: 14,
+    fontSize: 15,
     outline: 'none',
-    boxShadow: '0 0 0 1000px #F4F5F7 inset',
+    boxShadow: '0 0 0 1000px #F8F9FB inset',
     WebkitTextFillColor: '#12131A',
 };
 
 const BTN_P = {
     width: '100%',
-    padding: '11px 16px',
+    height: 48,
+    padding: '0 16px',
     backgroundColor: '#5B4BFF',
     color: '#fff',
     border: '1px solid #5B4BFF',
-    borderRadius: 10,
+    borderRadius: 12,
     cursor: 'pointer',
     fontFamily: 'inherit',
-    fontSize: 14,
-    fontWeight: 500,
+    fontSize: 15,
+    fontWeight: 700,
 };
 
 const BTN_S = {
     width: '100%',
-    padding: '11px 16px',
+    height: 48,
+    padding: '0 16px',
     backgroundColor: '#fff',
     color: '#12131A',
     border: '1px solid #D9DCE3',
-    borderRadius: 10,
+    borderRadius: 12,
     cursor: 'pointer',
     fontFamily: 'inherit',
-    fontSize: 14,
-    fontWeight: 500,
+    fontSize: 15,
+    fontWeight: 600,
 };
 
+const LogoMark = () => (
+    <>
+        <span style={{ width: 36, height: 36, borderRadius: 11, background: '#D4F74A', color: '#12131A', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 19 }} aria-hidden="true">m</span>
+        mystra
+    </>
+);
+
+const FEATURES = [
+    'AI uy vazifalarini tekshiradi, ustoz bir bosishda tasdiqlaydi',
+    'Kunlik reja, XP, reyting va sertifikatlar',
+    "To'lov, davomat va hisobotlar bitta joyda",
+];
+
+function Layout({ children }) {
+    return (
+        <div className="lg-root">
+            <style>{LOGIN_CSS}</style>
+            <aside className="lg-brand" aria-hidden="true">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 22, fontWeight: 700 }}>
+                    <span style={{ width: 40, height: 40, borderRadius: 12, background: '#D4F74A', color: '#12131A', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 21 }}>m</span>
+                    mystra
+                    <span style={{ fontSize: 12, fontWeight: 700, background: '#2A2C38', color: '#D4F74A', padding: '3px 9px', borderRadius: 99 }}>2.0</span>
+                </div>
+                <div style={{ position: 'relative', zIndex: 1, maxWidth: 520 }}>
+                    <h1 style={{ fontSize: 52, lineHeight: 1.05, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 28px' }}>O'qish o'yinga,<br />o'quv markazi<br />tizimga aylanadi</h1>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                        {FEATURES.map((t, i) => (
+                            <div className="lg-feat" key={t}><span className="lg-dot">{i + 1}</span><span>{t}</span></div>
+                        ))}
+                    </div>
+                </div>
+                <div style={{ fontSize: 13, color: '#A3A6B4', position: 'relative', zIndex: 1 }}>© MYSTRA · o'quv markazi platformasi</div>
+            </aside>
+            <div className="lg-form">
+                <div style={CARD}>{children}</div>
+            </div>
+        </div>
+    );
+}
+
 const Field = ({ k, l, type = 'text', f, set }) => (
-    <div style={{ marginBottom: 10 }}>
+    <div style={{ marginBottom: 14 }}>
+        <label className="lg-label" htmlFor={'lg-' + k}>{l}</label>
         <input
-            className="fi"
+            id={'lg-' + k}
+            className="fi lg-field"
             type={type}
             placeholder={l}
             value={f[k]}
@@ -302,14 +349,13 @@ export default function Login() {
 
     if (done) {
         return (
-            <div style={PAGE}>
-                <div style={CARD}>
-                    <h2 style={LOGO}>mystra</h2>
+            <Layout>
+                    <div style={LOGO}><LogoMark /></div>
 
-                    <div style={{ textAlign: 'center', margin: '18px 0 6px', fontSize: 34 }}>✅</div>
+                    
 
                     <div style={{ textAlign: 'center', marginBottom: 8 }}>
-                        <b style={{ fontSize: 16 }}>So'rov yuborildi ✓</b>
+                        <b style={{ fontSize: 16 }}>So'rov yuborildi</b>
                     </div>
 
                     <p
@@ -342,19 +388,17 @@ export default function Login() {
                     >
                         Kirish
                     </button>
-                </div>
-            </div>
+                </Layout>
         );
     }
 
     return (
-        <div style={PAGE}>
-            <div style={CARD}>
-                <h2 style={LOGO}>mystra</h2>
+        <Layout>
+                <div style={LOGO}><LogoMark /></div>
 
                 <p style={SUB}>
                     {mode === 'login'
-                        ? 'Hisobingizga kiring'
+                        ? 'Xush kelibsiz!'
                         : "Ro'yxatdan o'tish"}
                 </p>
 
@@ -523,7 +567,6 @@ export default function Login() {
                         </button>
                     </form>
                 )}
-            </div>
-        </div>
+            </Layout>
     );
 }
