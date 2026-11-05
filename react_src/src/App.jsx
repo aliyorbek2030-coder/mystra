@@ -117,7 +117,8 @@ body{padding-bottom:0 !important}
   .app-root{flex-direction:column}
   .sb-root{position:fixed;bottom:0;top:auto;left:0;right:0;width:auto;height:auto;flex-direction:row;padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:50;border-top:1px solid #2A2C38}
   .sb-head,.sb-user .sb-uname,.sb-user .sb-urole,.sb-user .sb-ava{display:none}
-  .sb-nav{flex-direction:row;overflow-x:auto;gap:4px;margin:0;padding:0}
+  .sb-nav{flex-direction:row;overflow-x:auto;gap:4px;margin:0;padding:0;scrollbar-width:none}
+  .sb-nav::-webkit-scrollbar{display:none}
   .sb-link{flex-direction:column;gap:3px;min-width:68px;min-height:52px;padding:6px 8px;font-size:11px;justify-content:center}
   .sb-badge{position:absolute;margin:0;transform:translate(14px,-14px)}
   .sb-link{position:relative}

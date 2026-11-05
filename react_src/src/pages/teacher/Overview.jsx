@@ -178,7 +178,7 @@ export default function Overview() {
 
             <section className="ov-kpis" aria-label="Asosiy ko'rsatkichlar">
                 <Kpi label="Faol o'quvchilar" value={`${active} / ${students.length}`} to="/people"
-                    sub={expired.length ? `${expired.length} ta obunasi tugagan` : 'Hammasi faol'} warn={expired.length > 0} />
+                    sub={students.length === 0 ? 'Hali o\u2018quvchi yo\u2018q' : expired.length ? `${expired.length} ta obunasi tugagan` : 'Hammasi faol'} warn={expired.length > 0} />
                 <Kpi label="Tekshirish kutmoqda" value={queue.length} to="/review"
                     sub={queue.length ? 'AI dastlabki baho qo‘ydi' : 'Navbat bo‘sh'} warn={queue.length > 0} />
                 <Kpi label="O'rtacha natija" value={avgRating ? `${avgRating}%` : '—'} to="/reports"
