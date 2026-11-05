@@ -90,26 +90,34 @@ WSGI_APPLICATION = "config.wsgi.application"
 # 1) DATABASE_URL (Neon / Render / boshqa PostgreSQL) — hostingda
 # 2) DB_NAME ... — o'z serveringizdagi PostgreSQL
 # 3) aks holda SQLite (kompyuterda sinov uchun)
-if os.environ.get("DATABASE_URL"):
-    from urllib.parse import parse_qs, unquote, urlparse
+def _parse_db_url(raw):
+    """postgresql://user:pass@host[:port]/db?sslmode=... — bo'sh joy, qo'shtirnoq,
+    "psql '...'" kabi ortiqcha belgilar bo'lsa ham to'g'ri o'qiydi."""
+    import re
+    from urllib.parse import parse_qs, unquote
 
-    _u = urlparse(os.environ["DATABASE_URL"])
-    _q = {k: v[0] for k, v in parse_qs(_u.query).items()}
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": unquote(_u.path.lstrip("/")),
-            "USER": unquote(_u.username or ""),
-            "PASSWORD": unquote(_u.password or ""),
-            "HOST": _u.hostname or "",
-            "PORT": str(_u.port or 5432),
-            "CONN_MAX_AGE": 60,
-            "CONN_HEALTH_CHECKS": True,
-            # Neon "-pooler" (PgBouncer) bilan server kursorlari ishlamaydi
-            "DISABLE_SERVER_SIDE_CURSORS": True,
-            "OPTIONS": {"sslmode": _q.get("sslmode", "require")},
-        }
+    m = re.search(r"postgres(?:ql)?://([^:@/\s]+)(?::([^@\s]*))?@([^/:?\s'\"]+)(?::(\d+))?/([^?\s'\"]+)(?:\?([^\s'\"]*))?", raw or "")
+    if not m:
+        raise RuntimeError("DATABASE_URL noto'g'ri: postgresql://user:parol@host/baza ko'rinishida bo'lishi kerak")
+    user, pw, host, port, name, query = m.groups()
+    q = {k: v[0] for k, v in parse_qs(query or "").items()}
+    return {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": unquote(name),
+        "USER": unquote(user),
+        "PASSWORD": unquote(pw or ""),
+        "HOST": host,
+        "PORT": port or "5432",
+        "CONN_MAX_AGE": 60,
+        "CONN_HEALTH_CHECKS": True,
+        # Neon "-pooler" (PgBouncer) bilan server kursorlari ishlamaydi
+        "DISABLE_SERVER_SIDE_CURSORS": True,
+        "OPTIONS": {"sslmode": q.get("sslmode", "require")},
     }
+
+
+if os.environ.get("DATABASE_URL"):
+    DATABASES = {"default": _parse_db_url(os.environ["DATABASE_URL"])}
 elif os.environ.get("DB_NAME"):
     DATABASES = {
         "default": {
