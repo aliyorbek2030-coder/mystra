@@ -8,32 +8,31 @@ const CSS = `
 .ov{padding:28px 32px 48px;max-width:1360px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
 .ov-head{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
 .ov-date{font-size:14px;color:#5B6070}
-.ov-title{margin:4px 0 0;font-size:30px;font-weight:700;letter-spacing:-0.02em;color:#12131A}
+.ov-title{margin:4px 0 0;font-family:'Fredoka','Onest',sans-serif;font-size:36px;font-weight:600;color:#12131A}
 .ov-btn{height:44px;padding:0 18px;border-radius:12px;font:inherit;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer;border:1px solid #E3E5EA;background:#fff;color:#12131A}
 .ov-btn:hover{border-color:#C9CCD6}
 .ov-btn.p{background:#5B4BFF;border-color:#5B4BFF;color:#fff}
 .ov-btn.p:hover{background:#4A3AF0}
 .ov-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
-.ov-kpi{border-radius:20px;padding:22px;background:#fff;border:1px solid #E3E5EA;text-decoration:none;color:#12131A;display:block;transition:transform .12s,box-shadow .12s}
-a.ov-kpi:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(18,19,26,.06)}
-.ov-kpi.dark{background:#5B4BFF;border-color:#5B4BFF;color:#fff}
-.ov-kpi-l{font-size:14px;font-weight:500;color:#5B6070}
-.ov-kpi.dark .ov-kpi-l,.ov-kpi.dark .ov-kpi-s{color:#E4E1FF}
-.ov-kpi-v{font-size:34px;font-weight:700;letter-spacing:-0.03em;margin-top:10px}
-.ov-kpi-s{font-size:13px;margin-top:6px;color:#15803D;font-weight:600}
-.ov-kpi-s.warn{color:#B45309}
+.ov-kpi{position:relative;overflow:hidden;border-radius:24px;padding:22px;text-decoration:none;display:block;min-height:150px;box-sizing:border-box}
+.ov-kpi-ic{position:absolute;right:16px;top:16px;width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.28);display:flex;align-items:center;justify-content:center}
+.ov-kpi:after{content:'';position:absolute;right:-30px;bottom:-40px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.16)}
+.ov-kpi-l{font-size:14px;font-weight:600;opacity:.85}
+.ov-kpi-v{font-family:'Fredoka','Onest',sans-serif;font-size:40px;font-weight:700;margin-top:14px;line-height:1}
+.ov-kpi-s{display:inline-block;font-size:12px;margin-top:12px;font-weight:700;background:rgba(255,255,255,.3);padding:4px 10px;border-radius:99px}
 .ov-row{display:flex;flex-wrap:wrap;gap:16px}
-.ov-card{background:#fff;border:1px solid #E3E5EA;border-radius:20px;padding:24px;box-sizing:border-box;min-width:0}
+.ov-card{background:#fff;border:1px solid #E3E5EA;border-radius:24px;box-shadow:0 2px 0 rgba(18,19,26,.03);padding:24px;box-sizing:border-box;min-width:0}
 .ov-card h2{margin:0;font-size:18px;font-weight:600;color:#12131A}
-.ov-ai{background:#12131A;color:#fff;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:12px;box-sizing:border-box;min-width:0}
+.ov-ai{background:linear-gradient(160deg,#2A2C3F,#12131A 60%);color:#fff;border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:12px;box-sizing:border-box;min-width:0}
 .ov-ai-item{background:#1E2030;border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
 .ov-ai-tag{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
 .ov-ai-text{font-size:14px;line-height:1.5;color:#E6E7EE}
 .ov-ai-btn{align-self:flex-start;height:36px;padding:0 14px;border-radius:10px;background:#fff;color:#12131A;font-weight:600;font-size:13px;display:inline-flex;align-items:center;text-decoration:none}
-.ov-ai-btn:hover{background:#D4F74A}
+.ov-ai-btn:hover{background:#D4F74A;transform:translateX(3px)}
 .ov-bars{height:220px;display:flex;align-items:flex-end;gap:14px;margin-top:22px;border-bottom:1px solid #E3E5EA}
 .ov-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px;min-width:0}
-.ov-bar{width:100%;max-width:48px;background:#5B4BFF;border-radius:8px 8px 0 0;min-height:4px}
+.ov-bar{width:100%;max-width:52px;border-radius:12px 12px 4px 4px;min-height:6px;transform-origin:bottom;animation:ovbar .7s cubic-bezier(.3,1.4,.6,1) both}
+@keyframes ovbar{from{transform:scaleY(0)}}
 .ov-bar-lbl{flex:1;text-align:center;font-size:12px;color:#5B6070;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .ov-table{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}
 .ov-table th{text-align:left;color:#5B6070;font-size:12px;text-transform:uppercase;letter-spacing:.05em;font-weight:600;padding:10px 8px}
@@ -47,6 +46,7 @@ a.ov-kpi:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(18,19,26,.0
 @media (max-width:860px){.ov{padding:20px 16px 32px}.ov-title{font-size:24px}}
 `;
 
+const BAR_GRAD = ['linear-gradient(180deg,#8B7CFF,#5B4BFF)', 'linear-gradient(180deg,#ECFF9E,#B9E01F)', 'linear-gradient(180deg,#FFC38F,#F2612E)', 'linear-gradient(180deg,#BAE6FD,#38BDF8)', 'linear-gradient(180deg,#FBCFE8,#DB2777)'];
 const COLORS = ['#5B4BFF', '#E5582E', '#0E7490', '#15803D', '#9333EA', '#B45309'];
 const MONTHS = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
 const DAYS = ['Yakshanba', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'];
@@ -68,15 +68,23 @@ function greeting() {
     return 'Xayrli kech';
 }
 
-function Kpi({ label, value, sub, warn, dark, to }) {
+const KPI_IC = {
+    users: <><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></>,
+    check: <><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></>,
+    star: <path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z" />,
+    coin: <><circle cx="12" cy="12" r="9" /><path d="M14.5 9a2.5 2.5 0 0 0-2.5-1.5c-1.5 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1 2-2.5 2A2.5 2.5 0 0 1 9.5 15M12 6v1.5M12 16.5V18" /></>,
+};
+
+function Kpi({ label, value, sub, grad, icon, to }) {
     const body = (
         <>
+            <div className="ov-kpi-ic wiggle"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{KPI_IC[icon]}</svg></div>
             <div className="ov-kpi-l">{label}</div>
             <div className="ov-kpi-v">{value}</div>
-            {sub && <div className={'ov-kpi-s' + (warn ? ' warn' : '')}>{sub}</div>}
+            {sub && <div className="ov-kpi-s">{sub}</div>}
         </>
     );
-    const cls = 'ov-kpi' + (dark ? ' dark' : '');
+    const cls = `ov-kpi lift pop-in ${grad}`;
     return to ? <Link to={to} className={cls}>{body}</Link> : <div className={cls}>{body}</div>;
 }
 
@@ -177,18 +185,18 @@ export default function Overview() {
             </header>
 
             <section className="ov-kpis" aria-label="Asosiy ko'rsatkichlar">
-                <Kpi label="Faol o'quvchilar" value={`${active} / ${students.length}`} to="/people"
-                    sub={students.length === 0 ? 'Hali o\u2018quvchi yo\u2018q' : expired.length ? `${expired.length} ta obunasi tugagan` : 'Hammasi faol'} warn={expired.length > 0} />
-                <Kpi label="Tekshirish kutmoqda" value={queue.length} to="/review"
-                    sub={queue.length ? 'AI dastlabki baho qo‘ydi' : 'Navbat bo‘sh'} warn={queue.length > 0} />
-                <Kpi label="O'rtacha natija" value={avgRating ? `${avgRating}%` : '—'} to="/reports"
+                <Kpi grad="g-violet" icon="users" label="Faol o'quvchilar" value={`${active} / ${students.length}`} to="/people"
+                    sub={students.length === 0 ? 'Hali o\u2018quvchi yo\u2018q' : expired.length ? `${expired.length} ta obunasi tugagan` : 'Hammasi faol'} />
+                <Kpi grad="g-lime" icon="check" label="Tekshirish kutmoqda" value={queue.length} to="/review"
+                    sub={queue.length ? 'AI dastlabki baho qo‘ydi' : 'Navbat bo‘sh'} />
+                <Kpi grad="g-sky" icon="star" label="O'rtacha natija" value={avgRating ? `${avgRating}%` : '—'} to="/reports"
                     sub={rated.length ? `${rated.length} o'quvchi bo'yicha` : 'Hali natija yo‘q'} />
-                <Kpi label="Shu oy tushum" value={money(paidSum)} dark to="/payment"
+                <Kpi grad="g-orange" icon="coin" label="Shu oy tushum" value={money(paidSum)} to="/payment"
                     sub={`so'm · ${paidCount} ta to'liq to'lov`} />
             </section>
 
             <section className="ov-row">
-                <div className="ov-card" style={{ flex: '2 1 480px' }}>
+                <div className="ov-card pop-in" style={{ flex: '2 1 480px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                         <h2 style={{ flex: 1 }}>Guruhlar bo'yicha o'quvchilar</h2>
                         <Link to="/people" style={{ fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>Guruhlar →</Link>
@@ -201,7 +209,7 @@ export default function Overview() {
                                 {perGroup.map(g => (
                                     <div className="ov-bar-col" key={g.label}>
                                         <div style={{ fontSize: 12, fontWeight: 700 }}>{g.n}</div>
-                                        <div className="ov-bar" style={{ height: Math.round(g.n / maxN * 170) }} />
+                                        <div className="ov-bar" style={{ height: Math.round(g.n / maxN * 170), background: BAR_GRAD[perGroup.indexOf(g) % BAR_GRAD.length], animationDelay: `${perGroup.indexOf(g) * 60}ms` }} />
                                     </div>
                                 ))}
                             </div>

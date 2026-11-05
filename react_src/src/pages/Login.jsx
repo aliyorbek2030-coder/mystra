@@ -2,15 +2,18 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../lib/auth';
 
 import { API_URL as API } from '../lib/config';
+import LangSwitch from '../components/LangSwitch';
 
 // --- DIZAYN (MYSTRA 2.0) ---
 const LOGIN_CSS = `
 .lg-root{min-height:100vh;display:flex;background:#F4F5F7;font-family:'Onest',system-ui,sans-serif;color:#12131A}
-.lg-brand{flex:1 1 50%;background:#12131A;color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
-.lg-brand:after{content:'';position:absolute;right:-120px;bottom:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,#5B4BFF 0%,rgba(91,75,255,0) 70%);opacity:.55}
+.lg-brand{flex:1 1 50%;background:linear-gradient(150deg,#8B7CFF 0%,#5B4BFF 45%,#3A2BD0 100%);color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.lg-brand:after{content:'';position:absolute;right:-90px;bottom:-90px;width:340px;height:340px;border-radius:50%;background:#D4F74A;opacity:.9}
+.lg-brand:before{content:'';position:absolute;right:120px;top:90px;width:90px;height:90px;border-radius:26px;background:#FF8A55;transform:rotate(18deg);animation:lgfloat 5s ease-in-out infinite}
+@keyframes lgfloat{50%{transform:rotate(28deg) translateY(-14px)}}
 .lg-form{flex:1 1 50%;display:flex;align-items:center;justify-content:center;padding:32px 20px}
-.lg-feat{display:flex;gap:12px;align-items:flex-start;font-size:15px;line-height:1.5;color:#C9CBD6}
-.lg-dot{width:28px;height:28px;border-radius:9px;background:#1E2030;color:#D4F74A;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;font-size:13px}
+.lg-feat{display:flex;gap:12px;align-items:center;font-size:16px;line-height:1.5;color:#F1EFFF;font-weight:500}
+.lg-dot{width:30px;height:30px;border-radius:10px;background:#D4F74A;color:#12131A;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;font-size:13px}
 .lg-label{display:block;font-size:13px;font-weight:600;color:#3D4150;margin:0 0 6px}
 .lg-field:focus{border-color:#5B4BFF !important;box-shadow:0 0 0 3px rgba(91,75,255,.15) !important}
 @media (max-width:900px){.lg-brand{display:none}}
@@ -46,6 +49,7 @@ const SUB = {
     fontWeight: 700,
     letterSpacing: '-0.02em',
     color: '#12131A',
+    fontFamily: "'Fredoka','Onest',sans-serif",
 };
 
 const FIELD = {
@@ -68,9 +72,10 @@ const BTN_P = {
     width: '100%',
     height: 48,
     padding: '0 16px',
-    backgroundColor: '#5B4BFF',
+    background: 'linear-gradient(135deg,#8B7CFF,#5B4BFF)',
     color: '#fff',
     border: '1px solid #5B4BFF',
+    boxShadow: '0 4px 0 #3F31D9',
     borderRadius: 12,
     cursor: 'pointer',
     fontFamily: 'inherit',
@@ -116,7 +121,7 @@ function Layout({ children }) {
                     <span style={{ fontSize: 12, fontWeight: 700, background: '#2A2C38', color: '#D4F74A', padding: '3px 9px', borderRadius: 99 }}>2.0</span>
                 </div>
                 <div style={{ position: 'relative', zIndex: 1, maxWidth: 520 }}>
-                    <h1 style={{ fontSize: 52, lineHeight: 1.05, fontWeight: 800, letterSpacing: '-0.03em', margin: '0 0 28px' }}>O'qish o'yinga,<br />o'quv markazi<br />tizimga aylanadi</h1>
+                    <h1 style={{ fontFamily: "'Fredoka','Onest',sans-serif", fontSize: 56, lineHeight: 1.02, fontWeight: 700, margin: '0 0 28px' }}>O'qish o'yinga,<br />o'quv markazi<br />tizimga aylanadi</h1>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                         {FEATURES.map((t, i) => (
                             <div className="lg-feat" key={t}><span className="lg-dot">{i + 1}</span><span>{t}</span></div>
@@ -125,8 +130,9 @@ function Layout({ children }) {
                 </div>
                 <div style={{ fontSize: 13, color: '#A3A6B4', position: 'relative', zIndex: 1 }}>© MYSTRA · o'quv markazi platformasi</div>
             </aside>
-            <div className="lg-form">
-                <div style={CARD}>{children}</div>
+            <div className="lg-form" style={{ flexDirection: 'column', gap: 16 }}>
+                <LangSwitch />
+                <div style={CARD} className="pop-in">{children}</div>
             </div>
         </div>
     );

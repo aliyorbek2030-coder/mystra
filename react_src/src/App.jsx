@@ -4,6 +4,7 @@ import { useAuth, apiRequest } from './lib/auth';
 
 import NotifBar from './components/NotifBar';
 import Login from './pages/Login';
+import LangSwitch from './components/LangSwitch';
 
 // Student pages
 import Tasks from './pages/student/Tasks';
@@ -95,37 +96,52 @@ const Icon = ({ name }) => (
 );
 
 const SIDEBAR_CSS = `
-.sb-root{width:248px;flex-shrink:0;position:sticky;top:0;height:100vh;box-sizing:border-box;display:flex;flex-direction:column;background:#12131A;color:#fff;padding:20px 14px}
-.sb-head{display:flex;align-items:center;gap:10px;padding:0 8px 22px}
-.sb-logo{width:36px;height:36px;border-radius:11px;background:#D4F74A;color:#12131A;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;flex-shrink:0}
-.sb-word{font-weight:700;font-size:20px;letter-spacing:-0.02em}
-.sb-ver{margin-left:auto;font-size:11px;font-weight:700;background:#2A2C38;color:#D4F74A;padding:3px 8px;border-radius:99px}
-.sb-nav{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px;margin:0 -4px;padding:0 4px}
-.sb-link{display:flex;align-items:center;gap:12px;min-height:42px;padding:0 12px;border-radius:12px;font-size:14px;font-weight:500;color:#C9CBD6;text-decoration:none;transition:background .12s,color .12s;cursor:pointer;white-space:nowrap}
-.sb-link:hover{background:#1E2030;color:#fff}
-.sb-link.active,.sb-link.active:hover{background:#D4F74A;color:#12131A;font-weight:600}
-.sb-badge{margin-left:auto;min-width:22px;height:20px;padding:0 7px;border-radius:999px;background:#5B4BFF;color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
-.sb-user{margin-top:14px;padding:12px;border-radius:14px;background:#1E2030;display:flex;align-items:center;gap:10px}
-.sb-ava{width:36px;height:36px;border-radius:99px;background:#5B4BFF;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sb-uname{font-size:13px;font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sb-urole{font-size:12px;color:#A3A6B4}
-.sb-out{margin-left:auto;width:36px;height:36px;border-radius:10px;border:0;background:transparent;color:#C9CBD6;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.sb-out:hover{background:#2A2C38;color:#fff}
+.sb-root{width:256px;flex-shrink:0;position:sticky;top:0;height:100vh;box-sizing:border-box;display:flex;flex-direction:column;background:rgba(255,255,255,.86);backdrop-filter:blur(14px);border-right:1px solid #E3E5EA;padding:20px 14px}
+.sb-head{display:flex;align-items:center;gap:10px;padding:0 8px 20px}
+.sb-logo{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#8B7CFF,#5B4BFF);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fredoka','Onest',sans-serif;font-weight:700;font-size:22px;flex-shrink:0;box-shadow:0 4px 0 #3F31D9;transform:rotate(-6deg)}
+.sb-word{font-family:'Fredoka','Onest',sans-serif;font-weight:700;font-size:23px;color:#12131A}
+.sb-ver{margin-left:auto;font-size:11px;font-weight:800;background:#D4F74A;color:#12131A;padding:3px 8px;border-radius:99px;transform:rotate(4deg)}
+.sb-nav{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:3px;margin:0 -4px;padding:0 4px}
+.sb-link{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 10px 0 6px;border-radius:14px;font-size:14px;font-weight:600;color:#3D4150;text-decoration:none;transition:background .15s,color .15s,transform .15s;cursor:pointer;white-space:nowrap}
+.sb-ic{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .2s cubic-bezier(.3,1.4,.6,1)}
+.sb-link:hover{background:#F4F5F7;color:#12131A}
+.sb-link:hover .sb-ic{transform:rotate(-8deg) scale(1.08)}
+.sb-link.active,.sb-link.active:hover{background:linear-gradient(135deg,#8B7CFF,#5B4BFF);color:#fff;box-shadow:0 6px 16px rgba(91,75,255,.28)}
+.sb-link.active .sb-ic{background:rgba(255,255,255,.2) !important;color:#fff !important}
+.sb-badge{margin-left:auto;min-width:22px;height:20px;padding:0 7px;border-radius:999px;background:#FF7A45;color:#fff;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}
+.sb-user{margin-top:12px;padding:12px;border-radius:16px;background:linear-gradient(135deg,#F4F2FF,#EEF9D2);display:flex;flex-direction:column;gap:10px}
+.sb-user-row{display:flex;align-items:center;gap:10px}
+.sb-ava{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#FFC38F,#FF7A45);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-uname{font-size:13px;font-weight:700;color:#12131A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-urole{font-size:12px;color:#5B6070}
+.sb-out{margin-left:auto;width:36px;height:36px;border-radius:10px;border:0;background:#fff;color:#3D4150;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.sb-out:hover{background:#FFE4D6;color:#C2410C}
 .app-main{flex:1;min-width:0}
 body{padding-bottom:0 !important}
 @media (max-width: 860px){
   .app-root{flex-direction:column}
-  .sb-root{position:fixed;bottom:0;top:auto;left:0;right:0;width:auto;height:auto;flex-direction:row;padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:50;border-top:1px solid #2A2C38}
-  .sb-head,.sb-user .sb-uname,.sb-user .sb-urole,.sb-user .sb-ava{display:none}
+  .sb-root{position:fixed;bottom:0;top:auto;left:0;right:0;width:auto;height:auto;flex-direction:row;padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:50;border-right:0;border-top:1px solid #E3E5EA;background:rgba(255,255,255,.95)}
+  .sb-head,.sb-user{display:none}
   .sb-nav{flex-direction:row;overflow-x:auto;gap:4px;margin:0;padding:0;scrollbar-width:none}
   .sb-nav::-webkit-scrollbar{display:none}
-  .sb-link{flex-direction:column;gap:3px;min-width:68px;min-height:52px;padding:6px 8px;font-size:11px;justify-content:center}
-  .sb-badge{position:absolute;margin:0;transform:translate(14px,-14px)}
-  .sb-link{position:relative}
-  .sb-user{margin:0 0 0 4px;padding:0;background:transparent}
-  .app-main{padding-bottom:80px}
+  .sb-link{flex-direction:column;gap:2px;min-width:70px;min-height:56px;padding:4px 6px;font-size:11px;justify-content:center;position:relative}
+  .sb-ic{width:28px;height:28px}
+  .sb-badge{position:absolute;margin:0;top:2px;right:8px}
+  .app-main{padding-bottom:84px}
+  .sb-mlang{display:flex !important}
 }
 `;
+
+const TILE = {
+    _: ['#EEF0F3', '#3D4150'],
+    '/overview': ['#ECEAFF', '#5B4BFF'], '/review': ['#E7F6EC', '#15803D'], '/signups': ['#FFE4D6', '#C2410C'],
+    '/people': ['#E0F2FE', '#0369A1'], '/payment': ['#ECFCCB', '#4D7C0F'], '/reports': ['#FCE7F3', '#BE185D'],
+    '/hwcheck': ['#FEF3C7', '#B45309'], '/attend': ['#E0F2FE', '#0369A1'], '/suggest': ['#ECEAFF', '#5B4BFF'],
+    '/send': ['#FFE4D6', '#C2410C'], '/aitask': ['#F3E8FF', '#7E22CE'], '/parent': ['#FCE7F3', '#BE185D'],
+    '/settings': ['#EEF0F3', '#3D4150'], '/admin': ['#ECEAFF', '#5B4BFF'],
+    '/tasks': ['#ECEAFF', '#5B4BFF'], '/results': ['#ECFCCB', '#4D7C0F'], '/archive': ['#FEF3C7', '#B45309'],
+    '/pay': ['#E0F2FE', '#0369A1'], '/certs': ['#FCE7F3', '#BE185D'],
+};
 
 const ROLE_LABEL = { teacher: 'Ustoz', admin: 'Administrator', student: "O'quvchi" };
 
@@ -151,7 +167,7 @@ function Shell({ tabs, notifTo, children }) {
     return (
         <>
             <style>{SIDEBAR_CSS}</style>
-            <div className="app-root" style={{ display: 'flex', minHeight: '100vh', background: '#F4F5F7' }}>
+            <div className="app-root" style={{ display: 'flex', minHeight: '100vh' }}>
                 <aside className="sb-root" aria-label="Asosiy menyu">
                     <div className="sb-head">
                         <div className="sb-logo" aria-hidden="true">m</div>
@@ -162,7 +178,7 @@ function Shell({ tabs, notifTo, children }) {
                     <nav className="sb-nav">
                         {tabs.map(([to, l]) => (
                             <NavLink key={to} to={to} title={l} className={({ isActive }) => 'sb-link' + (isActive ? ' active' : '')}>
-                                <Icon name={ICON_FOR[to]} />
+                                <span className="sb-ic" style={{ background: (TILE[to] || TILE._)[0], color: (TILE[to] || TILE._)[1] }}><Icon name={ICON_FOR[to]} /></span>
                                 <span className="sb-label">{l}</span>
                                 {to === '/signups' && signupCount > 0 && <span className="sb-badge">{signupCount}</span>}
                             </NavLink>
@@ -170,18 +186,25 @@ function Shell({ tabs, notifTo, children }) {
                     </nav>
 
                     <div className="sb-user">
-                        <div className="sb-ava" aria-hidden="true">{initials}</div>
-                        <div style={{ minWidth: 0 }}>
-                            <div className="sb-uname">{user.name}</div>
-                            <div className="sb-urole">{ROLE_LABEL[user.role] || user.role}</div>
+                        <div className="sb-user-row">
+                            <div className="sb-ava" aria-hidden="true">{initials}</div>
+                            <div style={{ minWidth: 0 }}>
+                                <div className="sb-uname">{user.name}</div>
+                                <div className="sb-urole">{ROLE_LABEL[user.role] || user.role}</div>
+                            </div>
+                            <button type="button" className="sb-out" onClick={logout} title="Chiqish" aria-label="Chiqish">
+                                <Icon name="logout" />
+                            </button>
                         </div>
-                        <button type="button" className="sb-out" onClick={logout} title="Chiqish" aria-label="Chiqish">
-                            <Icon name="logout" />
-                        </button>
+                        <LangSwitch style={{ alignSelf: 'stretch', justifyContent: 'space-between', background: '#fff' }} />
                     </div>
                 </aside>
 
                 <main className="app-main">
+                    <div className="sb-mlang" style={{ display: 'none', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '10px 16px 0' }}>
+                        <LangSwitch />
+                        <button type="button" onClick={logout} aria-label="Chiqish" title="Chiqish" style={{ border: 0, background: '#fff', borderRadius: 10, height: 36, padding: '0 12px', font: 'inherit', fontWeight: 600, fontSize: 13, color: '#3D4150', cursor: 'pointer' }}>Chiqish</button>
+                    </div>
                     <NotifBar to={notifTo} />
                     {children}
                 </main>

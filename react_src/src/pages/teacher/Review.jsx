@@ -1,24 +1,25 @@
 import { useState, useEffect, useCallback } from 'react';
 import { apiRequest } from '../../lib/auth';
 import { adjScore } from '../../lib/helpers';
+import confetti from '../../lib/confetti';
 
 // --- DIZAYN (MYSTRA 2.0) ---
 const RV_CSS = `
 .rv{padding:28px 32px 48px;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:20px;font-family:'Onest',system-ui,sans-serif;color:#12131A}
 .rv-eyebrow{font-size:13px;font-weight:700;color:#5B4BFF;text-transform:uppercase;letter-spacing:.08em}
-.rv-title{margin:4px 0 2px;font-size:30px;font-weight:700;letter-spacing:-.02em}
+.rv-title{margin:4px 0 2px;font-family:'Fredoka','Onest',sans-serif;font-size:34px;font-weight:600}
 .rv-sub{margin:0;color:#5B6070;font-size:14px}
 .rv-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-.rv-stat{background:#fff;border:1px solid #E3E5EA;border-radius:18px;padding:16px 18px;display:flex;align-items:center;gap:14px}
+.rv-stat{background:#fff;border:1px solid #E3E5EA;border-radius:20px;transition:transform .18s cubic-bezier(.3,1.4,.6,1);padding:16px 18px;display:flex;align-items:center;gap:14px}
 .rv-stat-ic{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .rv-stat-v{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1}
 .rv-stat-l{font-size:13px;color:#5B6070;margin-top:4px}
 .rv-tabs{display:flex;gap:6px;background:#fff;border:1px solid #E3E5EA;border-radius:14px;padding:5px;align-self:flex-start;flex-wrap:wrap}
 .rv-tab{border:0;background:transparent;font:inherit;font-size:14px;font-weight:600;color:#5B6070;height:40px;padding:0 16px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:8px}
-.rv-tab.on{background:#12131A;color:#fff}
+.rv-tab.on{background:linear-gradient(135deg,#8B7CFF,#5B4BFF);color:#fff;box-shadow:0 4px 12px rgba(91,75,255,.3)}
 .rv-tab .n{font-size:12px;font-weight:700;min-width:22px;height:20px;padding:0 6px;border-radius:99px;background:#EEF0F3;color:#12131A;display:inline-flex;align-items:center;justify-content:center}
 .rv-tab.on .n{background:#D4F74A}
-.rv-card{background:#fff;border:1px solid #E3E5EA;border-radius:22px;overflow:hidden}
+.rv-card{background:#fff;border:1px solid #E3E5EA;border-radius:24px;overflow:hidden;animation:pop-in .45s cubic-bezier(.3,1.4,.6,1) both}
 .rv-card-h{display:flex;align-items:center;gap:14px;padding:18px 22px;border-bottom:1px solid #EEF0F3;flex-wrap:wrap}
 .rv-ava{width:44px;height:44px;border-radius:99px;color:#fff;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .rv-score{width:64px;height:64px;border-radius:99px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -35,12 +36,12 @@ const RV_CSS = `
 .rv-ai b{color:#D4F74A;font-weight:700}
 .rv-foot{display:flex;align-items:center;gap:10px;padding:16px 22px;background:#F8F9FB;flex-wrap:wrap}
 .rv-btn{height:44px;padding:0 18px;border-radius:12px;font:inherit;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;border:1px solid transparent}
-.rv-btn.p{background:#5B4BFF;color:#fff}.rv-btn.p:hover{background:#4A3AF0}
+.rv-btn.p{background:linear-gradient(135deg,#8B7CFF,#5B4BFF);color:#fff;box-shadow:0 4px 0 #3F31D9}.rv-btn.p:hover{filter:brightness(1.06)}.rv-btn.p:active{transform:translateY(3px);box-shadow:0 1px 0 #3F31D9}
 .rv-btn.w{background:#fff;color:#9A3412;border-color:#FDBA74}.rv-btn.w:hover{background:#FFF7ED}
 .rv-btn.s{background:#fff;color:#12131A;border-color:#E3E5EA}.rv-btn.s:hover{border-color:#C9CCD6}
 .rv-btn:disabled{opacity:.6;cursor:wait}
 .rv-empty{background:#fff;border:1px dashed #D9DCE3;border-radius:22px;padding:44px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
-.rv-empty-ic{width:72px;height:72px;border-radius:22px;display:flex;align-items:center;justify-content:center}
+.rv-empty-ic{width:80px;height:80px;border-radius:26px;transform:rotate(-6deg);animation:flame 2.4s ease-in-out infinite;display:flex;align-items:center;justify-content:center}
 .rv-empty h3{margin:6px 0 0;font-size:18px;font-weight:700}
 .rv-empty p{margin:0;color:#5B6070;font-size:14px;max-width:420px;line-height:1.5}
 .rv-subs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
@@ -395,6 +396,7 @@ export default function Review() {
             await action();
 
             setMessage(successText);
+            if (/tasdiqlandi/i.test(successText)) confetti();
 
             await loadData();
         } catch (e) {
@@ -617,7 +619,7 @@ export default function Review() {
                     [I.clock, '#FFF1E6', '#C2410C', expiring.length, 'obunasi tugayapti'],
                     [I.spark, '#ECFCCB', '#4D7C0F', [...days.flatMap(d => d.items || []), ...extra].filter(x => x.ai?.score != null).length, 'ishni AI baholadi'],
                 ].map(([ic, bg, col, v, l]) => (
-                    <div className="rv-stat" key={l}>
+                    <div className="rv-stat lift pop-in" key={l}>
                         <div className="rv-stat-ic" style={{ background: bg }}><Svg d={ic} size={22} color={col} /></div>
                         <div><div className="rv-stat-v">{loaded ? v : '…'}</div><div className="rv-stat-l">{l}</div></div>
                     </div>

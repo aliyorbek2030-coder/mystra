@@ -8,6 +8,7 @@ import { AuthProvider } from './lib/auth';
 
 import App from './App';
 import './styles.css';
+import { startAutoTranslate } from './lib/i18n';
 
 // Set the application theme
 document.documentElement.dataset.theme = S.get('theme') || '';
@@ -20,6 +21,9 @@ createRoot(document.getElementById('root')).render(
         </AuthProvider>
     </HashRouter>
 );
+
+// Tanlangan til (rus / ingliz) bo'lsa, interfeysni avtomatik tarjima qilish
+startAutoTranslate();
 
 // Register the service worker
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
