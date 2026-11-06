@@ -160,6 +160,7 @@ const RAW = {
   'Qaytadan boshlash': ['Начать заново', 'Start over'], 'Xato': ['Ошибка', 'Mistake'], "To'g'ri": ['Правильно', 'Correct'],
   "Bos — to'g'risini ko'r": ['Нажми — посмотри ответ', 'Tap to see the answer'],
   'Yana takrorlayman': ['Повторю ещё', 'Repeat again'], 'Bilaman ✓': ['Знаю ✓', 'I know it ✓'],
+  'Yorqin': ['Светлая', 'Light'], 'Tungi': ['Тёмная', 'Dark'], 'Mavzu': ['Тема', 'Theme'],
   // ── Kirish
   'Xush kelibsiz!': ['Добро пожаловать!', 'Welcome!'],
   'Kirish': ['Войти', 'Sign in'],

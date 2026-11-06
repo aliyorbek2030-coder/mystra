@@ -1,0 +1,66 @@
+/* ── MYSTRA: tungi (qorong'i) mavzu ──
+   Sahifalar ranglari asosan inline yozilgan, shuning uchun ularni atribut selektorlari orqali almashtiramiz.
+   Yorqin gradient kartalar (binafsha, salat, to'q sariq...) o'zgarmaydi. */
+html[data-mode="dark"]{color-scheme:dark;--bg:#0E0F14;--surface:#171923;--surface2:#1F2230;--border:#2A2D3A;--text:#ECEDF3;--text2:#B4B7C3;--text3:#9CA0AE}
+html[data-mode="dark"] body{background-color:#0E0F14;color:#ECEDF3;background-image:radial-gradient(600px 400px at 100% 0%,rgba(91,75,255,.18),transparent 70%),radial-gradient(500px 400px at 0% 100%,rgba(212,247,74,.06),transparent 70%)}
+
+/* yuzalar (inline) */
+html[data-mode="dark"] [style*="background: rgb(255, 255, 255)"],
+html[data-mode="dark"] [style*="background-color: rgb(255, 255, 255)"]{background:#171923 !important}
+html[data-mode="dark"] [style*="background: rgb(244, 245, 247)"],html[data-mode="dark"] [style*="background-color: rgb(244, 245, 247)"],
+html[data-mode="dark"] [style*="background: rgb(238, 240, 243)"],html[data-mode="dark"] [style*="background-color: rgb(238, 240, 243)"],
+html[data-mode="dark"] [style*="background: rgb(248, 249, 251)"],html[data-mode="dark"] [style*="background-color: rgb(248, 249, 251)"],
+html[data-mode="dark"] [style*="background: rgb(247, 247, 246)"],html[data-mode="dark"] [style*="background-color: rgb(250, 250, 250)"]{background:#1F2230 !important}
+/* chegaralar */
+html[data-mode="dark"] [style*="rgb(227, 229, 234)"],html[data-mode="dark"] [style*="rgb(217, 220, 227)"],html[data-mode="dark"] [style*="rgb(238, 240, 243)"]{border-color:#2A2D3A !important}
+/* matn (fonsiz elementlarda) */
+html[data-mode="dark"] [style*="color: rgb(18, 19, 26)"]:not([style*="background"]),
+html[data-mode="dark"] [style*="color: rgb(30, 32, 48)"]:not([style*="background"]){color:#ECEDF3 !important}
+html[data-mode="dark"] [style*="color: rgb(91, 96, 112)"]:not([style*="background"]),
+html[data-mode="dark"] [style*="color: rgb(107, 112, 128)"]:not([style*="background"]){color:#A3A6B4 !important}
+html[data-mode="dark"] [style*="color: rgb(74, 78, 92)"]:not([style*="background"]),
+html[data-mode="dark"] [style*="color: rgb(61, 65, 80)"]:not([style*="background"]){color:#C1C4CE !important}
+/* oq fondagi qora matn kartalar ichida */
+html[data-mode="dark"] [style*="background: rgb(255, 255, 255)"][style*="color: rgb(18, 19, 26)"]{color:#ECEDF3 !important}
+
+/* umumiy sinflar */
+html[data-mode="dark"] .card,html[data-mode="dark"] .ov-card,html[data-mode="dark"] .rv-card,html[data-mode="dark"] .gm-card,
+html[data-mode="dark"] .fn-card,html[data-mode="dark"] .pv-card,html[data-mode="dark"] .rv-stat,html[data-mode="dark"] .rv-subc,
+html[data-mode="dark"] .rv-tabs,html[data-mode="dark"] .rv-empty{background:#171923;border-color:#2A2D3A;color:#ECEDF3}
+html[data-mode="dark"] .rv-foot,html[data-mode="dark"] .gm-badge.off{background:#1F2230}
+html[data-mode="dark"] .rv-card-h,html[data-mode="dark"] .rv-item,html[data-mode="dark"] .ov-table td,html[data-mode="dark"] .ov-rank,
+html[data-mode="dark"] .fn-row,html[data-mode="dark"] .pv-row{border-color:#2A2D3A}
+html[data-mode="dark"] .btn,html[data-mode="dark"] .ov-btn:not(.p),html[data-mode="dark"] .rv-btn.s,html[data-mode="dark"] .rv-step,html[data-mode="dark"] .rv-step button{background:#1F2230;color:#ECEDF3;border-color:#2A2D3A}
+html[data-mode="dark"] .rv-step input{background:#171923;color:#ECEDF3}
+html[data-mode="dark"] .rv-btn.w{background:#2A1A12;color:#FDBA74}
+html[data-mode="dark"] .rv-tab .n{background:#2A2D3A;color:#ECEDF3}
+html[data-mode="dark"] .rv-tab{color:#A3A6B4}
+html[data-mode="dark"] .ov-title,html[data-mode="dark"] .ov-card h2,html[data-mode="dark"] .rv,html[data-mode="dark"] .gm,html[data-mode="dark"] .fn,
+html[data-mode="dark"] .pv,html[data-mode="dark"] .gm-h,html[data-mode="dark"] .fn-h,html[data-mode="dark"] .pv-h,html[data-mode="dark"] .rv-title{color:#ECEDF3}
+html[data-mode="dark"] .ov-date,html[data-mode="dark"] .rv-sub,html[data-mode="dark"] .rv-stat-l,html[data-mode="dark"] .ov-table th,
+html[data-mode="dark"] .ov-bar-lbl,html[data-mode="dark"] .ov-empty{color:#A3A6B4}
+html[data-mode="dark"] .ov-bars{border-color:#2A2D3A}
+html[data-mode="dark"] tbody tr:hover{background:#1F2230}
+html[data-mode="dark"] .shimmer{background:linear-gradient(90deg,#1F2230 0%,#2A2D3A 50%,#1F2230 100%) !important;background-size:200% 100% !important}
+
+/* menyu */
+html[data-mode="dark"] .sb-root{background:rgba(23,25,35,.92);border-color:#2A2D3A}
+html[data-mode="dark"] .sb-word,html[data-mode="dark"] .sb-uname{color:#ECEDF3}
+html[data-mode="dark"] .sb-link{color:#B4B7C3}
+html[data-mode="dark"] .sb-link:hover{background:#1F2230;color:#fff}
+html[data-mode="dark"] .sb-user{background:linear-gradient(135deg,#1F1C3A,#1C2412)}
+html[data-mode="dark"] .sb-urole{color:#9CA0AE}
+html[data-mode="dark"] .sb-out{background:#1F2230;color:#C1C4CE}
+
+/* kirish sahifasi */
+html[data-mode="dark"] .lg-root{background:#0E0F14;color:#ECEDF3}
+html[data-mode="dark"] .lg-label{color:#C1C4CE}
+
+/* maydonlar */
+html[data-mode="dark"] input:not([type=checkbox]):not([type=radio]),html[data-mode="dark"] textarea,html[data-mode="dark"] select,html[data-mode="dark"] .fi{
+  background:#1F2230 !important;color:#ECEDF3 !important;-webkit-text-fill-color:#ECEDF3 !important;border-color:#2A2D3A !important;box-shadow:none !important}
+html[data-mode="dark"] ::placeholder{color:#7C8091 !important;-webkit-text-fill-color:#7C8091 !important}
+html[data-mode="dark"] option{background:#171923;color:#ECEDF3}
+html[data-mode="dark"] mark{color:#18181B !important}
+html{transition:background-color .3s}
+body{transition:background-color .3s,color .3s}

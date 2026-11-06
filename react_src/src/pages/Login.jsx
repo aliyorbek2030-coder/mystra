@@ -3,6 +3,7 @@ import { useAuth } from '../lib/auth';
 
 import { API_URL as API } from '../lib/config';
 import LangSwitch from '../components/LangSwitch';
+import ThemeSwitch from '../components/ThemeSwitch';
 
 // --- DIZAYN (MYSTRA 2.0) ---
 const LOGIN_CSS = `
@@ -131,7 +132,7 @@ function Layout({ children }) {
                 <div style={{ fontSize: 13, color: '#A3A6B4', position: 'relative', zIndex: 1 }}>© MYSTRA · o'quv markazi platformasi</div>
             </aside>
             <div className="lg-form" style={{ flexDirection: 'column', gap: 16 }}>
-                <LangSwitch />
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}><LangSwitch /><ThemeSwitch /></div>
                 <div style={CARD} className="pop-in">{children}</div>
             </div>
         </div>

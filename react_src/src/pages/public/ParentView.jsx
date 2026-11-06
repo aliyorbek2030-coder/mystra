@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { API_URL } from '../../lib/config';
 import LangSwitch from '../../components/LangSwitch';
+import ThemeSwitch from '../../components/ThemeSwitch';
 import Num from '../../components/Num';
 
 /* Ota-ona kabineti — login talab qilinmaydi, maxsus havola orqali ochiladi */
@@ -61,6 +62,7 @@ export default function ParentView() {
           <div style={{ fontSize: 12, color: '#5B6070' }}>Ota-ona kabineti</div>
           <div className="pv-h" style={{ fontSize: 18 }}>MYSTRA</div>
         </div>
+        <ThemeSwitch />
         <LangSwitch />
       </header>
 

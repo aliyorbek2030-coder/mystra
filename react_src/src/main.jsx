@@ -8,6 +8,8 @@ import { AuthProvider } from './lib/auth';
 
 import App from './App';
 import './styles.css';
+import './dark.css';
+import { getMode, applyMode } from './components/ThemeSwitch';
 import { startAutoTranslate } from './lib/i18n';
 
 // Set the application theme
@@ -23,6 +25,7 @@ createRoot(document.getElementById('root')).render(
 );
 
 // Tanlangan til (rus / ingliz) bo'lsa, interfeysni avtomatik tarjima qilish
+applyMode(getMode());
 startAutoTranslate();
 
 // "Ilovani o'rnatish" tugmasi uchun brauzer taklifini saqlab qo'yamiz
