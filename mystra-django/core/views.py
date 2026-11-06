@@ -678,6 +678,20 @@ def telegram_send(request):
     return {"sent": L.tg_sync("teacher", str(body(request).get("text") or "")[:3500])}
 
 
+@api(["POST"], T)
+def telegram_send_results(request):
+    """'Yuborish' sahifasi: guruh natijalari matnini Telegram guruhiga yuboradi."""
+    text = str(body(request).get("text") or "").strip()[:3500]
+    if not text:
+        raise E(400, "Yuboriladigan matn bo'sh")
+    bot = L.cfg("bot_cfg") or {}
+    if not bot.get("token") or not bot.get("gid"):
+        raise E(400, "Telegram bot sozlanmagan. Sozlamalar bo'limini tekshiring.")
+    if not L.tg_api("sendMessage", {"chat_id": bot["gid"], "text": text}):
+        raise E(502, "Telegram xabarni yubora olmadi. Bot sozlamalarini tekshiring.")
+    return {"sent": True}
+
+
 @api(["GET"], ANY)
 def upload(request, name):
     name = Path(name).name

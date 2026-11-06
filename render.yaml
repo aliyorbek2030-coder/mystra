@@ -7,7 +7,7 @@ services:
     plan: free
     region: frankfurt
     buildCommand: ./build.sh
-    startCommand: gunicorn config.wsgi:application --chdir mystra-django --workers 2 --timeout 120
+    startCommand: gunicorn config.wsgi:application --chdir mystra-django --workers 1 --threads 8 --worker-class gthread --timeout 90
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:

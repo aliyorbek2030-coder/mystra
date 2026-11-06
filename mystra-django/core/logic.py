@@ -290,7 +290,34 @@ def save_data_url(data_url, max_bytes=3_000_000):
 
 
 # ── AI (Gemini bo'lsa u, bo'lmasa namunaviy)
+_AI_PAUSE = {"until": 0.0}
+AI_TIMEOUT = int(os.environ.get("AI_TIMEOUT", "25"))
+
+
 def _gemini(parts):
+    """Gemini chaqiruvi qat'iy vaqt chegarasi bilan: AI javob bermasa yoki kvota tugasa,
+    so'rov osilib qolmaydi — chaqiruvchi namunaviy bahoga o'tadi."""
+    import concurrent.futures
+    import time as _t
+
+    if _t.time() < _AI_PAUSE["until"]:
+        raise RuntimeError("AI vaqtincha o'chirilgan (kvota tugagan)")
+    ex = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+    fut = ex.submit(_gemini_call, parts)
+    try:
+        return fut.result(timeout=AI_TIMEOUT)
+    except concurrent.futures.TimeoutError:
+        _AI_PAUSE["until"] = _t.time() + 300
+        raise RuntimeError(f"AI {AI_TIMEOUT} soniyada javob bermadi")
+    except Exception as e:
+        if "429" in str(e) or "quota" in str(e).lower() or "RESOURCE_EXHAUSTED" in str(e):
+            _AI_PAUSE["until"] = _t.time() + 600  # 10 daqiqa AI ga murojaat qilmaymiz
+        raise
+    finally:
+        ex.shutdown(wait=False, cancel_futures=True)
+
+
+def _gemini_call(parts):
     from google import genai
 
     client = genai.Client(
@@ -453,10 +480,14 @@ def att_stats(st, ym=None):
 
 # ── yozuv va sertifikat (95%+)
 def add_record(st, date, items, avg, note, extra=False, late=False, manual=False, rid=None):
-    rec = HwRecord(student=st, date=date, items=items, avg_score=avg, note=note, extra=extra, late=late, manual=manual)
+    fields = dict(student=st, date=date, items=items, avg_score=avg, note=note, extra=extra, late=late, manual=manual)
+    if rid and HwRecord.objects.filter(id=rid).exists():
+        HwRecord.objects.filter(id=rid).update(**fields)  # mavjud yozuvni yangilaymiz (takroriy id xatosi bo'lmasin)
+        return rid
+    rec = HwRecord(**fields)
     if rid:
         rec.id = rid
-    rec.save()
+    rec.save(force_insert=True)
     return rec.id
 
 
