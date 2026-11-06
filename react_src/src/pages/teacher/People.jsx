@@ -17,14 +17,14 @@ const FIELD = {
     boxSizing: 'border-box',
     padding: '10px 12px',
     borderRadius: 10,
-    border: '1px solid #D4D4D8',
+    border: '1px solid #D9DCE3',
     backgroundColor: '#fff',
-    color: '#18181B',
+    color: '#12131A',
     fontFamily: 'inherit',
     fontSize: 13,
     outline: 'none',
     boxShadow: '0 0 0 1000px #fff inset',
-    WebkitTextFillColor: '#18181B',
+    WebkitTextFillColor: '#12131A',
 };
 
 const In = ({ v, f, p, t = 'text' }) => (
@@ -461,8 +461,8 @@ export default function People() {
                 boxSizing: 'border-box',
                 padding: 0,
                 fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-                color: '#18181B',
-                backgroundColor: '#F4F4F5',
+                color: '#12131A',
+                backgroundColor: '#F4F5F7',
                 minHeight: '100vh',
             }}
         >
@@ -470,12 +470,12 @@ export default function People() {
             <div
                 style={{
                     backgroundColor: '#fff',
-                    borderBottom: '1px solid #E4E4E7',
+                    borderBottom: '1px solid #E3E5EA',
                     padding: '24px 24px 14px',
                 }}
             >
-                <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#18181B' }}>Guruhlar</h1>
-                <p style={{ color: '#71717A', margin: 0, fontSize: 13 }}>Guruhni bosing — ichiga kirasiz</p>
+                <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#12131A' }}>Guruhlar</h1>
+                <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>Guruhni bosing — ichiga kirasiz</p>
             </div>
 
             <div style={{ padding: '24px' }}>
@@ -506,13 +506,13 @@ export default function People() {
                     </div>
                 )}
 
-                {loading && <p style={{ fontSize: 13, color: '#71717A' }}>Ma'lumotlar yuklanmoqda...</p>}
+                {loading && <p style={{ fontSize: 13, color: '#5B6070' }}>Ma'lumotlar yuklanmoqda...</p>}
 
                 {/* Level Tabs */}
                 <div style={{
                     display: 'flex',
                     gap: 24,
-                    borderBottom: '1px solid #E4E4E7',
+                    borderBottom: '1px solid #E3E5EA',
                     marginBottom: 14,
                     overflowX: 'auto'
                 }}>
@@ -529,8 +529,8 @@ export default function People() {
                                 fontFamily: 'inherit',
                                 fontSize: 13,
                                 fontWeight: activeLevel === level ? 500 : 400,
-                                color: activeLevel === level ? '#18181B' : '#71717A',
-                                borderBottom: activeLevel === level ? '2px solid #18181B' : '2px solid transparent',
+                                color: activeLevel === level ? '#12131A' : '#5B6070',
+                                borderBottom: activeLevel === level ? '2px solid #12131A' : '2px solid transparent',
                                 transition: 'color 0.15s',
                                 whiteSpace: 'nowrap'
                             }}
@@ -546,7 +546,7 @@ export default function People() {
                         <div
                             key={group.id}
                             style={{
-                                border: '1px solid #E4E4E7',
+                                border: '1px solid #E3E5EA',
                                 borderRadius: 12,
                                 padding: 14,
                                 backgroundColor: '#fff',
@@ -557,9 +557,9 @@ export default function People() {
                             }}
                         >
                             <div>
-                                <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4, color: '#18181B' }}>{group.name}</div>
-                                <div style={{ fontSize: 12, color: '#71717A', marginBottom: 2 }}>{group.days || "Kunlar belgilanmagan"}</div>
-                                <div style={{ fontSize: 12, color: '#71717A' }}>
+                                <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4, color: '#12131A' }}>{group.name}</div>
+                                <div style={{ fontSize: 12, color: '#5B6070', marginBottom: 2 }}>{group.days || "Kunlar belgilanmagan"}</div>
+                                <div style={{ fontSize: 12, color: '#6B7080' }}>
                                     {students.filter(
                                         student =>
                                             String(student.groupId ?? student.group_id) === String(group.id)
@@ -568,8 +568,8 @@ export default function People() {
                                 </div>
                             </div>
                             <div style={{ display: 'flex', gap: 6, marginTop: 10, justifyContent: 'flex-end' }}>
-                                <button className="btn" disabled={busy} onClick={() => editG(group)} style={{ padding: '3px 8px', fontSize: 13, background: '#F4F4F5', border: 'none', borderRadius: 8, cursor: 'pointer' }}>✏️</button>
-                                <button className="btn" disabled={busy} onClick={() => del('groups', group)} style={{ padding: '3px 8px', fontSize: 13, background: '#F4F4F5', border: 'none', borderRadius: 8, cursor: 'pointer' }}>🗑️</button>
+                                <button className="btn" disabled={busy} onClick={() => editG(group)} style={{ padding: '3px 8px', fontSize: 13, background: '#F4F5F7', border: 'none', borderRadius: 8, cursor: 'pointer' }}>✏️</button>
+                                <button className="btn" disabled={busy} onClick={() => del('groups', group)} style={{ padding: '3px 8px', fontSize: 13, background: '#F4F5F7', border: 'none', borderRadius: 8, cursor: 'pointer' }}>🗑️</button>
                             </div>
                         </div>
                     ))}
@@ -589,7 +589,7 @@ export default function People() {
                             }, 100);
                         }}
                         style={{
-                            border: '1.5px dashed #D4D4D8',
+                            border: '1.5px dashed #D9DCE3',
                             borderRadius: 12,
                             padding: 14,
                             display: 'flex',
@@ -597,17 +597,17 @@ export default function People() {
                             alignItems: 'center',
                             justifyContent: 'center',
                             cursor: 'pointer',
-                            color: '#71717A',
+                            color: '#6B7080',
                             minHeight: 87,
                             transition: 'border-color 0.15s, color 0.15s',
                         }}
                         onMouseEnter={e => {
-                            e.currentTarget.style.borderColor = '#71717A';
-                            e.currentTarget.style.color = '#52525B';
+                            e.currentTarget.style.borderColor = '#6B7080';
+                            e.currentTarget.style.color = '#4A4E5C';
                         }}
                         onMouseLeave={e => {
-                            e.currentTarget.style.borderColor = '#D4D4D8';
-                            e.currentTarget.style.color = '#71717A';
+                            e.currentTarget.style.borderColor = '#D9DCE3';
+                            e.currentTarget.style.color = '#6B7080';
                         }}
                     >
                         <div style={{ fontSize: 20, marginBottom: 6, lineHeight: 1 }}>+</div>
@@ -636,8 +636,8 @@ export default function People() {
                 {/* --- REST OF THE SECTIONS (STUDENTS, HOMEWORK) --- */}
 
                 <div style={{ marginTop: 40 }}>
-                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, color: '#18181B' }}>O'quvchilar ({students.length})</h2>
-                    <div style={{ backgroundColor: '#fff', border: '1px solid #E4E4E7', borderRadius: 12, padding: 16, marginBottom: 16 }}>
+                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, color: '#12131A' }}>O'quvchilar ({students.length})</h2>
+                    <div style={{ backgroundColor: '#fff', border: '1px solid #E3E5EA', borderRadius: 12, padding: 16, marginBottom: 16 }}>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
                             <In v={s.name} f={value => setS(prev => ({ ...prev, name: value }))} p="Ism Familya" />
                             <In v={s.phone} f={value => setS(prev => ({ ...prev, phone: value }))} p="Telefon" />
@@ -657,7 +657,7 @@ export default function People() {
                             <In v={s.username} f={value => setS(prev => ({ ...prev, username: value }))} p="Login" />
                             <In v={s.password} f={value => setS(prev => ({ ...prev, password: value }))} p="Parol" t="password" />
                         </div>
-                        <button className="btn btn-p" onClick={addS} disabled={busy} style={{ padding: '9px 18px', backgroundColor: '#4F46E5', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontFamily: 'inherit', fontSize: 13, fontWeight: 500 }}>
+                        <button className="btn btn-p" onClick={addS} disabled={busy} style={{ padding: '9px 18px', backgroundColor: '#5B4BFF', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontFamily: 'inherit', fontSize: 13, fontWeight: 500 }}>
                             {busy ? 'Kutilmoqda...' : "➕ O'quvchi qo'shish"}
                         </button>
                     </div>
@@ -666,17 +666,17 @@ export default function People() {
                         {students.map(student => {
                             const group = groups.find(item => String(item.id) === String(student.groupId ?? student.group_id));
                             return (
-                                <div key={student.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff', border: '1px solid #E4E4E7', borderRadius: 12, padding: '12px 16px' }}>
+                                <div key={student.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff', border: '1px solid #E3E5EA', borderRadius: 12, padding: '12px 16px' }}>
                                     <div>
                                         <div style={{ fontWeight: 500, fontSize: 14 }}>{student.name}</div>
-                                        <div style={{ fontSize: 12, color: '#71717A' }}>
+                                        <div style={{ fontSize: 12, color: '#5B6070' }}>
                                             {student.level} · {group?.name || 'Guruh belgilanmagan'} · {student.phone}
                                         </div>
-                                        <div style={{ fontSize: 12, color: '#71717A', marginTop: 2 }}>Login: {student.username}</div>
+                                        <div style={{ fontSize: 12, color: '#6B7080', marginTop: 2 }}>Login: {student.username}</div>
                                     </div>
                                     <div style={{ display: 'flex', gap: 6 }}>
-                                        <button className="btn" disabled={busy} onClick={() => editS(student)} style={{ padding: '5px 9px', background: '#F4F4F5', border: 'none', borderRadius: 8, cursor: 'pointer' }}>✏️</button>
-                                        <button className="btn" disabled={busy} onClick={() => del('students', student)} style={{ padding: '5px 9px', background: '#F4F4F5', border: 'none', borderRadius: 8, cursor: 'pointer' }}>🗑️</button>
+                                        <button className="btn" disabled={busy} onClick={() => editS(student)} style={{ padding: '5px 9px', background: '#F4F5F7', border: 'none', borderRadius: 8, cursor: 'pointer' }}>✏️</button>
+                                        <button className="btn" disabled={busy} onClick={() => del('students', student)} style={{ padding: '5px 9px', background: '#F4F5F7', border: 'none', borderRadius: 8, cursor: 'pointer' }}>🗑️</button>
                                     </div>
                                 </div>
                             );
@@ -685,8 +685,8 @@ export default function People() {
                 </div>
 
                 <div style={{ marginTop: 40, marginBottom: 40 }}>
-                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, color: '#18181B' }}>Vazifa berish — guruh bo'yicha</h2>
-                    <div style={{ backgroundColor: '#fff', border: '1px solid #E4E4E7', borderRadius: 12, padding: 16 }}>
+                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, color: '#12131A' }}>Vazifa berish — guruh bo'yicha</h2>
+                    <div style={{ backgroundColor: '#fff', border: '1px solid #E3E5EA', borderRadius: 12, padding: 16 }}>
                         <div style={{ marginBottom: 12 }}>
                             <In v={h.title} f={value => setH(prev => ({ ...prev, title: value }))} p="Vazifa nomi" />
                         </div>
@@ -705,7 +705,7 @@ export default function People() {
                             })}
                         </select>
                         {h.groupId && (
-                            <p style={{ margin: '4px 0 12px', fontSize: 13, color: '#71717A' }}>
+                            <p style={{ margin: '4px 0 12px', fontSize: 13, color: '#5B6070' }}>
                                 {(() => {
                                     const selected = groups.find(group => String(group.id) === String(h.groupId));
                                     const count = students.filter(student => String(student.groupId ?? student.group_id) === String(h.groupId)).length;
@@ -713,7 +713,7 @@ export default function People() {
                                 })()}
                             </p>
                         )}
-                        <button className="btn btn-p" onClick={addH} disabled={busy || loading || groups.length === 0} style={{ padding: '9px 18px', backgroundColor: '#4F46E5', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontFamily: 'inherit', fontSize: 13, fontWeight: 500 }}>
+                        <button className="btn btn-p" onClick={addH} disabled={busy || loading || groups.length === 0} style={{ padding: '9px 18px', backgroundColor: '#5B4BFF', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontFamily: 'inherit', fontSize: 13, fontWeight: 500 }}>
                             {busy ? 'Kutilmoqda...' : "📚 Tanlangan guruhga vazifa berish"}
                         </button>
                         {groups.length === 0 && !loading && <p style={{ marginTop: 8, fontSize: 13, color: '#DC2626' }}>Avval kamida bitta guruh yarating.</p>}
@@ -721,19 +721,19 @@ export default function People() {
                 </div>
 
                 <div>
-                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, color: '#18181B' }}>Berilgan vazifalar ({hws.length})</h2>
+                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, color: '#12131A' }}>Berilgan vazifalar ({hws.length})</h2>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                         {hws.map(homework => {
                             const group = groups.find(item => String(item.id) === String(homework.groupId ?? homework.group_id));
                             return (
-                                <div key={homework.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff', border: '1px solid #E4E4E7', borderRadius: 12, padding: '12px 16px' }}>
+                                <div key={homework.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff', border: '1px solid #E3E5EA', borderRadius: 12, padding: '12px 16px' }}>
                                     <div>
                                         <div style={{ fontWeight: 500, fontSize: 14 }}>{homework.title}</div>
-                                        <div style={{ fontSize: 12, color: '#71717A' }}>
+                                        <div style={{ fontSize: 12, color: '#5B6070' }}>
                                             {homework.groupName || group?.name || 'Guruh belgilanmagan'} · {homework.level}
                                         </div>
                                     </div>
-                                    <button className="btn" disabled={busy} onClick={() => del('homeworks', homework)} style={{ padding: '5px 9px', background: '#F4F4F5', border: 'none', borderRadius: 8, cursor: 'pointer' }}>🗑️</button>
+                                    <button className="btn" disabled={busy} onClick={() => del('homeworks', homework)} style={{ padding: '5px 9px', background: '#F4F5F7', border: 'none', borderRadius: 8, cursor: 'pointer' }}>🗑️</button>
                                 </div>
                             );
                         })}

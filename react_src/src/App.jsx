@@ -107,48 +107,50 @@ const Icon = ({ name }) => (
 );
 
 const SIDEBAR_CSS = `
-.sb-root{width:240px;flex-shrink:0;position:sticky;top:0;height:100vh;box-sizing:border-box;display:flex;flex-direction:column;background:#FFFFFF;border-right:1px solid #E4E4E7;padding:18px 12px}
-.sb-head{display:flex;align-items:center;gap:10px;padding:0 8px 18px}
-.sb-logo{width:30px;height:30px;border-radius:8px;background:#18181B;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex-shrink:0}
-.sb-word{font-weight:600;font-size:17px;color:#18181B}
-.sb-ver{margin-left:auto;font-size:11px;font-weight:600;color:#71717A;border:1px solid #E4E4E7;padding:1px 7px;border-radius:99px}
-.sb-nav{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:1px;margin:0 -4px;padding:0 4px}
-.sb-link{display:flex;align-items:center;gap:10px;min-height:38px;padding:0 10px;border-radius:8px;font-size:14px;font-weight:500;color:#52525B;text-decoration:none;transition:background .12s,color .12s;cursor:pointer;white-space:nowrap}
-.sb-ic{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:transparent !important;color:inherit !important}
-.sb-link:hover{background:#F4F4F5;color:#18181B}
-.sb-link.active,.sb-link.active:hover{background:#EEF2FF;color:#4338CA;font-weight:600}
-.sb-badge{margin-left:auto;min-width:20px;height:18px;padding:0 6px;border-radius:999px;background:#4F46E5;color:#fff;font-size:11px;font-weight:600;display:inline-flex;align-items:center;justify-content:center}
-.sb-user{margin-top:12px;padding:12px 8px 0;border-top:1px solid #E4E4E7;display:flex;flex-direction:column;gap:10px}
+.sb-root{width:256px;flex-shrink:0;position:sticky;top:0;height:100vh;box-sizing:border-box;display:flex;flex-direction:column;background:rgba(255,255,255,.86);backdrop-filter:blur(14px);border-right:1px solid #E3E5EA;padding:20px 14px}
+.sb-head{display:flex;align-items:center;gap:10px;padding:0 8px 20px}
+.sb-logo{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#8B7CFF,#5B4BFF);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fredoka','Onest',sans-serif;font-weight:700;font-size:22px;flex-shrink:0;box-shadow:0 4px 0 #3F31D9;transform:rotate(-6deg)}
+.sb-word{font-family:'Fredoka','Onest',sans-serif;font-weight:700;font-size:23px;color:#12131A}
+.sb-ver{margin-left:auto;font-size:11px;font-weight:800;background:#D4F74A;color:#12131A;padding:3px 8px;border-radius:99px;transform:rotate(4deg)}
+.sb-nav{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:3px;margin:0 -4px;padding:0 4px}
+.sb-link{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 10px 0 6px;border-radius:14px;font-size:14px;font-weight:600;color:#3D4150;text-decoration:none;transition:background .15s,color .15s,transform .15s;cursor:pointer;white-space:nowrap}
+.sb-ic{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .2s cubic-bezier(.3,1.4,.6,1)}
+.sb-link:hover{background:#F4F5F7;color:#12131A}
+.sb-link:hover .sb-ic{transform:rotate(-8deg) scale(1.08)}
+.sb-link.active,.sb-link.active:hover{background:linear-gradient(135deg,#8B7CFF,#5B4BFF);color:#fff;box-shadow:0 6px 16px rgba(91,75,255,.28)}
+.sb-link.active .sb-ic{background:rgba(255,255,255,.2) !important;color:#fff !important}
+.sb-badge{margin-left:auto;min-width:22px;height:20px;padding:0 7px;border-radius:999px;background:#FF7A45;color:#fff;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}
+.sb-user{margin-top:12px;padding:12px;border-radius:16px;background:linear-gradient(135deg,#F4F2FF,#EEF9D2);display:flex;flex-direction:column;gap:10px}
 .sb-user-row{display:flex;align-items:center;gap:10px}
-.sb-ava{width:32px;height:32px;border-radius:99px;background:#F4F4F5;color:#3F3F46;font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sb-uname{font-size:13px;font-weight:600;color:#18181B;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sb-urole{font-size:12px;color:#71717A}
-.sb-out{margin-left:auto;width:32px;height:32px;border-radius:8px;border:0;background:transparent;color:#71717A;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.sb-out:hover{background:#F4F4F5;color:#18181B}
+.sb-ava{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#FFC38F,#FF7A45);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-uname{font-size:13px;font-weight:700;color:#12131A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-urole{font-size:12px;color:#5B6070}
+.sb-out{margin-left:auto;width:36px;height:36px;border-radius:10px;border:0;background:#fff;color:#3D4150;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.sb-out:hover{background:#FFE4D6;color:#C2410C}
 .app-main{flex:1;min-width:0}
 body{padding-bottom:0 !important}
 @media (max-width: 860px){
   .app-root{flex-direction:column}
-  .sb-root{position:fixed;bottom:0;top:auto;left:0;right:0;width:auto;height:auto;flex-direction:row;padding:4px 4px calc(4px + env(safe-area-inset-bottom));z-index:50;border-right:0;border-top:1px solid #E4E4E7}
+  .sb-root{position:fixed;bottom:0;top:auto;left:0;right:0;width:auto;height:auto;flex-direction:row;padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:50;border-right:0;border-top:1px solid #E3E5EA;background:rgba(255,255,255,.95)}
   .sb-head,.sb-user{display:none}
-  .sb-nav{flex-direction:row;overflow-x:auto;gap:2px;margin:0;padding:0;scrollbar-width:none}
+  .sb-nav{flex-direction:row;overflow-x:auto;gap:4px;margin:0;padding:0;scrollbar-width:none}
   .sb-nav::-webkit-scrollbar{display:none}
-  .sb-link{flex-direction:column;gap:2px;min-width:66px;min-height:50px;padding:4px 6px;font-size:11px;justify-content:center;position:relative}
-  .sb-link.active,.sb-link.active:hover{background:transparent}
-  .sb-badge{position:absolute;margin:0;top:2px;right:10px}
-  .app-main{padding-bottom:76px}
+  .sb-link{flex-direction:column;gap:2px;min-width:70px;min-height:56px;padding:4px 6px;font-size:11px;justify-content:center;position:relative}
+  .sb-ic{width:28px;height:28px}
+  .sb-badge{position:absolute;margin:0;top:2px;right:8px}
+  .app-main{padding-bottom:84px}
   .sb-mlang{display:flex !important}
 }
 `;
 
 const TILE = {
-    _: ['#F4F4F5', '#3F3F46'],
-    '/overview': ['#EEF2FF', '#4F46E5'], '/review': ['#E7F6EC', '#15803D'], '/signups': ['#FFE4D6', '#C2410C'],
+    _: ['#EEF0F3', '#3D4150'],
+    '/overview': ['#ECEAFF', '#5B4BFF'], '/review': ['#E7F6EC', '#15803D'], '/signups': ['#FFE4D6', '#C2410C'],
     '/people': ['#E0F2FE', '#0369A1'], '/payment': ['#ECFCCB', '#4D7C0F'], '/reports': ['#FCE7F3', '#BE185D'],
-    '/hwcheck': ['#FEF3C7', '#B45309'], '/attend': ['#E0F2FE', '#0369A1'], '/suggest': ['#EEF2FF', '#4F46E5'],
+    '/hwcheck': ['#FEF3C7', '#B45309'], '/attend': ['#E0F2FE', '#0369A1'], '/suggest': ['#ECEAFF', '#5B4BFF'],
     '/send': ['#FFE4D6', '#C2410C'], '/aitask': ['#F3E8FF', '#7E22CE'], '/parent': ['#FCE7F3', '#BE185D'],
-    '/settings': ['#F4F4F5', '#3F3F46'], '/admin': ['#EEF2FF', '#4F46E5'],
-    '/tasks': ['#EEF2FF', '#4F46E5'], '/results': ['#ECFCCB', '#4D7C0F'], '/archive': ['#FEF3C7', '#B45309'],
+    '/settings': ['#EEF0F3', '#3D4150'], '/admin': ['#ECEAFF', '#5B4BFF'],
+    '/tasks': ['#ECEAFF', '#5B4BFF'], '/results': ['#ECFCCB', '#4D7C0F'], '/archive': ['#FEF3C7', '#B45309'],
     '/pay': ['#E0F2FE', '#0369A1'], '/certs': ['#FCE7F3', '#BE185D'], '/game': ['#FEF3C7', '#B45309'], '/cards': ['#F3E8FF', '#7E22CE'], '/finance': ['#FFE4D6', '#C2410C'],
 };
 
@@ -156,9 +158,9 @@ const TILE = {
 function PageLoading() {
     return (
         <div aria-busy="true" aria-label="Yuklanmoqda..." style={{ padding: '28px 32px', display: 'grid', gap: 12, maxWidth: 1240, margin: '0 auto' }}>
-            <div style={{ height: 28, width: 220, background: '#F4F4F5', borderRadius: 8 }} />
-            <div style={{ height: 120, background: '#F4F4F5', borderRadius: 12 }} />
-            <div style={{ height: 240, background: '#F4F4F5', borderRadius: 12 }} />
+            <div style={{ height: 28, width: 220, background: '#EEF0F3', borderRadius: 10 }} />
+            <div style={{ height: 130, background: '#EEF0F3', borderRadius: 20 }} />
+            <div style={{ height: 240, background: '#EEF0F3', borderRadius: 20 }} />
         </div>
     );
 }
@@ -192,7 +194,7 @@ function Shell({ tabs, notifTo, children }) {
                     <div className="sb-head">
                         <div className="sb-logo" aria-hidden="true">m</div>
                         <span className="sb-word">mystra</span>
-                        <span className="sb-ver">3.0</span>
+                        <span className="sb-ver">2.0</span>
                     </div>
 
                     <nav className="sb-nav">
@@ -216,7 +218,7 @@ function Shell({ tabs, notifTo, children }) {
                                 <Icon name="logout" />
                             </button>
                         </div>
-                        <LangSwitch style={{ alignSelf: 'stretch', justifyContent: 'space-between' }} />
+                        <LangSwitch style={{ alignSelf: 'stretch', justifyContent: 'space-between', background: '#fff' }} />
                         <InstallApp />
                     </div>
                 </aside>
@@ -225,7 +227,7 @@ function Shell({ tabs, notifTo, children }) {
                     <div className="sb-mlang" style={{ display: 'none', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '10px 16px 0' }}>
                         <LangSwitch />
                         <div style={{ flex: 1, maxWidth: 190 }}><InstallApp compact /></div>
-                        <button type="button" onClick={logout} aria-label="Chiqish" title="Chiqish" style={{ border: 0, background: '#fff', borderRadius: 10, height: 36, padding: '0 12px', font: 'inherit', fontWeight: 600, fontSize: 13, color: '#3F3F46', cursor: 'pointer' }}>Chiqish</button>
+                        <button type="button" onClick={logout} aria-label="Chiqish" title="Chiqish" style={{ border: 0, background: '#fff', borderRadius: 10, height: 36, padding: '0 12px', font: 'inherit', fontWeight: 600, fontSize: 13, color: '#3D4150', cursor: 'pointer' }}>Chiqish</button>
                     </div>
                     <NotifBar to={notifTo} />
                     <Suspense fallback={<PageLoading />}>{children}</Suspense>

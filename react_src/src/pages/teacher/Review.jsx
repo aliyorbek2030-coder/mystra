@@ -1,56 +1,57 @@
 import { useState, useEffect, useCallback } from 'react';
 import { apiRequest } from '../../lib/auth';
 import { adjScore } from '../../lib/helpers';
+import confetti from '../../lib/confetti';
 
 // --- DIZAYN (MYSTRA 2.0) ---
 const RV_CSS = `
-.rv{padding:28px 32px 48px;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:20px;font-family:'Onest',system-ui,sans-serif;color:#18181B}
-.rv-eyebrow{font-size:12px;font-weight:600;color:#71717A;text-transform:uppercase;letter-spacing:.06em}
-.rv-title{margin:2px 0 2px;font-size:24px;font-weight:600}
-.rv-sub{margin:0;color:#71717A;font-size:14px}
+.rv{padding:28px 32px 48px;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:20px;font-family:'Onest',system-ui,sans-serif;color:#12131A}
+.rv-eyebrow{font-size:13px;font-weight:700;color:#5B4BFF;text-transform:uppercase;letter-spacing:.08em}
+.rv-title{margin:4px 0 2px;font-family:'Fredoka','Onest',sans-serif;font-size:34px;font-weight:600}
+.rv-sub{margin:0;color:#5B6070;font-size:14px}
 .rv-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-.rv-stat{background:#fff;border:1px solid #E4E4E7;border-radius:12px;transition:transform .18s cubic-bezier(.3,1.4,.6,1);padding:16px 18px;display:flex;align-items:center;gap:14px}
-.rv-stat-ic{width:36px;height:36px;border-radius:10px;background:#F4F4F5 !important;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.rv-stat-v{font-size:22px;font-weight:600;letter-spacing:-.02em;line-height:1}
-.rv-stat-l{font-size:13px;color:#71717A;margin-top:4px}
-.rv-tabs{display:flex;gap:6px;background:#fff;border:1px solid #E4E4E7;border-radius:14px;padding:5px;align-self:flex-start;flex-wrap:wrap}
-.rv-tab{border:0;background:transparent;font:inherit;font-size:14px;font-weight:600;color:#71717A;height:40px;padding:0 16px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:8px}
-.rv-tab.on{background:#18181B;color:#fff}
-.rv-tab .n{font-size:12px;font-weight:700;min-width:22px;height:20px;padding:0 6px;border-radius:99px;background:#F4F4F5;color:#18181B;display:inline-flex;align-items:center;justify-content:center}
-.rv-tab.on .n{background:#3F3F46;color:#fff}
-.rv-card{background:#fff;border:1px solid #E4E4E7;border-radius:12px;overflow:hidden}
-.rv-card-h{display:flex;align-items:center;gap:14px;padding:18px 22px;border-bottom:1px solid #F4F4F5;flex-wrap:wrap}
+.rv-stat{background:#fff;border:1px solid #E3E5EA;border-radius:20px;transition:transform .18s cubic-bezier(.3,1.4,.6,1);padding:16px 18px;display:flex;align-items:center;gap:14px}
+.rv-stat-ic{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rv-stat-v{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.rv-stat-l{font-size:13px;color:#5B6070;margin-top:4px}
+.rv-tabs{display:flex;gap:6px;background:#fff;border:1px solid #E3E5EA;border-radius:14px;padding:5px;align-self:flex-start;flex-wrap:wrap}
+.rv-tab{border:0;background:transparent;font:inherit;font-size:14px;font-weight:600;color:#5B6070;height:40px;padding:0 16px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:8px}
+.rv-tab.on{background:linear-gradient(135deg,#8B7CFF,#5B4BFF);color:#fff;box-shadow:0 4px 12px rgba(91,75,255,.3)}
+.rv-tab .n{font-size:12px;font-weight:700;min-width:22px;height:20px;padding:0 6px;border-radius:99px;background:#EEF0F3;color:#12131A;display:inline-flex;align-items:center;justify-content:center}
+.rv-tab.on .n{background:#D4F74A}
+.rv-card{background:#fff;border:1px solid #E3E5EA;border-radius:24px;overflow:hidden;animation:pop-in .45s cubic-bezier(.3,1.4,.6,1) both}
+.rv-card-h{display:flex;align-items:center;gap:14px;padding:18px 22px;border-bottom:1px solid #EEF0F3;flex-wrap:wrap}
 .rv-ava{width:44px;height:44px;border-radius:99px;color:#fff;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .rv-score{width:64px;height:64px;border-radius:99px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .rv-score-in{width:50px;height:50px;border-radius:99px;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
-.rv-item{padding:18px 22px;border-bottom:1px solid #F4F4F5;display:flex;flex-direction:column;gap:12px}
+.rv-item{padding:18px 22px;border-bottom:1px solid #EEF0F3;display:flex;flex-direction:column;gap:12px}
 .rv-item-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.rv-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 10px;border-radius:99px;background:#EEF2FF;color:#4338CA}
-.rv-step{display:inline-flex;align-items:center;border:1px solid #E4E4E7;border-radius:12px;overflow:hidden;background:#fff}
-.rv-step button{width:36px;height:38px;border:0;background:#FAFAFA;font:inherit;font-size:18px;cursor:pointer;color:#18181B}
-.rv-step button:hover{background:#F4F4F5}
-.rv-step input{width:52px;height:38px;border:0;text-align:center;font:inherit;font-weight:700;font-size:15px;color:#18181B;outline:none;-moz-appearance:textfield}
+.rv-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 10px;border-radius:99px;background:#ECEAFF;color:#3F31D9}
+.rv-step{display:inline-flex;align-items:center;border:1px solid #E3E5EA;border-radius:12px;overflow:hidden;background:#fff}
+.rv-step button{width:36px;height:38px;border:0;background:#F8F9FB;font:inherit;font-size:18px;cursor:pointer;color:#12131A}
+.rv-step button:hover{background:#EEF0F3}
+.rv-step input{width:52px;height:38px;border:0;text-align:center;font:inherit;font-weight:700;font-size:15px;color:#12131A;outline:none;-moz-appearance:textfield}
 .rv-step input::-webkit-outer-spin-button,.rv-step input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.rv-ai{background:#F4F4F5;color:#3F3F46;border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.55;display:flex;gap:10px}
-.rv-ai b{color:#18181B;font-weight:600}
-.rv-foot{display:flex;align-items:center;gap:10px;padding:16px 22px;background:#FAFAFA;flex-wrap:wrap}
+.rv-ai{background:#12131A;color:#E6E7EE;border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.55;display:flex;gap:10px}
+.rv-ai b{color:#D4F74A;font-weight:700}
+.rv-foot{display:flex;align-items:center;gap:10px;padding:16px 22px;background:#F8F9FB;flex-wrap:wrap}
 .rv-btn{height:44px;padding:0 18px;border-radius:12px;font:inherit;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;border:1px solid transparent}
-.rv-btn.p{background:#4F46E5;color:#fff}.rv-btn.p:hover{background:#4338CA}
+.rv-btn.p{background:linear-gradient(135deg,#8B7CFF,#5B4BFF);color:#fff;box-shadow:0 4px 0 #3F31D9}.rv-btn.p:hover{filter:brightness(1.06)}.rv-btn.p:active{transform:translateY(3px);box-shadow:0 1px 0 #3F31D9}
 .rv-btn.w{background:#fff;color:#9A3412;border-color:#FDBA74}.rv-btn.w:hover{background:#FFF7ED}
-.rv-btn.s{background:#fff;color:#18181B;border-color:#E4E4E7}.rv-btn.s:hover{border-color:#C9CCD6}
+.rv-btn.s{background:#fff;color:#12131A;border-color:#E3E5EA}.rv-btn.s:hover{border-color:#C9CCD6}
 .rv-btn:disabled{opacity:.6;cursor:wait}
-.rv-empty{background:#fff;border:1px dashed #D4D4D8;border-radius:12px;padding:44px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
-.rv-empty-ic{width:56px;height:56px;border-radius:14px;background:#F4F4F5 !important;display:flex;align-items:center;justify-content:center}
+.rv-empty{background:#fff;border:1px dashed #D9DCE3;border-radius:22px;padding:44px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.rv-empty-ic{width:80px;height:80px;border-radius:26px;transform:rotate(-6deg);animation:flame 2.4s ease-in-out infinite;display:flex;align-items:center;justify-content:center}
 .rv-empty h3{margin:6px 0 0;font-size:18px;font-weight:700}
-.rv-empty p{margin:0;color:#71717A;font-size:14px;max-width:420px;line-height:1.5}
+.rv-empty p{margin:0;color:#5B6070;font-size:14px;max-width:420px;line-height:1.5}
 .rv-subs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.rv-subc{background:#fff;border:1px solid #E4E4E7;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.rv-subc{background:#fff;border:1px solid #E3E5EA;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px}
 .rv-pill{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px}
 .rv-banner{border-radius:14px;padding:12px 16px;font-size:14px;display:flex;align-items:center;gap:10px}
 @media (max-width:860px){.rv{padding:20px 16px 32px}.rv-title{font-size:24px}.rv-card-h,.rv-item,.rv-foot{padding-left:16px;padding-right:16px}}
 `;
 
-const COLORS = ['#4F46E5', '#E5582E', '#0E7490', '#15803D', '#9333EA', '#B45309'];
+const COLORS = ['#5B4BFF', '#E5582E', '#0E7490', '#15803D', '#9333EA', '#B45309'];
 const colorFor = id => COLORS[[...String(id || '')].reduce((a, c) => a + c.charCodeAt(0), 0) % COLORS.length];
 const initialsOf = name => (name || '?').split(' ').map(s => s[0]).join('').slice(0, 2).toUpperCase();
 
@@ -207,7 +208,7 @@ const AuthenticatedFile = ({ path, name, type }) => {
 
     if (!src) {
         return (
-            <span style={{ color: '#71717A', fontSize: 13 }}>
+            <span style={{ color: '#5B6070', fontSize: 13 }}>
                 Fayl yuklanmoqda...
             </span>
         );
@@ -246,7 +247,7 @@ const AuthenticatedFile = ({ path, name, type }) => {
                         maxHeight: 400,
                         objectFit: 'contain',
                         borderRadius: 12,
-                        border: '1px solid #E4E4E7',
+                        border: '1px solid #E3E5EA',
                     }}
                 />
             </a>
@@ -259,7 +260,7 @@ const AuthenticatedFile = ({ path, name, type }) => {
             target="_blank"
             rel="noreferrer"
             download={name || undefined}
-            style={{ color: '#18181B', fontSize: 13 }}
+            style={{ color: '#12131A', fontSize: 13 }}
         >
             Ochish / yuklab olish
         </a>
@@ -269,12 +270,12 @@ const AuthenticatedFile = ({ path, name, type }) => {
 const ERR_STYLE = {
     grammar: ['#FFE4D6', '#C2410C', 'Grammatika'],
     tense: ['#FFE4D6', '#C2410C', 'Zamon'],
-    article: ['#E4E1FF', '#4F46E5', 'Artikl'],
+    article: ['#E4E1FF', '#5B4BFF', 'Artikl'],
     preposition: ['#E0F2FE', '#0369A1', 'Predlog'],
     vocabulary: ['#ECFCCB', '#4D7C0F', "Lug'at"],
     spelling: ['#FCE7F3', '#BE185D', 'Imlo'],
     punctuation: ['#FEF3C7', '#B45309', 'Tinish belgisi'],
-    style: ['#F4F4F5', '#3F3F46', 'Uslub'],
+    style: ['#EEF0F3', '#3D4150', 'Uslub'],
 };
 const errStyle = t => ERR_STYLE[t] || ERR_STYLE.grammar;
 
@@ -319,10 +320,10 @@ const AiDetails = ({ ai }) => {
             {Object.keys(crit).length > 0 && (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: 10 }}>
                     {Object.entries(crit).map(([k, v]) => (
-                        <div key={k} style={{ background: '#FAFAFA', border: '1px solid #F4F4F5', borderRadius: 12, padding: '10px 12px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, fontWeight: 600, color: '#52525B' }}><span>{CRIT_LABEL[k] || k}</span><span style={{ color: '#18181B' }}>{v}</span></div>
-                            <div style={{ height: 6, background: '#F4F4F5', borderRadius: 99, marginTop: 6, overflow: 'hidden' }}>
-                                <div style={{ width: `${v}%`, height: '100%', borderRadius: 99, background: v >= 85 ? '#9BC31A' : v >= 65 ? '#4F46E5' : '#FF7A45' }} />
+                        <div key={k} style={{ background: '#F8F9FB', border: '1px solid #EEF0F3', borderRadius: 12, padding: '10px 12px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, fontWeight: 600, color: '#4A4E5C' }}><span>{CRIT_LABEL[k] || k}</span><span style={{ color: '#12131A' }}>{v}</span></div>
+                            <div style={{ height: 6, background: '#EEF0F3', borderRadius: 99, marginTop: 6, overflow: 'hidden' }}>
+                                <div style={{ width: `${v}%`, height: '100%', borderRadius: 99, background: v >= 85 ? '#9BC31A' : v >= 65 ? '#5B4BFF' : '#FF7A45' }} />
                             </div>
                         </div>
                     ))}
@@ -334,13 +335,13 @@ const AiDetails = ({ ai }) => {
                     {errors.map((e, i) => {
                         const [bg, fg, label] = errStyle(e.type);
                         return (
-                            <div key={i} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, padding: '10px 12px', borderRadius: 12, background: '#FAFAFA', border: '1px solid #F4F4F5', fontSize: 14 }}>
+                            <div key={i} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, padding: '10px 12px', borderRadius: 12, background: '#F8F9FB', border: '1px solid #EEF0F3', fontSize: 14 }}>
                                 <span style={{ fontWeight: 800, color: fg, width: 18 }}>{i + 1}</span>
                                 <span style={{ fontSize: 12, fontWeight: 700, padding: '3px 9px', borderRadius: 99, background: bg, color: fg }}>{label}</span>
                                 <span style={{ textDecoration: 'line-through', color: '#9A3412' }}>{e.wrong}</span>
-                                <span aria-hidden="true" style={{ color: '#71717A' }}>→</span>
+                                <span aria-hidden="true" style={{ color: '#6B7080' }}>→</span>
                                 <span style={{ color: '#15803D', fontWeight: 700 }}>{e.right}</span>
-                                {e.why && <span style={{ flex: '1 1 200px', fontSize: 13, color: '#71717A' }}>{e.why}</span>}
+                                {e.why && <span style={{ flex: '1 1 200px', fontSize: 13, color: '#5B6070' }}>{e.why}</span>}
                             </div>
                         );
                     })}
@@ -359,13 +360,13 @@ const Media = ({ s }) => (
                     overflowWrap: 'anywhere',
                     margin: 0,
                     padding: '14px 16px',
-                    background: '#FAFAFA',
-                    border: '1px solid #F4F4F5',
+                    background: '#F8F9FB',
+                    border: '1px solid #EEF0F3',
                     borderRadius: 14,
                     fontSize: 15,
                     lineHeight: 1.7,
                     fontFamily: "Georgia, 'Times New Roman', serif",
-                    color: '#27272A',
+                    color: '#1E2030',
                 }}
             >
                 {highlight(s.text, s.ai?.errors)}
@@ -479,6 +480,7 @@ export default function Review() {
             await action();
 
             setMessage(successText);
+            if (/tasdiqlandi/i.test(successText)) confetti();
 
             await loadData();
         } catch (e) {
@@ -639,9 +641,9 @@ export default function Review() {
 
     const scoreRing = (v) => {
         const n = Math.max(0, Math.min(100, Number(v) || 0));
-        const c = n >= 95 ? '#16A34A' : n >= 70 ? '#4F46E5' : '#D97706';
+        const c = n >= 95 ? '#9BC31A' : n >= 70 ? '#5B4BFF' : '#E5582E';
         return (
-            <div className="rv-score" style={{ background: `conic-gradient(${c} ${n * 3.6}deg, #F4F4F5 0)` }} role="img" aria-label={`Umumiy ${n}%`}>
+            <div className="rv-score" style={{ background: `conic-gradient(${c} ${n * 3.6}deg, #EEF0F3 0)` }} role="img" aria-label={`Umumiy ${n}%`}>
                 <div className="rv-score-in">{n}%</div>
             </div>
         );
@@ -660,7 +662,7 @@ export default function Review() {
             <div className="rv-ava" style={{ background: colorFor(student.id) }}>{initialsOf(student.name)}</div>
             <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 700, fontSize: 16 }}>{student.name || 'O‘quvchi'}</div>
-                <div style={{ fontSize: 13, color: '#71717A' }}>{meta}</div>
+                <div style={{ fontSize: 13, color: '#5B6070' }}>{meta}</div>
             </div>
             {right}
         </div>
@@ -668,7 +670,7 @@ export default function Review() {
 
     const AiNote = ({ ai }) => (ai?.feedback ? (
         <div className="rv-ai">
-            <Svg d={I.spark} size={18} color="#4F46E5" />
+            <Svg d={I.spark} size={18} color="#D4F74A" />
             <div><b>AI izohi.</b> {ai.feedback}</div>
         </div>
     ) : null);
@@ -696,12 +698,12 @@ export default function Review() {
 
             <section className="rv-stats" aria-label="Qisqa ko‘rsatkichlar">
                 {[
-                    [I.check, '#EEF2FF', '#4F46E5', days.length, 'kunlik ish kutmoqda'],
+                    [I.check, '#ECEAFF', '#5B4BFF', days.length, 'kunlik ish kutmoqda'],
                     [I.star, '#FEF3C7', '#B45309', extra.length, 'extra work kutmoqda'],
                     [I.clock, '#FFF1E6', '#C2410C', expiring.length, 'obunasi tugayapti'],
                     [I.spark, '#ECFCCB', '#4D7C0F', [...days.flatMap(d => d.items || []), ...extra].filter(x => x.ai?.score != null).length, 'ishni AI baholadi'],
                 ].map(([ic, bg, col, v, l]) => (
-                    <div className="rv-stat" key={l}>
+                    <div className="rv-stat lift pop-in" key={l}>
                         <div className="rv-stat-ic" style={{ background: bg }}><Svg d={ic} size={22} color={col} /></div>
                         <div><div className="rv-stat-v">{loaded ? v : '…'}</div><div className="rv-stat-l">{l}</div></div>
                     </div>
@@ -755,9 +757,9 @@ export default function Review() {
                                 <div className="rv-foot">
                                     <div style={{ flex: 1, minWidth: 200, display: 'flex', alignItems: 'center', gap: 8, fontSize: 14 }}>
                                         {total >= 95 ? (
-                                            <><span className="rv-pill" style={{ background: '#EEF2FF', color: '#4338CA', display: 'inline-flex', alignItems: 'center', gap: 6 }}><Svg d={I.award} size={14} /> Sertifikat</span> Tasdiqlansa, sertifikat avtomatik beriladi</>
+                                            <><span className="rv-pill" style={{ background: '#D4F74A', color: '#12131A', display: 'inline-flex', alignItems: 'center', gap: 6 }}><Svg d={I.award} size={14} /> Sertifikat</span> Tasdiqlansa, sertifikat avtomatik beriladi</>
                                         ) : (
-                                            <span style={{ color: '#71717A' }}>Sertifikat uchun 95% kerak · hozir <b style={{ color: '#18181B' }}>{total}%</b></span>
+                                            <span style={{ color: '#5B6070' }}>Sertifikat uchun 95% kerak · hozir <b style={{ color: '#12131A' }}>{total}%</b></span>
                                         )}
                                     </div>
                                     <button className="rv-btn w" disabled={isBusy(`return-day-${day.id}`)} onClick={() => returnDay(day)}><Svg d={I.back} size={18} /> Qayta topshirish</button>
@@ -767,7 +769,7 @@ export default function Review() {
                         );
                     })}
                     {loaded && !days.length && !error && (
-                        <Empty icon={I.check} bg="#EEF2FF" color="#4F46E5" title="Hammasi tekshirilgan">
+                        <Empty icon={I.check} bg="#ECEAFF" color="#5B4BFF" title="Hammasi tekshirilgan">
                             O‘quvchilar kunlik vazifalarni yakunlaganda ular shu yerda paydo bo‘ladi. AI ularga darhol dastlabki baho qo‘yadi.
                         </Empty>
                     )}
@@ -787,7 +789,7 @@ export default function Review() {
                                     <AiDetails ai={submission.ai} />
                                 </div>
                                 <div className="rv-foot">
-                                    <span style={{ fontSize: 14, color: '#71717A', flex: 1 }}>Yakuniy baho:</span>
+                                    <span style={{ fontSize: 14, color: '#5B6070', flex: 1 }}>Yakuniy baho:</span>
                                     {Stepper({ id: submission.id, value: getScore(submission) })}
                                     <button className="rv-btn w" disabled={isBusy(`return-extra-${submission.id}`)} onClick={() => returnExtra(submission)}><Svg d={I.back} size={18} /> Qayta</button>
                                     <button className="rv-btn p" disabled={isBusy(`extra-${submission.id}`)} onClick={() => approveExtra(submission)}><Svg d={I.check} size={18} /> {isBusy(`extra-${submission.id}`) ? 'Saqlanmoqda…' : 'Tasdiqlash'}</button>
@@ -820,11 +822,11 @@ export default function Review() {
                                         <div className="rv-ava" style={{ background: colorFor(student.id), width: 38, height: 38, fontSize: 13 }}>{initialsOf(student.name)}</div>
                                         <div style={{ flex: 1, minWidth: 0 }}>
                                             <div style={{ fontWeight: 600, fontSize: 14, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{student.name}</div>
-                                            <div style={{ fontSize: 12, color: '#71717A' }}>{student.level}</div>
+                                            <div style={{ fontSize: 12, color: '#5B6070' }}>{student.level}</div>
                                         </div>
                                         <span className="rv-pill" style={{ background: tone[0], color: tone[1] }}>{tone[2]}</span>
                                     </div>
-                                    <div style={{ height: 6, background: '#F4F4F5', borderRadius: 99, overflow: 'hidden' }}>
+                                    <div style={{ height: 6, background: '#EEF0F3', borderRadius: 99, overflow: 'hidden' }}>
                                         <div style={{ width: `${Math.min(100, daysLeft / 30 * 100)}%`, height: '100%', background: tone[1] }} />
                                     </div>
                                     <button className="rv-btn s" style={{ justifyContent: 'center' }} disabled={isBusy(`sub-${student.id}`)} onClick={() => extendSubscription(student)}>

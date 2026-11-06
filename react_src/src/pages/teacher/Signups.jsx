@@ -9,14 +9,14 @@ const PAGE = {
   boxSizing: 'border-box',
   padding: 0,
   fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-  color: '#18181B',
-  backgroundColor: '#F4F4F5',
+  color: '#12131A',
+  backgroundColor: '#F4F5F7',
   minHeight: '100vh',
 };
 
 const HEADER = {
   backgroundColor: '#fff',
-  borderBottom: '1px solid #E4E4E7',
+  borderBottom: '1px solid #E3E5EA',
   padding: '20px 24px 14px',
   display: 'flex',
   justifyContent: 'space-between',
@@ -27,7 +27,7 @@ const HEADER = {
 
 const CARD = {
   backgroundColor: '#fff',
-  border: '1px solid #E4E4E7',
+  border: '1px solid #E3E5EA',
   borderRadius: 12,
   boxSizing: 'border-box',
 };
@@ -37,25 +37,25 @@ const TH = {
   padding: '10px 16px',
   fontSize: 11,
   fontWeight: 500,
-  color: '#71717A',
+  color: '#5B6070',
   letterSpacing: '0.05em',
   textTransform: 'uppercase',
-  backgroundColor: '#F4F4F5',
+  backgroundColor: '#EEF0F3',
   whiteSpace: 'nowrap',
 };
 
 const TD = {
   padding: '14px 16px',
   fontSize: 13,
-  color: '#18181B',
+  color: '#12131A',
   verticalAlign: 'middle',
 };
 
 const BTN_P = {
   padding: '5px 12px',
-  backgroundColor: '#4F46E5',
+  backgroundColor: '#5B4BFF',
   color: '#fff',
-  border: '1px solid #4F46E5',
+  border: '1px solid #5B4BFF',
   borderRadius: 10,
   cursor: 'pointer',
   fontFamily: 'inherit',
@@ -80,8 +80,8 @@ const BTN_WARN = {
 const BTN_S = {
   padding: '8px 14px',
   backgroundColor: '#fff',
-  color: '#18181B',
-  border: '1px solid #D4D4D8',
+  color: '#12131A',
+  border: '1px solid #D9DCE3',
   borderRadius: 10,
   cursor: 'pointer',
   fontFamily: 'inherit',
@@ -177,10 +177,10 @@ export default function Signups() {
       {/* Header: title on the left, refresh on the right */}
       <div style={HEADER}>
         <div>
-          <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#18181B' }}>
+          <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#12131A' }}>
             Ro'yxatdan o'tish so'rovlari ({signups.length})
           </h1>
-          <p style={{ color: '#71717A', margin: 0, fontSize: 13 }}>
+          <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>
             O'quvchilar guruhga qo'shilishni so'ramoqda
           </p>
         </div>
@@ -235,7 +235,7 @@ export default function Signups() {
         )}
 
         {loading && (
-          <p style={{ color: '#71717A', fontSize: 13, margin: 0 }}>
+          <p style={{ color: '#5B6070', fontSize: 13, margin: 0 }}>
             So'rovlar Django serveridan yuklanmoqda...
           </p>
         )}
@@ -244,7 +244,7 @@ export default function Signups() {
           <div
             style={{
               textAlign: 'center',
-              color: '#71717A',
+              color: '#6B7080',
               fontSize: 14,
               padding: '28px 16px',
             }}
@@ -280,7 +280,7 @@ export default function Signups() {
                   return (
                     <tr
                       key={signup.id}
-                      style={{ borderTop: '1px solid #F4F4F5' }}
+                      style={{ borderTop: '1px solid #EEF0F3' }}
                     >
                       <td style={{ ...TD, fontWeight: 600 }}>
                         {signup.name}

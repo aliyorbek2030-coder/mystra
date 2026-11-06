@@ -8,8 +8,8 @@ export default function LangSwitch({ dark = false, style }) {
       role="group"
       aria-label="Til / Язык / Language"
       style={{
-        display: 'inline-flex', gap: 2, padding: 3, borderRadius: 10,
-        background: dark ? '#27272A' : '#F4F4F5', ...style,
+        display: 'inline-flex', gap: 2, padding: 3, borderRadius: 12,
+        background: dark ? '#1E2030' : '#EEF0F3', ...style,
       }}
     >
       {LANGS.map(l => {
@@ -23,9 +23,9 @@ export default function LangSwitch({ dark = false, style }) {
             onClick={() => !on && setLang(l.id)}
             style={{
               border: 0, cursor: on ? 'default' : 'pointer', font: 'inherit',
-              fontSize: 12, fontWeight: 600, height: 28, minWidth: 36, padding: '0 8px', borderRadius: 8,
-              background: on ? '#FFFFFF' : 'transparent', boxShadow: on ? '0 1px 2px rgba(0,0,0,.08)' : 'none',
-              color: on ? '#18181B' : dark ? '#A1A1AA' : '#71717A',
+              fontSize: 12, fontWeight: 700, height: 30, minWidth: 38, padding: '0 8px', borderRadius: 9,
+              background: on ? 'linear-gradient(135deg,#8B7CFF,#5B4BFF)' : 'transparent',
+              color: on ? '#fff' : dark ? '#C9CBD6' : '#4A4E5C',
             }}
           >
             {l.short}

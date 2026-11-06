@@ -12,20 +12,20 @@ const PAGE = {
     boxSizing: 'border-box',
     padding: 0,
     fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-    color: '#18181B',
-    backgroundColor: '#F4F4F5',
+    color: '#12131A',
+    backgroundColor: '#F4F5F7',
     minHeight: '100vh',
 };
 
 const HEADER = {
     backgroundColor: '#fff',
-    borderBottom: '1px solid #E4E4E7',
+    borderBottom: '1px solid #E3E5EA',
     padding: '24px 24px 14px',
 };
 
 const CARD = {
     backgroundColor: '#fff',
-    border: '1px solid #E4E4E7',
+    border: '1px solid #E3E5EA',
     borderRadius: 12,
     padding: '16px 18px',
     boxSizing: 'border-box',
@@ -35,21 +35,21 @@ const FIELD = {
     boxSizing: 'border-box',
     padding: '9px 12px',
     borderRadius: 10,
-    border: '1px solid #D4D4D8',
+    border: '1px solid #D9DCE3',
     backgroundColor: '#fff',
-    color: '#18181B',
+    color: '#12131A',
     fontFamily: 'inherit',
     fontSize: 13,
     outline: 'none',
     boxShadow: '0 0 0 1000px #fff inset',
-    WebkitTextFillColor: '#18181B',
+    WebkitTextFillColor: '#12131A',
 };
 
 const BTN_PRIMARY = {
     padding: '9px 16px',
-    backgroundColor: '#4F46E5',
+    backgroundColor: '#5B4BFF',
     color: '#fff',
-    border: '1px solid #4F46E5',
+    border: '1px solid #5B4BFF',
     borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
@@ -60,8 +60,8 @@ const BTN_PRIMARY = {
 const BTN_SECONDARY = {
     padding: '9px 16px',
     backgroundColor: '#fff',
-    color: '#18181B',
-    border: '1px solid #D4D4D8',
+    color: '#12131A',
+    border: '1px solid #D9DCE3',
     borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
@@ -71,10 +71,10 @@ const BTN_SECONDARY = {
 
 const PageHeader = () => (
     <div style={HEADER}>
-        <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#18181B' }}>
+        <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#12131A' }}>
             Natijalarni Telegramga yuborish
         </h1>
-        <p style={{ color: '#71717A', margin: 0, fontSize: 13 }}>
+        <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>
             Tekshirilgan vazifalar natijalarini guruh chatiga yuboring
         </p>
     </div>
@@ -267,7 +267,7 @@ export default function SendResults() {
             <div style={PAGE}>
                 <PageHeader />
                 <div style={{ padding: 24 }}>
-                    <p style={{ margin: 0, fontSize: 13, color: '#71717A' }}>
+                    <p style={{ margin: 0, fontSize: 13, color: '#5B6070' }}>
                         Ma'lumotlar yuklanmoqda...
                     </p>
                 </div>
@@ -337,11 +337,11 @@ export default function SendResults() {
                     }}
                 >
                     <div>
-                        <div style={{ fontWeight: 600, fontSize: 15, color: '#18181B' }}>
+                        <div style={{ fontWeight: 600, fontSize: 15, color: '#12131A' }}>
                             {group ? group.name : 'Guruh tanlanmagan'}
                         </div>
                         {group && (
-                            <p style={{ margin: '3px 0 0', fontSize: 12, color: '#71717A' }}>
+                            <p style={{ margin: '3px 0 0', fontSize: 12, color: '#5B6070' }}>
                                 {groupStudents.length} o'quvchi · {month}
                             </p>
                         )}
@@ -372,7 +372,7 @@ export default function SendResults() {
                         font: 'inherit',
                         fontSize: 14,
                         lineHeight: 1.6,
-                        color: '#18181B',
+                        color: '#12131A',
                         margin: '0 0 14px',
                     }}
                 >
