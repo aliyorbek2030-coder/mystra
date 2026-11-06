@@ -6,16 +6,13 @@ import LangSwitch from '../components/LangSwitch';
 
 // --- DIZAYN (MYSTRA 2.0) ---
 const LOGIN_CSS = `
-.lg-root{min-height:100vh;display:flex;background:#F4F5F7;font-family:'Onest',system-ui,sans-serif;color:#12131A}
-.lg-brand{flex:1 1 50%;background:linear-gradient(150deg,#8B7CFF 0%,#5B4BFF 45%,#3A2BD0 100%);color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
-.lg-brand:after{content:'';position:absolute;right:-90px;bottom:-90px;width:340px;height:340px;border-radius:50%;background:#D4F74A;opacity:.9}
-.lg-brand:before{content:'';position:absolute;right:120px;top:90px;width:90px;height:90px;border-radius:26px;background:#FF8A55;transform:rotate(18deg);animation:lgfloat 5s ease-in-out infinite}
-@keyframes lgfloat{50%{transform:rotate(28deg) translateY(-14px)}}
-.lg-form{flex:1 1 50%;display:flex;align-items:center;justify-content:center;padding:32px 20px}
-.lg-feat{display:flex;gap:12px;align-items:center;font-size:16px;line-height:1.5;color:#F1EFFF;font-weight:500}
-.lg-dot{width:30px;height:30px;border-radius:10px;background:#D4F74A;color:#12131A;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;font-size:13px}
-.lg-label{display:block;font-size:13px;font-weight:600;color:#3D4150;margin:0 0 6px}
-.lg-field:focus{border-color:#5B4BFF !important;box-shadow:0 0 0 3px rgba(91,75,255,.15) !important}
+.lg-root{min-height:100vh;display:flex;background:#F7F7F8;font-family:'Onest',system-ui,sans-serif;color:#18181B}
+.lg-brand{flex:1 1 45%;background:#FFFFFF;border-right:1px solid #E4E4E7;padding:48px;display:flex;flex-direction:column;justify-content:space-between}
+.lg-form{flex:1 1 55%;display:flex;align-items:center;justify-content:center;padding:32px 20px}
+.lg-feat{display:flex;gap:12px;align-items:flex-start;font-size:15px;line-height:1.5;color:#52525B}
+.lg-dot{width:22px;height:22px;border-radius:99px;background:#EEF2FF;color:#4F46E5;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:600;font-size:12px;margin-top:1px}
+.lg-label{display:block;font-size:13px;font-weight:500;color:#3F3F46;margin:0 0 6px}
+.lg-field:focus{border-color:#4F46E5 !important;box-shadow:0 0 0 3px rgba(79,70,229,.12) !important}
 @media (max-width:900px){.lg-brand{display:none}}
 `;
 
@@ -26,10 +23,10 @@ const CARD = {
     maxWidth: 420,
     boxSizing: 'border-box',
     backgroundColor: '#fff',
-    border: '1px solid #E3E5EA',
-    borderRadius: 24,
-    padding: '36px 32px',
-    boxShadow: '0 20px 60px rgba(18,19,26,.06)',
+    border: '1px solid #E4E4E7',
+    borderRadius: 14,
+    padding: '32px 28px',
+    boxShadow: 'none',
 };
 
 const LOGO = {
@@ -40,16 +37,15 @@ const LOGO = {
     fontSize: 22,
     fontWeight: 700,
     letterSpacing: '-0.02em',
-    color: '#12131A',
+    color: '#18181B',
 };
 
 const SUB = {
     margin: '0 0 22px',
-    fontSize: 26,
-    fontWeight: 700,
+    fontSize: 22,
+    fontWeight: 600,
     letterSpacing: '-0.02em',
-    color: '#12131A',
-    fontFamily: "'Fredoka','Onest',sans-serif",
+    color: '#18181B',
 };
 
 const FIELD = {
@@ -58,38 +54,37 @@ const FIELD = {
     padding: '0 14px',
     height: 46,
     borderRadius: 12,
-    border: '1px solid #E3E5EA',
-    backgroundColor: '#F8F9FB',
-    color: '#12131A',
+    border: '1px solid #E4E4E7',
+    backgroundColor: '#FAFAFA',
+    color: '#18181B',
     fontFamily: 'inherit',
     fontSize: 15,
     outline: 'none',
-    boxShadow: '0 0 0 1000px #F8F9FB inset',
-    WebkitTextFillColor: '#12131A',
+    boxShadow: '0 0 0 1000px #FAFAFA inset',
+    WebkitTextFillColor: '#18181B',
 };
 
 const BTN_P = {
     width: '100%',
-    height: 48,
+    height: 44,
     padding: '0 16px',
-    background: 'linear-gradient(135deg,#8B7CFF,#5B4BFF)',
+    background: '#4F46E5',
     color: '#fff',
-    border: '1px solid #5B4BFF',
-    boxShadow: '0 4px 0 #3F31D9',
+    border: '1px solid #4F46E5',
     borderRadius: 12,
     cursor: 'pointer',
     fontFamily: 'inherit',
     fontSize: 15,
-    fontWeight: 700,
+    fontWeight: 600,
 };
 
 const BTN_S = {
     width: '100%',
-    height: 48,
+    height: 44,
     padding: '0 16px',
     backgroundColor: '#fff',
-    color: '#12131A',
-    border: '1px solid #D9DCE3',
+    color: '#18181B',
+    border: '1px solid #D4D4D8',
     borderRadius: 12,
     cursor: 'pointer',
     fontFamily: 'inherit',
@@ -99,7 +94,7 @@ const BTN_S = {
 
 const LogoMark = () => (
     <>
-        <span style={{ width: 36, height: 36, borderRadius: 11, background: '#D4F74A', color: '#12131A', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 19 }} aria-hidden="true">m</span>
+        <span style={{ width: 30, height: 30, borderRadius: 8, background: '#18181B', color: '#fff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 16 }} aria-hidden="true">m</span>
         mystra
     </>
 );
@@ -115,24 +110,24 @@ function Layout({ children }) {
         <div className="lg-root">
             <style>{LOGIN_CSS}</style>
             <aside className="lg-brand" aria-hidden="true">
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 22, fontWeight: 700 }}>
-                    <span style={{ width: 40, height: 40, borderRadius: 12, background: '#D4F74A', color: '#12131A', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 21 }}>m</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 17, fontWeight: 600 }}>
+                    <span style={{ width: 30, height: 30, borderRadius: 8, background: '#18181B', color: '#fff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 16 }}>m</span>
                     mystra
-                    <span style={{ fontSize: 12, fontWeight: 700, background: '#2A2C38', color: '#D4F74A', padding: '3px 9px', borderRadius: 99 }}>2.0</span>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: '#71717A', border: '1px solid #E4E4E7', padding: '1px 7px', borderRadius: 99 }}>3.0</span>
                 </div>
                 <div style={{ position: 'relative', zIndex: 1, maxWidth: 520 }}>
-                    <h1 style={{ fontFamily: "'Fredoka','Onest',sans-serif", fontSize: 56, lineHeight: 1.02, fontWeight: 700, margin: '0 0 28px' }}>O'qish o'yinga,<br />o'quv markazi<br />tizimga aylanadi</h1>
+                    <h1 style={{ fontSize: 34, lineHeight: 1.15, fontWeight: 600, letterSpacing: '-0.02em', margin: '0 0 24px', color: '#18181B' }}>O'qish o'yinga,<br />o'quv markazi<br />tizimga aylanadi</h1>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                         {FEATURES.map((t, i) => (
                             <div className="lg-feat" key={t}><span className="lg-dot">{i + 1}</span><span>{t}</span></div>
                         ))}
                     </div>
                 </div>
-                <div style={{ fontSize: 13, color: '#A3A6B4', position: 'relative', zIndex: 1 }}>© MYSTRA · o'quv markazi platformasi</div>
+                <div style={{ fontSize: 13, color: '#A1A1AA' }}>© MYSTRA · o'quv markazi platformasi</div>
             </aside>
             <div className="lg-form" style={{ flexDirection: 'column', gap: 16 }}>
                 <LangSwitch />
-                <div style={CARD} className="pop-in">{children}</div>
+                <div style={CARD}>{children}</div>
             </div>
         </div>
     );
@@ -369,7 +364,7 @@ export default function Login() {
                             textAlign: 'center',
                             fontSize: 13,
                             lineHeight: 1.6,
-                            color: '#4A4E5C',
+                            color: '#52525B',
                             margin: '0 0 20px',
                         }}
                     >

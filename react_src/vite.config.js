@@ -7,4 +7,14 @@ export default defineConfig({
     port: 5173,
     host: true,
   },
+  build: {
+    target: 'es2019',
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        // React kutubxonalari alohida faylda — sahifalar yangilanganda ham brauzer keshida qoladi
+        manualChunks: { react: ['react', 'react-dom', 'react-router-dom'] },
+      },
+    },
+  },
 });

@@ -161,6 +161,14 @@ STORAGES = {
 FRONTEND_DIST = BASE_DIR / "frontend_dist"
 WHITENOISE_ROOT = FRONTEND_DIST if FRONTEND_DIST.exists() else None
 
+
+def _immutable_asset(path, url):
+    """Vite /assets/ fayllari nomida xesh bor — brauzer ularni 1 yil keshlaydi."""
+    return url.startswith("/assets/")
+
+
+WHITENOISE_IMMUTABLE_FILE_TEST = _immutable_asset
+
 # Uploads
 UPLOAD_DIR = Path(
     os.environ.get("UPLOAD_DIR", BASE_DIR / "data" / "uploads")

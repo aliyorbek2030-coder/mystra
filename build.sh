@@ -11,6 +11,8 @@ cd react_src
 npm ci
 npm run build -- --outDir ../mystra-django/frontend_dist --emptyOutDir
 cd ..
+# Sayt fayllarini oldindan siqish (gzip) — tezroq yuklanadi
+python -m whitenoise.compress mystra-django/frontend_dist
 
 echo "==> Django: static, migratsiya, birinchi akkauntlar"
 cd mystra-django

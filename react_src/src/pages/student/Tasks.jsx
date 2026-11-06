@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../../lib/auth';
-import confetti from '../../lib/confetti';
 import { loadStudentTasks, submitTask, finishDay } from '../../api';
 import ProgressBar from '../../components/ProgressBar';
 
@@ -266,7 +265,6 @@ export default function Tasks() {
 
     try {
       await finishDay(me, day);
-      confetti();
 
       await reload();
 
@@ -625,55 +623,42 @@ export default function Tasks() {
         const left = total - completed;
         const firstName = (me?.name || '').split(' ')[0];
         return (
-          <section
-            aria-label="Bugungi holat"
-            style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 16 }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 13, color: '#5B6070' }}>{me?.level ? `${me.level} daraja` : 'Bugun'}</div>
-                <h1 style={{ margin: '2px 0 0', fontFamily: "'Fredoka','Onest',sans-serif", fontSize: 28, fontWeight: 600 }}>Salom, {firstName}</h1>
-              </div>
-              <div
-                title="Ketma-ket kunlar"
-                style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg,#FFC38F,#FF7A45)', color: '#fff', padding: '8px 14px', borderRadius: 99, fontWeight: 800, fontSize: 14, whiteSpace: 'nowrap', boxShadow: '0 4px 0 #E2551F' }}
-              >
-                <span className="flame"><svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" stroke="#fff" strokeWidth="1.5" aria-hidden="true"><path d="M12 2c1 4 5 6 5 11a5 5 0 0 1-10 0c0-3 2-4 2-7 2 1 3 3 3 3s1-3 0-7z" /></svg></span>
-                {stats.streak ?? 0} kun
-              </div>
+          <section aria-label="Bugungi holat" style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 16 }}>
+            <div>
+              <div style={{ fontSize: 13, color: '#71717A' }}>{me?.level ? `${me.level} daraja` : 'Bugun'}</div>
+              <h1 style={{ margin: '2px 0 0', fontSize: 22, fontWeight: 600, letterSpacing: '-0.015em' }}>Salom, {firstName}</h1>
             </div>
 
-            <div className="pop-in" style={{ position: 'relative', overflow: 'hidden', background: 'linear-gradient(135deg,#8B7CFF 0%,#5B4BFF 50%,#C026D3 100%)', color: '#fff', borderRadius: 26, padding: 22, display: 'flex', alignItems: 'center', gap: 18, boxShadow: '0 12px 30px rgba(91,75,255,.30)' }}>
-              <div aria-hidden="true" style={{ position: 'absolute', right: -30, top: -30, width: 120, height: 120, borderRadius: '50%', background: 'rgba(212,247,74,.9)' }} />
+            <div style={{ background: '#fff', border: '1px solid #E4E4E7', borderRadius: 12, padding: 16, display: 'flex', alignItems: 'center', gap: 16 }}>
               <div
                 role="img"
                 aria-label={`Bugun ${completed} / ${total} vazifa bajarildi`}
-                style={{ width: 84, height: 84, borderRadius: 99, background: `conic-gradient(#D4F74A ${ringPct * 3.6}deg, rgba(255,255,255,.22) 0)`, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
+                style={{ width: 64, height: 64, borderRadius: 99, background: `conic-gradient(#4F46E5 ${ringPct * 3.6}deg, #EEF2FF 0)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
               >
-                <div style={{ width: 66, height: 66, borderRadius: 99, background: '#4F3FE8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Fredoka','Onest',sans-serif", fontWeight: 700, fontSize: 22 }}>
+                <div style={{ width: 52, height: 52, borderRadius: 99, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 15 }}>
                   {completed}/{total}
                 </div>
               </div>
-              <div style={{ minWidth: 0, position: 'relative' }}>
-                <div style={{ fontSize: 13, color: '#E4E1FF' }}>Bugungi reja</div>
-                <div style={{ fontFamily: "'Fredoka','Onest',sans-serif", fontSize: 24, fontWeight: 600, marginTop: 2 }}>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 13, color: '#71717A' }}>Bugungi reja</div>
+                <div style={{ fontSize: 17, fontWeight: 600, marginTop: 2 }}>
                   {total === 0 ? 'Bugun vazifa yo‘q' : left === 0 ? 'Hammasi bajarildi!' : `${left} ta vazifa qoldi`}
                 </div>
-                <div style={{ display: 'inline-block', fontSize: 13, color: '#12131A', background: '#D4F74A', marginTop: 8, fontWeight: 800, padding: '4px 10px', borderRadius: 99 }}>
+                <div style={{ fontSize: 13, color: '#4F46E5', marginTop: 4, fontWeight: 500 }}>
                   {stats.xp ?? 0} XP · {stats.lvl ?? 1}-daraja
                 </div>
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 10 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8 }}>
               {[
                 ['Ketma-ketlik', `${stats.streak ?? 0} kun`],
                 ['Davomat', att.t ? `${att.p}/${att.t}` : '—'],
                 ['Obuna', sb.active ? `${sb.days} kun` : 'Tugagan'],
-              ].map(([label, value], i) => (
-                <div key={label} className="lift pop-in" style={{ background: ['#FFE4D6', '#E0F2FE', '#ECFCCB'][i], borderRadius: 18, padding: '12px 14px' }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: ['#9A3412', '#075985', '#3F6212'][i] }}>{label}</div>
-                  <div style={{ fontFamily: "'Fredoka','Onest',sans-serif", fontSize: 20, fontWeight: 700, marginTop: 2, color: '#12131A' }}>{value}</div>
+              ].map(([label, value]) => (
+                <div key={label} style={{ background: '#fff', border: '1px solid #E4E4E7', borderRadius: 12, padding: '10px 12px' }}>
+                  <div style={{ fontSize: 12, color: '#71717A' }}>{label}</div>
+                  <div style={{ fontSize: 16, fontWeight: 600, marginTop: 2 }}>{value}</div>
                 </div>
               ))}
             </div>

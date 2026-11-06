@@ -10,14 +10,14 @@ const PAGE = {
     boxSizing: 'border-box',
     padding: 0,
     fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-    color: '#12131A',
-    backgroundColor: '#F4F5F7',
+    color: '#18181B',
+    backgroundColor: '#F4F4F5',
     minHeight: '100vh',
 };
 
 const HEADER = {
     backgroundColor: '#fff',
-    borderBottom: '1px solid #E3E5EA',
+    borderBottom: '1px solid #E4E4E7',
     padding: '20px 24px 14px',
     display: 'flex',
     justifyContent: 'space-between',
@@ -28,7 +28,7 @@ const HEADER = {
 
 const CARD = {
     backgroundColor: '#fff',
-    border: '1px solid #E3E5EA',
+    border: '1px solid #E4E4E7',
     borderRadius: 12,
     boxSizing: 'border-box',
     padding: '16px 18px',
@@ -38,21 +38,21 @@ const FIELD = {
     boxSizing: 'border-box',
     padding: '9px 12px',
     borderRadius: 10,
-    border: '1px solid #D9DCE3',
+    border: '1px solid #D4D4D8',
     backgroundColor: '#fff',
-    color: '#12131A',
+    color: '#18181B',
     fontFamily: 'inherit',
     fontSize: 13,
     outline: 'none',
     boxShadow: '0 0 0 1000px #fff inset',
-    WebkitTextFillColor: '#12131A',
+    WebkitTextFillColor: '#18181B',
 };
 
 const BTN_P = {
     padding: '8px 14px',
-    backgroundColor: '#5B4BFF',
+    backgroundColor: '#4F46E5',
     color: '#fff',
-    border: '1px solid #5B4BFF',
+    border: '1px solid #4F46E5',
     borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
@@ -63,8 +63,8 @@ const BTN_P = {
 const BTN_S = {
     padding: '8px 14px',
     backgroundColor: '#fff',
-    color: '#12131A',
-    border: '1px solid #D9DCE3',
+    color: '#18181B',
+    border: '1px solid #D4D4D8',
     borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
@@ -76,7 +76,7 @@ const Empty = ({ icon, children }) => (
     <div
         style={{
             textAlign: 'center',
-            color: '#6B7080',
+            color: '#71717A',
             fontSize: 14,
             padding: '28px 16px',
         }}
@@ -235,10 +235,10 @@ export default function Parent() {
             {/* Header: title on the left, month picker on the right */}
             <div style={HEADER}>
                 <div>
-                    <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#12131A' }}>
+                    <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#18181B' }}>
                         Ota-ona hisoboti
                     </h1>
-                    <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>
+                    <p style={{ color: '#71717A', margin: 0, fontSize: 13 }}>
                         Oylik natijani nusxalang yoki Telegram orqali yuboring
                     </p>
                 </div>
@@ -254,7 +254,7 @@ export default function Parent() {
 
             <div style={{ padding: 24 }}>
                 {loading && (
-                    <div style={{ ...CARD, fontSize: 13, color: '#5B6070' }}>
+                    <div style={{ ...CARD, fontSize: 13, color: '#71717A' }}>
                         Ma'lumotlar yuklanmoqda...
                     </div>
                 )}
@@ -336,9 +336,9 @@ export default function Parent() {
                                         font: 'inherit',
                                         fontSize: 13,
                                         lineHeight: 1.6,
-                                        color: '#2A2C38',
-                                        background: '#F4F5F7',
-                                        border: '1px solid #EEF0F3',
+                                        color: '#3F3F46',
+                                        background: '#F4F4F5',
+                                        border: '1px solid #F4F4F5',
                                         borderRadius: 12,
                                         padding: '12px 14px',
                                         margin: '12px 0',
@@ -381,7 +381,7 @@ export default function Parent() {
                                         style={{
                                             marginTop: 10,
                                             fontSize: 12,
-                                            color: '#5B6070',
+                                            color: '#71717A',
                                         }}
                                     >
                                         Bu oy uchun hisobot ma'lumotlari topilmadi.
@@ -393,7 +393,7 @@ export default function Parent() {
                                         style={{
                                             marginTop: 6,
                                             fontSize: 12,
-                                            color: '#5B6070',
+                                            color: '#71717A',
                                         }}
                                     >
                                         To'lov ma'lumotlari topilmadi.

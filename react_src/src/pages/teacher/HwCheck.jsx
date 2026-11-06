@@ -9,14 +9,14 @@ const PAGE = {
     boxSizing: 'border-box',
     padding: 0,
     fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-    color: '#12131A',
-    backgroundColor: '#F4F5F7',
+    color: '#18181B',
+    backgroundColor: '#F4F4F5',
     minHeight: '100vh',
 };
 
 const HEADER = {
     backgroundColor: '#fff',
-    borderBottom: '1px solid #E3E5EA',
+    borderBottom: '1px solid #E4E4E7',
     padding: '20px 24px 14px',
     display: 'flex',
     justifyContent: 'space-between',
@@ -27,7 +27,7 @@ const HEADER = {
 
 const CARD = {
     backgroundColor: '#fff',
-    border: '1px solid #E3E5EA',
+    border: '1px solid #E4E4E7',
     borderRadius: 12,
     boxSizing: 'border-box',
 };
@@ -36,21 +36,21 @@ const FIELD = {
     boxSizing: 'border-box',
     padding: '9px 12px',
     borderRadius: 10,
-    border: '1px solid #D9DCE3',
+    border: '1px solid #D4D4D8',
     backgroundColor: '#fff',
-    color: '#12131A',
+    color: '#18181B',
     fontFamily: 'inherit',
     fontSize: 13,
     outline: 'none',
     boxShadow: '0 0 0 1000px #fff inset',
-    WebkitTextFillColor: '#12131A',
+    WebkitTextFillColor: '#18181B',
 };
 
 const BTN_P = {
     padding: '9px 16px',
-    backgroundColor: '#5B4BFF',
+    backgroundColor: '#4F46E5',
     color: '#fff',
-    border: '1px solid #5B4BFF',
+    border: '1px solid #4F46E5',
     borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
@@ -61,8 +61,8 @@ const BTN_P = {
 const BTN_S = {
     padding: '9px 16px',
     backgroundColor: '#fff',
-    color: '#12131A',
-    border: '1px solid #D9DCE3',
+    color: '#18181B',
+    border: '1px solid #D4D4D8',
     borderRadius: 10,
     cursor: 'pointer',
     fontFamily: 'inherit',
@@ -79,9 +79,9 @@ const MARK_BTN = active => ({
     fontFamily: 'inherit',
     fontSize: 14,
     fontWeight: 600,
-    backgroundColor: active ? '#12131A' : '#fff',
-    color: active ? '#fff' : '#12131A',
-    border: active ? '1px solid #12131A' : '1px solid #D9DCE3',
+    backgroundColor: active ? '#18181B' : '#fff',
+    color: active ? '#fff' : '#18181B',
+    border: active ? '1px solid #18181B' : '1px solid #D4D4D8',
 });
 
 const BANNER_ERR = {
@@ -109,7 +109,7 @@ const Empty = ({ icon, children }) => (
     <div
         style={{
             textAlign: 'center',
-            color: '#6B7080',
+            color: '#71717A',
             fontSize: 14,
             padding: '28px 16px',
         }}
@@ -122,10 +122,10 @@ const Empty = ({ icon, children }) => (
 const PageHeader = ({ children }) => (
     <div style={HEADER}>
         <div>
-            <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#12131A' }}>
+            <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#18181B' }}>
                 Dars tekshiruvi
             </h1>
-            <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>
+            <p style={{ color: '#71717A', margin: 0, fontSize: 13 }}>
                 Vazifalarni belgilang va natijani saqlang
             </p>
         </div>
@@ -242,7 +242,7 @@ function AuthenticatedMedia({ path, mime, name }) {
 
     if (loading) {
         return (
-            <div style={{ fontSize: 13, color: '#5B6070', marginTop: 6 }}>
+            <div style={{ fontSize: 13, color: '#71717A', marginTop: 6 }}>
                 {name || 'Fayl'} yuklanmoqda...
             </div>
         );
@@ -271,7 +271,7 @@ function AuthenticatedMedia({ path, mime, name }) {
                 href={url}
                 target="_blank"
                 rel="noreferrer"
-                style={{ display: 'block', marginTop: 6, color: '#12131A', fontSize: 12 }}
+                style={{ display: 'block', marginTop: 6, color: '#18181B', fontSize: 12 }}
             >
                 <img
                     src={url}
@@ -282,7 +282,7 @@ function AuthenticatedMedia({ path, mime, name }) {
                         maxHeight: 320,
                         objectFit: 'contain',
                         borderRadius: 12,
-                        border: '1px solid #E3E5EA',
+                        border: '1px solid #E4E4E7',
                     }}
                 />
                 <small>Rasmni kattalashtirish</small>
@@ -337,11 +337,11 @@ function AuthenticatedMedia({ path, mime, name }) {
                     style={{
                         width: '100%',
                         height: 360,
-                        border: '1px solid #E3E5EA',
+                        border: '1px solid #E4E4E7',
                         borderRadius: 12,
                     }}
                 />
-                <a href={url} target="_blank" rel="noreferrer" style={{ color: '#12131A', fontSize: 13 }}>
+                <a href={url} target="_blank" rel="noreferrer" style={{ color: '#18181B', fontSize: 13 }}>
                     PDFni alohida oynada ochish
                 </a>
             </div>
@@ -351,7 +351,7 @@ function AuthenticatedMedia({ path, mime, name }) {
     return (
         <div style={{ marginTop: 6, fontSize: 13 }}>
             📎{' '}
-            <a href={url} download={name || 'student-file'} style={{ color: '#12131A' }}>
+            <a href={url} download={name || 'student-file'} style={{ color: '#18181B' }}>
                 {name || 'Faylni yuklab olish'}
             </a>
         </div>
@@ -365,9 +365,9 @@ function StudentSubmissions({ submissions }) {
                 style={{
                     marginTop: 14,
                     paddingTop: 12,
-                    borderTop: '1px solid #EEF0F3',
+                    borderTop: '1px solid #F4F4F5',
                     fontSize: 13,
-                    color: '#6B7080',
+                    color: '#71717A',
                 }}
             >
                 Hozircha yuborilgan online javoblar yo‘q.
@@ -380,7 +380,7 @@ function StudentSubmissions({ submissions }) {
             style={{
                 marginTop: 14,
                 paddingTop: 12,
-                borderTop: '1px solid #EEF0F3',
+                borderTop: '1px solid #F4F4F5',
             }}
         >
             <b style={{ fontSize: 13 }}>📥 O‘quvchi yuborgan javoblar ({submissions.length})</b>
@@ -392,8 +392,8 @@ function StudentSubmissions({ submissions }) {
                         marginTop: 10,
                         padding: 12,
                         borderRadius: 12,
-                        background: '#F4F5F7',
-                        border: '1px solid #EEF0F3',
+                        background: '#F4F4F5',
+                        border: '1px solid #F4F4F5',
                         minWidth: 0,
                     }}
                 >
@@ -403,7 +403,7 @@ function StudentSubmissions({ submissions }) {
                         style={{
                             marginTop: 4,
                             fontSize: 12,
-                            color: '#5B6070',
+                            color: '#71717A',
                         }}
                     >
                         Topshirilgan sana: {sub.date || '—'}
@@ -670,7 +670,7 @@ export default function HwCheck() {
             <div style={PAGE}>
                 <PageHeader />
                 <div style={{ padding: 24 }}>
-                    <div style={{ ...CARD, padding: '16px 18px', fontSize: 13, color: '#5B6070' }}>
+                    <div style={{ ...CARD, padding: '16px 18px', fontSize: 13, color: '#71717A' }}>
                         Ma'lumotlar yuklanmoqda...
                     </div>
                 </div>
@@ -753,7 +753,7 @@ export default function HwCheck() {
                 )}
 
                 {submissionsLoading && (
-                    <div style={{ marginBottom: 12, fontSize: 13, color: '#5B6070' }}>
+                    <div style={{ marginBottom: 12, fontSize: 13, color: '#71717A' }}>
                         O‘quvchi javoblari yuklanmoqda...
                     </div>
                 )}
@@ -813,7 +813,7 @@ export default function HwCheck() {
                                     <b style={{ fontSize: 15 }}>{student.name}</b>
 
                                     {saved && (
-                                        <small style={{ color: '#5B6070', fontSize: 12 }}>
+                                        <small style={{ color: '#71717A', fontSize: 12 }}>
                                             {' '}(saqlangan: {saved.avgScore}%)
                                         </small>
                                     )}
@@ -827,7 +827,7 @@ export default function HwCheck() {
                                             gap: 8,
                                             alignItems: 'center',
                                             padding: '8px 0',
-                                            borderTop: '1px solid #EEF0F3',
+                                            borderTop: '1px solid #F4F4F5',
                                         }}
                                     >
                                         <span style={{ flex: 1, minWidth: 0, fontSize: 13 }}>
@@ -902,7 +902,7 @@ export default function HwCheck() {
                                         justifyContent: 'space-between',
                                         marginTop: 10,
                                         paddingTop: 12,
-                                        borderTop: '1px solid #EEF0F3',
+                                        borderTop: '1px solid #F4F4F5',
                                         alignItems: 'center',
                                         gap: 8,
                                     }}

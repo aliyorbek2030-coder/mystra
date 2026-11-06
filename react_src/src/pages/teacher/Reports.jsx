@@ -10,14 +10,14 @@ const PAGE = {
   boxSizing: 'border-box',
   padding: 0,
   fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-  color: '#12131A',
-  backgroundColor: '#F4F5F7',
+  color: '#18181B',
+  backgroundColor: '#F4F4F5',
   minHeight: '100vh',
 };
 
 const HEADER = {
   backgroundColor: '#fff',
-  borderBottom: '1px solid #E3E5EA',
+  borderBottom: '1px solid #E4E4E7',
   padding: '20px 24px 14px',
   display: 'flex',
   justifyContent: 'space-between',
@@ -28,7 +28,7 @@ const HEADER = {
 
 const CARD = {
   backgroundColor: '#fff',
-  border: '1px solid #E3E5EA',
+  border: '1px solid #E4E4E7',
   borderRadius: 12,
   boxSizing: 'border-box',
 };
@@ -37,20 +37,20 @@ const FIELD = {
   boxSizing: 'border-box',
   padding: '9px 12px',
   borderRadius: 10,
-  border: '1px solid #D9DCE3',
+  border: '1px solid #D4D4D8',
   backgroundColor: '#fff',
-  color: '#12131A',
+  color: '#18181B',
   fontFamily: 'inherit',
   fontSize: 13,
   outline: 'none',
   boxShadow: '0 0 0 1000px #fff inset',
-  WebkitTextFillColor: '#12131A',
+  WebkitTextFillColor: '#18181B',
 };
 
 const SECTION_TITLE = {
   fontSize: 14,
   fontWeight: 600,
-  color: '#12131A',
+  color: '#18181B',
   margin: '0 0 12px',
 };
 
@@ -59,22 +59,22 @@ const TH = {
   padding: '10px 14px',
   fontSize: 11,
   fontWeight: 500,
-  color: '#5B6070',
+  color: '#71717A',
   letterSpacing: '0.05em',
   textTransform: 'uppercase',
-  backgroundColor: '#F4F5F7',
+  backgroundColor: '#F4F4F5',
   whiteSpace: 'nowrap',
 };
 
 const TD = {
   padding: '12px 14px',
   fontSize: 13,
-  color: '#12131A',
+  color: '#18181B',
 };
 
 const EMPTY = {
   textAlign: 'center',
-  color: '#6B7080',
+  color: '#71717A',
   fontSize: 13,
   padding: '18px 14px',
 };
@@ -250,10 +250,10 @@ export default function Reports() {
       {/* Header: title on the left, month picker on the right */}
       <div style={HEADER}>
         <div>
-          <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#12131A' }}>
+          <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#18181B' }}>
             📅 Oylik hisobot
           </h1>
-          <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>
+          <p style={{ color: '#71717A', margin: 0, fontSize: 13 }}>
             Har oy alohida saqlanadi — hisobot va progress
           </p>
         </div>
@@ -288,8 +288,8 @@ export default function Reports() {
                 marginLeft: 8,
                 padding: '4px 10px',
                 backgroundColor: '#fff',
-                color: '#12131A',
-                border: '1px solid #D9DCE3',
+                color: '#18181B',
+                border: '1px solid #D4D4D8',
                 borderRadius: 10,
                 cursor: 'pointer',
                 fontFamily: 'inherit',
@@ -312,15 +312,15 @@ export default function Reports() {
             }}
           >
             {[
-              ['Faol talabalar', rows.length, '#12131A'],
-              ['Yozuvlar', rows.reduce((sum, row) => sum + (Number(row.n) || 0), 0), '#12131A'],
+              ['Faol talabalar', rows.length, '#18181B'],
+              ['Yozuvlar', rows.reduce((sum, row) => sum + (Number(row.n) || 0), 0), '#18181B'],
               ['Sertifikatlar', rows.reduce((sum, row) => sum + (Number(row.certs) || 0), 0), '#b8860b'],
               [
                 "O'rtacha %",
                 rows.length
                   ? Math.round(rows.reduce((sum, row) => sum + (Number(row.avg) || 0), 0) / rows.length) + '%'
                   : '—',
-                rows.length ? '#12131A' : '#DC2626',
+                rows.length ? '#18181B' : '#DC2626',
               ],
             ].map(([label, value, color]) => (
               <div key={label} style={{ ...CARD, padding: '14px 16px' }}>
@@ -328,7 +328,7 @@ export default function Reports() {
                 <div
                   style={{
                     fontSize: 11,
-                    color: '#5B6070',
+                    color: '#71717A',
                     letterSpacing: '0.05em',
                     textTransform: 'uppercase',
                   }}
@@ -344,7 +344,7 @@ export default function Reports() {
         <h2 style={SECTION_TITLE}>Oylik hisobot — {ym}</h2>
 
         {loading ? (
-          <div style={{ color: 'var(--text3, #5B6070)', fontSize: 13 }}>
+          <div style={{ color: 'var(--text3, #71717A)', fontSize: 13 }}>
             Hisobot yuklanmoqda...
           </div>
         ) : (
@@ -376,7 +376,7 @@ export default function Reports() {
                   return (
                     <tr
                       key={student.id}
-                      style={{ borderTop: '1px solid #EEF0F3' }}
+                      style={{ borderTop: '1px solid #F4F4F5' }}
                     >
                       <td style={{ ...TD, fontWeight: 500 }}>{student.name}</td>
                       <td style={TD}>{getGroupName(student)}</td>
@@ -395,7 +395,7 @@ export default function Reports() {
             </table>
 
             {!rows.length && (
-              <div style={{ ...EMPTY, borderTop: '1px solid #EEF0F3' }}>
+              <div style={{ ...EMPTY, borderTop: '1px solid #F4F4F5' }}>
                 Bu oy uchun hisobot topilmadi.
               </div>
             )}
@@ -431,7 +431,7 @@ export default function Reports() {
 
         <div style={{ ...CARD, padding: '16px 18px', marginBottom: 32 }}>
           <Chart pts={progress} />
-          <small style={{ display: 'block', marginTop: 8, fontSize: 12, color: '#5B6070' }}>
+          <small style={{ display: 'block', marginTop: 8, fontSize: 12, color: '#71717A' }}>
             Yashil chiziq — 95% (sertifikat chegarasi)
           </small>
         </div>

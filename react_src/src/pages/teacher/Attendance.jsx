@@ -10,14 +10,14 @@ const PAGE = {
   boxSizing: 'border-box',
   padding: 0,
   fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-  color: '#12131A',
-  backgroundColor: '#F4F5F7',
+  color: '#18181B',
+  backgroundColor: '#F4F4F5',
   minHeight: '100vh',
 };
 
 const HEADER = {
   backgroundColor: '#fff',
-  borderBottom: '1px solid #E3E5EA',
+  borderBottom: '1px solid #E4E4E7',
   padding: '20px 24px 14px',
   display: 'flex',
   justifyContent: 'space-between',
@@ -28,7 +28,7 @@ const HEADER = {
 
 const CARD = {
   backgroundColor: '#fff',
-  border: '1px solid #E3E5EA',
+  border: '1px solid #E4E4E7',
   borderRadius: 12,
   boxSizing: 'border-box',
   padding: '12px 18px',
@@ -39,14 +39,14 @@ const FIELD = {
   boxSizing: 'border-box',
   padding: '9px 12px',
   borderRadius: 10,
-  border: '1px solid #D9DCE3',
+  border: '1px solid #D4D4D8',
   backgroundColor: '#fff',
-  color: '#12131A',
+  color: '#18181B',
   fontFamily: 'inherit',
   fontSize: 13,
   outline: 'none',
   boxShadow: '0 0 0 1000px #fff inset',
-  WebkitTextFillColor: '#12131A',
+  WebkitTextFillColor: '#18181B',
 };
 
 const MARK_BTN = (active, disabled) => ({
@@ -56,9 +56,9 @@ const MARK_BTN = (active, disabled) => ({
   fontFamily: 'inherit',
   fontSize: 13,
   fontWeight: 500,
-  backgroundColor: active ? '#12131A' : '#fff',
-  color: active ? '#fff' : '#12131A',
-  border: active ? '1px solid #12131A' : '1px solid #D9DCE3',
+  backgroundColor: active ? '#18181B' : '#fff',
+  color: active ? '#fff' : '#18181B',
+  border: active ? '1px solid #18181B' : '1px solid #D4D4D8',
   opacity: disabled ? 0.6 : 1,
 });
 
@@ -66,7 +66,7 @@ const Empty = ({ icon, children }) => (
   <div
     style={{
       textAlign: 'center',
-      color: '#6B7080',
+      color: '#71717A',
       fontSize: 14,
       padding: '28px 16px',
     }}
@@ -197,10 +197,10 @@ export default function Attendance() {
       {/* Header: title on the left, group + date pickers on the right */}
       <div style={HEADER}>
         <div>
-          <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#12131A' }}>
+          <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#18181B' }}>
             Davomat
           </h1>
-          <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>
+          <p style={{ color: '#71717A', margin: 0, fontSize: 13 }}>
             Guruh va sanani tanlab, o'quvchilarni belgilang
           </p>
         </div>
@@ -231,7 +231,7 @@ export default function Attendance() {
 
       <div style={{ padding: 24 }}>
         {loading && (
-          <div style={{ marginBottom: 12, fontSize: 13, color: '#5B6070' }}>
+          <div style={{ marginBottom: 12, fontSize: 13, color: '#71717A' }}>
             Yuklanmoqda...
           </div>
         )}
@@ -304,7 +304,7 @@ export default function Attendance() {
                   <div
                     style={{
                       fontSize: 12,
-                      color: '#5B6070',
+                      color: '#71717A',
                       marginTop: 2,
                     }}
                   >
