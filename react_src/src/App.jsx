@@ -158,9 +158,9 @@ const TILE = {
 function PageLoading() {
     return (
         <div aria-busy="true" aria-label="Yuklanmoqda..." style={{ padding: '28px 32px', display: 'grid', gap: 12, maxWidth: 1240, margin: '0 auto' }}>
-            <div style={{ height: 28, width: 220, background: '#EEF0F3', borderRadius: 10 }} />
-            <div style={{ height: 130, background: '#EEF0F3', borderRadius: 20 }} />
-            <div style={{ height: 240, background: '#EEF0F3', borderRadius: 20 }} />
+            <div className="shimmer" style={{ height: 28, width: 220, borderRadius: 10 }} />
+            <div className="shimmer" style={{ height: 130, borderRadius: 20 }} />
+            <div className="shimmer" style={{ height: 240, borderRadius: 20 }} />
         </div>
     );
 }
@@ -230,7 +230,7 @@ function Shell({ tabs, notifTo, children }) {
                         <button type="button" onClick={logout} aria-label="Chiqish" title="Chiqish" style={{ border: 0, background: '#fff', borderRadius: 10, height: 36, padding: '0 12px', font: 'inherit', fontWeight: 600, fontSize: 13, color: '#3D4150', cursor: 'pointer' }}>Chiqish</button>
                     </div>
                     <NotifBar to={notifTo} />
-                    <Suspense fallback={<PageLoading />}>{children}</Suspense>
+                    <div key={pathname} className="page-in"><Suspense fallback={<PageLoading />}>{children}</Suspense></div>
                 </main>
             </div>
         </>

@@ -323,7 +323,7 @@ const AiDetails = ({ ai }) => {
                         <div key={k} style={{ background: '#F8F9FB', border: '1px solid #EEF0F3', borderRadius: 12, padding: '10px 12px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, fontWeight: 600, color: '#4A4E5C' }}><span>{CRIT_LABEL[k] || k}</span><span style={{ color: '#12131A' }}>{v}</span></div>
                             <div style={{ height: 6, background: '#EEF0F3', borderRadius: 99, marginTop: 6, overflow: 'hidden' }}>
-                                <div style={{ width: `${v}%`, height: '100%', borderRadius: 99, background: v >= 85 ? '#9BC31A' : v >= 65 ? '#5B4BFF' : '#FF7A45' }} />
+                                <div className="bar-grow" style={{ width: `${v}%`, height: '100%', borderRadius: 99, background: v >= 85 ? '#9BC31A' : v >= 65 ? '#5B4BFF' : '#FF7A45' }} />
                             </div>
                         </div>
                     ))}
@@ -643,7 +643,7 @@ export default function Review() {
         const n = Math.max(0, Math.min(100, Number(v) || 0));
         const c = n >= 95 ? '#9BC31A' : n >= 70 ? '#5B4BFF' : '#E5582E';
         return (
-            <div className="rv-score" style={{ background: `conic-gradient(${c} ${n * 3.6}deg, #EEF0F3 0)` }} role="img" aria-label={`Umumiy ${n}%`}>
+            <div className="rv-score ring-anim" style={{ '--p': n, background: `conic-gradient(${c} calc(var(--p) * 3.6deg), #EEF0F3 0)` }} role="img" aria-label={`Umumiy ${n}%`}>
                 <div className="rv-score-in">{n}%</div>
             </div>
         );
@@ -696,7 +696,7 @@ export default function Review() {
                 <button type="button" className="rv-btn s" onClick={loadData}><Svg d={I.refresh} size={18} /> Yangilash</button>
             </header>
 
-            <section className="rv-stats" aria-label="Qisqa ko‘rsatkichlar">
+            <section className="rv-stats stagger" aria-label="Qisqa ko‘rsatkichlar">
                 {[
                     [I.check, '#ECEAFF', '#5B4BFF', days.length, 'kunlik ish kutmoqda'],
                     [I.star, '#FEF3C7', '#B45309', extra.length, 'extra work kutmoqda'],
@@ -723,7 +723,7 @@ export default function Review() {
                 </div>
             )}
 
-            <div className="rv-tabs" role="tablist" aria-label="Bo‘limlar">
+            <div className="rv-tabs page-in" role="tablist" aria-label="Bo‘limlar">
                 {TABS.map(([id, label, n]) => (
                     <button key={id} type="button" role="tab" aria-selected={tab === id} className={'rv-tab' + (tab === id ? ' on' : '')} onClick={() => setTab(id)}>
                         {label} <span className="n">{n}</span>
@@ -732,7 +732,7 @@ export default function Review() {
             </div>
 
             {tab === 'days' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div className="stagger" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                     {days.map((day) => {
                         const student = person(day);
                         const items = day.items || [];

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { API_URL } from '../../lib/config';
 import LangSwitch from '../../components/LangSwitch';
+import Num from '../../components/Num';
 
 /* Ota-ona kabineti — login talab qilinmaydi, maxsus havola orqali ochiladi */
 
@@ -76,12 +77,12 @@ export default function ParentView() {
         </div>
       </section>
 
-      <div className="pv-grid">
-        <div className="pv-tile lift" style={{ background: '#ECEAFF', color: '#3F31D9' }}><div className="l">O'rtacha natija</div><div className="v">{d.avg != null ? `${d.avg}%` : '—'}</div></div>
-        <div className="pv-tile lift" style={{ background: '#FFE4D6', color: '#9A3412' }}><div className="l">Ketma-ket kunlar</div><div className="v">{d.streak.streak}</div></div>
+      <div className="pv-grid stagger">
+        <div className="pv-tile lift" style={{ background: '#ECEAFF', color: '#3F31D9' }}><div className="l">O'rtacha natija</div><div className="v"><Num value={d.avg != null ? `${d.avg}%` : '—'} /></div></div>
+        <div className="pv-tile lift" style={{ background: '#FFE4D6', color: '#9A3412' }}><div className="l">Ketma-ket kunlar</div><div className="v"><Num value={d.streak.streak} /></div></div>
         <div className="pv-tile lift" style={{ background: '#ECFCCB', color: '#3F6212' }}><div className="l">Davomat</div><div className="v">{d.attendance.length ? `${present}/${d.attendance.length}` : '—'}</div></div>
-        <div className="pv-tile lift" style={{ background: '#E0F2FE', color: '#075985' }}><div className="l">Guruhdagi o'rni</div><div className="v">{d.rank || '—'}</div></div>
-        <div className="pv-tile lift" style={{ background: '#FCE7F3', color: '#9D174D' }}><div className="l">Sertifikatlar</div><div className="v">{d.certificates}</div></div>
+        <div className="pv-tile lift" style={{ background: '#E0F2FE', color: '#075985' }}><div className="l">Guruhdagi o'rni</div><div className="v"><Num value={d.rank || '—'} /></div></div>
+        <div className="pv-tile lift" style={{ background: '#FCE7F3', color: '#9D174D' }}><div className="l">Sertifikatlar</div><div className="v"><Num value={d.certificates} /></div></div>
         <div className="pv-tile lift" style={{ background: pay[1], color: pay[2] }}><div className="l">To'lov</div><div className="v" style={{ fontSize: 18, marginTop: 10 }}>{pay[0]}</div></div>
       </div>
 

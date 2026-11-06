@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { apiRequest, useAuth } from '../../lib/auth';
+import Num from '../../components/Num';
 
 /* MYSTRA 2.0 — ustozning bosh sahifasi (real ma'lumotlar bilan) */
 
@@ -78,13 +79,13 @@ const KPI_IC = {
 function Kpi({ label, value, sub, grad, icon, to }) {
     const body = (
         <>
-            <div className="ov-kpi-ic wiggle"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{KPI_IC[icon]}</svg></div>
+            <div className="ov-kpi-ic wiggle float"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{KPI_IC[icon]}</svg></div>
             <div className="ov-kpi-l">{label}</div>
-            <div className="ov-kpi-v">{value}</div>
+            <div className="ov-kpi-v"><Num value={value} /></div>
             {sub && <div className="ov-kpi-s">{sub}</div>}
         </>
     );
-    const cls = `ov-kpi lift pop-in ${grad}`;
+    const cls = `ov-kpi lift ${grad}`;
     return to ? <Link to={to} className={cls}>{body}</Link> : <div className={cls}>{body}</div>;
 }
 
@@ -131,9 +132,9 @@ export default function Overview() {
     if (!d) {
         return (
             <div className="ov"><style>{CSS}</style>
-                <div className="ov-skel" style={{ height: 70 }} />
-                <div className="ov-kpis">{[0, 1, 2, 3].map(i => <div key={i} className="ov-skel" style={{ height: 130 }} />)}</div>
-                <div className="ov-skel" style={{ height: 320 }} />
+                <div className="ov-skel shimmer" style={{ height: 70 }} />
+                <div className="ov-kpis">{[0, 1, 2, 3].map(i => <div key={i} className="ov-skel shimmer" style={{ height: 130 }} />)}</div>
+                <div className="ov-skel shimmer" style={{ height: 320 }} />
             </div>
         );
     }
@@ -184,7 +185,7 @@ export default function Overview() {
                 </Link>
             </header>
 
-            <section className="ov-kpis" aria-label="Asosiy ko'rsatkichlar">
+            <section className="ov-kpis stagger" aria-label="Asosiy ko'rsatkichlar">
                 <Kpi grad="g-violet" icon="users" label="Faol o'quvchilar" value={`${active} / ${students.length}`} to="/people"
                     sub={students.length === 0 ? 'Hali o\u2018quvchi yo\u2018q' : expired.length ? `${expired.length} ta obunasi tugagan` : 'Hammasi faol'} />
                 <Kpi grad="g-lime" icon="check" label="Tekshirish kutmoqda" value={queue.length} to="/review"
@@ -229,8 +230,8 @@ export default function Overview() {
                     </div>
                     {insights.length === 0 ? (
                         <div className="ov-ai-item"><div className="ov-ai-text">Hammasi joyida: navbat bo'sh, to'lovlar va obunalar tartibda.</div></div>
-                    ) : insights.slice(0, 4).map(i => (
-                        <div className="ov-ai-item" key={i.tag + i.text}>
+                    ) : insights.slice(0, 4).map((i, n) => (
+                        <div className="ov-ai-item page-in" style={{ animationDelay: `${0.15 + n * 0.08}s` }} key={i.tag + i.text}>
                             <div className="ov-ai-tag" style={{ color: i.color }}>{i.tag}</div>
                             <div className="ov-ai-text">{i.text}</div>
                             <Link to={i.to} className="ov-ai-btn">{i.btn}</Link>
@@ -252,8 +253,8 @@ export default function Overview() {
                             <table className="ov-table">
                                 <thead><tr><th>O'quvchi</th><th>Vazifa</th><th>AI ball</th><th /></tr></thead>
                                 <tbody>
-                                    {queue.slice(0, 6).map(q => (
-                                        <tr key={q.id}>
+                                    {queue.slice(0, 6).map((q, n) => (
+                                        <tr key={q.id} className="page-in" style={{ animationDelay: `${n * 0.05}s` }}>
                                             <td>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                                                     <div className="ov-ava" style={{ background: colorFor(q.student?.id) }}>{initials(q.student?.name)}</div>
@@ -281,7 +282,7 @@ export default function Overview() {
                             <span style={{ fontWeight: 700 }}>{payPct}%</span>
                         </div>
                         <div style={{ height: 10, background: '#EEF0F3', borderRadius: 99, margin: '14px 0 12px', overflow: 'hidden' }}>
-                            <div style={{ width: `${payPct}%`, height: '100%', background: '#15803D', borderRadius: 99 }} />
+                            <div className="bar-grow" style={{ width: `${payPct}%`, height: '100%', background: 'linear-gradient(90deg,#ECFF9E,#15803D)', borderRadius: 99 }} />
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#5B6070' }}>
                             <span>{paidCount} ta to'lagan</span><span>{debtors.length} ta qarzdor</span>
@@ -292,7 +293,7 @@ export default function Overview() {
                     <div className="ov-card">
                         <h2 style={{ marginBottom: 6 }}>Reyting TOP-5</h2>
                         {top.length === 0 ? <div className="ov-empty">Hali natija yo'q</div> : top.map((r, i) => (
-                            <div className="ov-rank" key={r.student?.id || i}>
+                            <div className="ov-rank page-in" style={{ animationDelay: `${0.1 + i * 0.06}s` }} key={r.student?.id || i}>
                                 <div style={{ width: 22, fontWeight: 800 }}>{i + 1}</div>
                                 <div className="ov-ava" style={{ background: colorFor(r.student?.id), width: 32, height: 32, fontSize: 12 }}>{initials(r.student?.name)}</div>
                                 <div style={{ flex: 1, fontWeight: 600, fontSize: 14, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.student?.name}</div>

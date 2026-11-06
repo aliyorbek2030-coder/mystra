@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../../lib/auth';
+import Num from '../../components/Num';
 import confetti from '../../lib/confetti';
 import { loadStudentTasks, submitTask, finishDay } from '../../api';
 import ProgressBar from '../../components/ProgressBar';
@@ -647,8 +648,9 @@ export default function Tasks() {
               <div aria-hidden="true" style={{ position: 'absolute', right: -30, top: -30, width: 120, height: 120, borderRadius: '50%', background: 'rgba(212,247,74,.9)' }} />
               <div
                 role="img"
+                className="ring-anim"
                 aria-label={`Bugun ${completed} / ${total} vazifa bajarildi`}
-                style={{ width: 84, height: 84, borderRadius: 99, background: `conic-gradient(#D4F74A ${ringPct * 3.6}deg, rgba(255,255,255,.22) 0)`, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
+                style={{ width: 84, height: 84, borderRadius: 99, '--p': ringPct, background: 'conic-gradient(#D4F74A calc(var(--p) * 3.6deg), rgba(255,255,255,.22) 0)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
               >
                 <div style={{ width: 66, height: 66, borderRadius: 99, background: '#4F3FE8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Fredoka','Onest',sans-serif", fontWeight: 700, fontSize: 22 }}>
                   {completed}/{total}
@@ -660,7 +662,7 @@ export default function Tasks() {
                   {total === 0 ? 'Bugun vazifa yo‘q' : left === 0 ? 'Hammasi bajarildi!' : `${left} ta vazifa qoldi`}
                 </div>
                 <div style={{ display: 'inline-block', fontSize: 13, color: '#12131A', background: '#D4F74A', marginTop: 8, fontWeight: 800, padding: '4px 10px', borderRadius: 99 }}>
-                  {stats.xp ?? 0} XP · {stats.lvl ?? 1}-daraja
+                  <Num value={`${stats.xp ?? 0} XP`} /> · {stats.lvl ?? 1}-daraja
                 </div>
               </div>
             </div>
@@ -671,7 +673,7 @@ export default function Tasks() {
                 ['Davomat', att.t ? `${att.p}/${att.t}` : '—'],
                 ['Obuna', sb.active ? `${sb.days} kun` : 'Tugagan'],
               ].map(([label, value], i) => (
-                <div key={label} className="lift pop-in" style={{ background: ['#FFE4D6', '#E0F2FE', '#ECFCCB'][i], borderRadius: 18, padding: '12px 14px' }}>
+                <div key={label} className="lift page-in" style={{ animationDelay: `${0.2 + i * 0.08}s`, background: ['#FFE4D6', '#E0F2FE', '#ECFCCB'][i], borderRadius: 18, padding: '12px 14px' }}>
                   <div style={{ fontSize: 12, fontWeight: 600, color: ['#9A3412', '#075985', '#3F6212'][i] }}>{label}</div>
                   <div style={{ fontFamily: "'Fredoka','Onest',sans-serif", fontSize: 20, fontWeight: 700, marginTop: 2, color: '#12131A' }}>{value}</div>
                 </div>

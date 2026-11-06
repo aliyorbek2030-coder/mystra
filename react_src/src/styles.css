@@ -39,3 +39,25 @@ a{color:var(--accent)}
 [data-theme=dark]{--bg:#0C0C0C;--surface:#161616;--surface2:#1F1F1F;--border:#2A2A2A;--text:#F0F0EE;--text2:#A0A09C;--text3:#555;--accent:#F0F0EE;--accent-fg:#0C0C0C;--success:#4ADE80;--success-bg:#052e16;--danger:#F87171;--danger-bg:#1f0a0a;--warn:#FCD34D;--warn-bg:#1a1200;--gold:#F0C060;--info:#38BDF8;--info-bg:#0c1a2e}
 [data-theme=pink]{--bg:#FDF8F5;--surface:#FFF;--surface2:#FAF0F5;--border:#F0D8E8;--text:#2D1520;--text2:#8A5070;--text3:#B890A8;--accent:#C06B8A;--accent-fg:#FFF;--success:#6DBF9E;--success-bg:#F0FAF5;--danger:#E07070;--danger-bg:#FEF5F5;--warn:#D4A843;--warn-bg:#FFFBEB;--gold:#C06B8A;--info:#7B9ED9;--info-bg:#EFF3FF}
 [data-theme=purple]{--bg:#F8F5FF;--surface:#FFF;--surface2:#F0EBFF;--border:#DDD5F5;--text:#1E1830;--text2:#6B5B9A;--text3:#A090C8;--accent:#7C3AED;--accent-fg:#FFF;--success:#6DBF9E;--success-bg:#F0FAF5;--danger:#E07070;--danger-bg:#FEF5F5;--warn:#D4A843;--warn-bg:#FFFBEB;--gold:#A78BFA;--info:#38BDF8;--info-bg:#EFF9FF}
+
+/* ── Animatsiyalar (MYSTRA 2.1) ── */
+@property --p{syntax:'<number>';inherits:false;initial-value:0}
+@keyframes page-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.page-in{animation:page-in .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+.shimmer{background:linear-gradient(90deg,#EEF0F3 0%,#F8F9FB 50%,#EEF0F3 100%) !important;background-size:200% 100% !important;animation:shimmer 1.3s linear infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.float{animation:float 3.2s ease-in-out infinite}
+@keyframes ring-fill{from{--p:0}}
+.ring-anim{animation:ring-fill 1.1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes bar-grow{from{transform:scaleX(0)}}
+.bar-grow{transform-origin:left;animation:bar-grow .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes bounce-in{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+.bounce-in{animation:bounce-in .5s cubic-bezier(.3,1.4,.6,1) both}
+.stagger>*{animation:page-in .5s cubic-bezier(.2,.8,.2,1) both}
+.stagger>*:nth-child(1){animation-delay:.02s}.stagger>*:nth-child(2){animation-delay:.08s}.stagger>*:nth-child(3){animation-delay:.14s}.stagger>*:nth-child(4){animation-delay:.2s}.stagger>*:nth-child(5){animation-delay:.26s}.stagger>*:nth-child(6){animation-delay:.32s}.stagger>*:nth-child(7){animation-delay:.38s}.stagger>*:nth-child(8){animation-delay:.44s}.stagger>*:nth-child(n+9){animation-delay:.5s}
+.btn,.ov-btn,.rv-btn,.ov-ai-btn{transition:transform .12s ease,background .15s,border-color .15s,box-shadow .15s,filter .15s}
+.btn:active,.ov-btn:active,.rv-btn:active{transform:scale(.96)}
+.sb-link.active .sb-ic{animation:bounce-in .45s cubic-bezier(.3,1.4,.6,1)}
+tbody tr{transition:background .15s}tbody tr:hover{background:#F8F9FB}
+@media (prefers-reduced-motion:reduce){.page-in,.shimmer,.float,.ring-anim,.bar-grow,.bounce-in,.stagger>*,.sb-link.active .sb-ic{animation:none !important}}

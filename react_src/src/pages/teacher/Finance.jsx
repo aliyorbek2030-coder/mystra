@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiRequest } from '../../lib/auth';
+import Num from '../../components/Num';
 
 /* Ustoz/admin: moliya paneli */
 
@@ -59,10 +60,10 @@ export default function Finance() {
         <Link to="/payment" className="btn">To'lovlarni kiritish</Link>
       </header>
 
-      <section className="fn-kpis">
-        <div className="fn-kpi g-orange lift pop-in"><div className="l">Shu oy tushum</div><div className="v">{short(c.paid)}</div><div className="s">so'm · {pct}% reja</div></div>
-        <div className="fn-kpi g-violet lift pop-in"><div className="l">Kutilgan tushum</div><div className="v">{short(c.expected)}</div><div className="s">{c.students} ta o'quvchi</div></div>
-        <div className="fn-kpi g-pink lift pop-in"><div className="l">Qarzdorlik</div><div className="v">{short(c.debt)}</div><div className="s">{d.debtors.length} ta qarzdor</div></div>
+      <section className="fn-kpis stagger">
+        <div className="fn-kpi g-orange lift pop-in"><div className="l">Shu oy tushum</div><div className="v"><Num value={short(c.paid)} /></div><div className="s">so'm · {pct}% reja</div></div>
+        <div className="fn-kpi g-violet lift pop-in"><div className="l">Kutilgan tushum</div><div className="v"><Num value={short(c.expected)} /></div><div className="s">{c.students} ta o'quvchi</div></div>
+        <div className="fn-kpi g-pink lift pop-in"><div className="l">Qarzdorlik</div><div className="v"><Num value={short(c.debt)} /></div><div className="s">{d.debtors.length} ta qarzdor</div></div>
         <div className="fn-kpi g-lime lift pop-in"><div className="l">O'tgan oyga nisbatan</div><div className="v">{c.growth == null ? '—' : `${c.growth > 0 ? '+' : ''}${c.growth}%`}</div><div className="s">+{c.newStudents} yangi o'quvchi</div></div>
       </section>
 
@@ -94,7 +95,7 @@ export default function Finance() {
               <span style={{ flex: 1, fontSize: 13, color: '#5B6070' }}>{l.students} ta o'quvchi</span>
               <span style={{ fontWeight: 700 }}>{short(l.paid)}</span>
               <div style={{ width: '100%', height: 6, background: '#EEF0F3', borderRadius: 99, overflow: 'hidden' }}>
-                <div style={{ width: `${l.expected ? Math.min(100, l.paid / l.expected * 100) : 0}%`, height: '100%', background: '#9BC31A' }} />
+                <div className="bar-grow" style={{ width: `${l.expected ? Math.min(100, l.paid / l.expected * 100) : 0}%`, height: '100%', background: '#9BC31A' }} />
               </div>
             </div>
           ))}

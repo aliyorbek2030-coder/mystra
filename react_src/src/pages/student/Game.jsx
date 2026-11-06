@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiRequest } from '../../lib/auth';
+import Num from '../../components/Num';
 
 /* O'quvchi: daraja, haftalik liga va nishonlar */
 
@@ -63,10 +64,10 @@ export default function Game() {
           <div aria-hidden="true" style={{ position: 'absolute', right: -30, bottom: -30, width: 130, height: 130, borderRadius: '50%', background: 'rgba(212,247,74,.9)' }} />
           <div style={{ position: 'relative' }}>
             <div style={{ fontSize: 13, color: '#E4E1FF' }}>Daraja</div>
-            <div className="gm-h" style={{ fontSize: 56, lineHeight: 1 }}>{level.lvl}</div>
+            <div className="gm-h bounce-in" style={{ fontSize: 56, lineHeight: 1 }}>{level.lvl}</div>
             <div style={{ fontSize: 14, marginTop: 8 }}>{level.xp} XP · keyingi darajagacha {Math.max(0, level.to - level.xp)} XP</div>
             <div className="gm-bar" style={{ background: 'rgba(255,255,255,.25)', marginTop: 10 }}>
-              <div style={{ width: `${lvPct}%`, height: '100%', background: '#D4F74A', borderRadius: 99 }} />
+              <div className="bar-grow" style={{ width: `${lvPct}%`, height: '100%', background: '#D4F74A', borderRadius: 99 }} />
             </div>
           </div>
         </section>
@@ -81,13 +82,13 @@ export default function Game() {
               <div className="gm-h" style={{ fontSize: 24 }}>{league.name} ligasi</div>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div className="gm-h" style={{ fontSize: 24 }}>{league.weekXp}</div>
+              <div className="gm-h" style={{ fontSize: 24 }}><Num value={league.weekXp} /></div>
               <div style={{ fontSize: 12, color: '#5B6070' }}>XP shu hafta</div>
             </div>
           </div>
           <div style={{ display: 'grid', gap: 4, marginTop: 14 }}>
             {league.board.map(b => (
-              <div key={b.id} className="gm-lb" style={{ background: b.me ? 'linear-gradient(135deg,#ECEAFF,#F5F3FF)' : 'transparent', border: b.me ? '1px solid #C7C2FF' : '1px solid transparent' }}>
+              <div key={b.id} className="gm-lb page-in" style={{ background: b.me ? 'linear-gradient(135deg,#ECEAFF,#F5F3FF)' : 'transparent', border: b.me ? '1px solid #C7C2FF' : '1px solid transparent' }}>
                 <span style={{ width: 26, height: 26, borderRadius: 9, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 13, background: b.rank === 1 ? '#FACC15' : b.rank === 2 ? '#E3E5EA' : b.rank === 3 ? '#FDBA74' : '#F4F5F7' }}>{b.rank}</span>
                 <span style={{ flex: 1, fontWeight: b.me ? 800 : 600, fontSize: 14, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{b.name}{b.me ? ' (sen)' : ''}</span>
                 <span style={{ fontWeight: 700, fontSize: 14 }}>{b.xp} XP</span>
@@ -102,11 +103,11 @@ export default function Game() {
           <h2 className="gm-h" style={{ fontSize: 22, flex: 1 }}>Nishonlar</h2>
           <span style={{ fontWeight: 700, color: '#5B6070' }}>{d.earned} / {badges.length}</span>
         </div>
-        <div className="gm-badges">
+        <div className="gm-badges stagger">
           {badges.map((b, i) => {
             const [bg, grad] = PAL[i % PAL.length];
             return (
-              <div key={b.id} className={'gm-badge pop-in' + (b.earned ? ' lift' : ' off')} style={b.earned ? { background: bg } : {}}>
+              <div key={b.id} className={'gm-badge' + (b.earned ? ' lift' : ' off')} style={b.earned ? { background: bg } : {}}>
                 <div className={'gm-medal' + (b.earned ? ' wiggle' : '')} style={b.earned ? { background: grad, color: '#fff', boxShadow: '0 6px 14px rgba(18,19,26,.15)' } : {}}>
                   <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{ICON[b.id]}</svg>
                 </div>
