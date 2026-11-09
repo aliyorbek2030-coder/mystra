@@ -289,93 +289,122 @@ def save_data_url(data_url, max_bytes=3_000_000):
     return {"name": name, "mime": mime, "buf": buf}
 
 
-# ── AI (Gemini bo'lsa u, bo'lmasa namunaviy)
-_AI_PAUSE = {"until": 0.0}
+# ── AI: Groq (bepul) → Gemini → namunaviy javob
+_AI_PAUSE = {"groq": 0.0, "gemini": 0.0}
 AI_TIMEOUT = int(os.environ.get("AI_TIMEOUT", "25"))
 
 
-def _gemini(parts):
-    """Gemini chaqiruvi qat'iy vaqt chegarasi bilan: AI javob bermasa yoki kvota tugasa,
-    so'rov osilib qolmaydi — chaqiruvchi namunaviy bahoga o'tadi."""
+def ai_enabled():
+    return bool(os.environ.get("GROQ_API_KEY") or os.environ.get("GEMINI_API_KEY"))
+
+
+def _parts_text(parts):
+    out = []
+    for p in parts:
+        if isinstance(p, dict) and "text" in p:
+            out.append(p["text"])
+        elif isinstance(p, str):
+            out.append(p)
+    return "\n".join(out).strip()
+
+
+def _parse_json(txt):
+    txt = (txt or "").strip()
+    if "```json" in txt:
+        txt = txt.split("```json", 1)[1].split("```", 1)[0]
+    elif "```" in txt:
+        txt = txt.split("```", 1)[1].split("```", 1)[0]
+    txt = txt.strip()
+    if not txt.startswith("{"):
+        a, b = txt.find("{"), txt.rfind("}")
+        if a >= 0 and b > a:
+            txt = txt[a:b + 1]
+    return json.loads(txt)
+
+
+def _with_limit(name, fn, arg):
+    """Provayder chaqiruvi qat'iy vaqt chegarasi bilan; kvota tugasa provayder 10 daqiqa chetlab o'tiladi."""
     import concurrent.futures
     import time as _t
 
-    if _t.time() < _AI_PAUSE["until"]:
-        raise RuntimeError("AI vaqtincha o'chirilgan (kvota tugagan)")
+    if _t.time() < _AI_PAUSE[name]:
+        raise RuntimeError(f"{name} vaqtincha o'chirilgan (kvota)")
     ex = concurrent.futures.ThreadPoolExecutor(max_workers=1)
-    fut = ex.submit(_gemini_call, parts)
+    fut = ex.submit(fn, arg)
     try:
         return fut.result(timeout=AI_TIMEOUT)
     except concurrent.futures.TimeoutError:
-        _AI_PAUSE["until"] = _t.time() + 300
-        raise RuntimeError(f"AI {AI_TIMEOUT} soniyada javob bermadi")
+        _AI_PAUSE[name] = _t.time() + 120
+        raise RuntimeError(f"{name} {AI_TIMEOUT} soniyada javob bermadi")
     except Exception as e:
-        if "429" in str(e) or "quota" in str(e).lower() or "RESOURCE_EXHAUSTED" in str(e):
-            _AI_PAUSE["until"] = _t.time() + 600  # 10 daqiqa AI ga murojaat qilmaymiz
+        m = str(e)
+        if "429" in m or "quota" in m.lower() or "RESOURCE_EXHAUSTED" in m or "rate_limit" in m:
+            _AI_PAUSE[name] = _t.time() + 600
         raise
     finally:
         ex.shutdown(wait=False, cancel_futures=True)
 
 
-def _gemini_call(parts):
+def _groq_call(prompt):
+    import urllib.error
+    import urllib.request
+
+    req = urllib.request.Request(
+        "https://api.groq.com/openai/v1/chat/completions",
+        data=json.dumps({
+            "model": os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile"),
+            "messages": [
+                {"role": "system", "content": "You are an expert English teacher at an Uzbek learning centre. Always answer with valid JSON only."},
+                {"role": "user", "content": prompt},
+            ],
+            "temperature": 0.4,
+            "max_tokens": 4096,
+            "response_format": {"type": "json_object"},
+        }).encode(),
+        headers={"Authorization": "Bearer " + os.environ["GROQ_API_KEY"], "Content-Type": "application/json", "User-Agent": "mystra/1.0"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=AI_TIMEOUT) as r:
+            data = json.loads(r.read().decode())
+    except urllib.error.HTTPError as e:
+        raise RuntimeError(f"Groq HTTP {e.code}: {e.read()[:200]!r}")
+    return _parse_json(data["choices"][0]["message"]["content"])
+
+
+def _gemini_call(prompt):
     from google import genai
 
-    client = genai.Client(
-        api_key=os.environ.get("GEMINI_API_KEY"),
-    )
-    tools = [
-        {
-            'type': 'google_search',
-        },
-    ]
-    generation_config = {
-        'max_output_tokens': 65536,
-        'thinking_level': 'medium',
-    }
-
-    input_text = ""
-    for p in parts:
-        if isinstance(p, dict):
-            if "text" in p:
-                input_text += p["text"] + "\n"
-        elif isinstance(p, str):
-            input_text += p + "\n"
-
+    client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
     model = os.environ.get("GEMINI_MODEL", "models/gemini-3.8-flash")
     if not model.startswith("models/"):
         model = f"models/{model}"
-
-    try:
-        interaction = client.interactions.create(
-            model=model,
-            input=input_text.strip(),
-            tools=tools,
-            generation_config=generation_config,
-        )
-    except Exception as err:
-        log.warning("Interactions with tools failed, retrying without tools: %s", err)
-        interaction = client.interactions.create(
-            model=model,
-            input=input_text.strip(),
-            generation_config=generation_config,
-        )
-
+    interaction = client.interactions.create(model=model, input=prompt)
     txt = ""
     if getattr(interaction, "output_text", None):
         txt = interaction.output_text
-    elif getattr(interaction, "steps", None) and interaction.steps:
-        last_step = interaction.steps[-1]
-        if hasattr(last_step, "content"):
-            for c in last_step.content:
-                if hasattr(c, "text") and c.text:
-                    txt += c.text
+    elif getattr(interaction, "steps", None):
+        for c in getattr(interaction.steps[-1], "content", None) or []:
+            if getattr(c, "text", None):
+                txt += c.text
+    return _parse_json(txt)
 
-    txt = txt.strip()
-    if "```json" in txt:
-        txt = txt.split("```json", 1)[1].split("```", 1)[0]
-    elif "```" in txt:
-        txt = txt.split("```", 1)[1].split("```", 1)[0]
-    return json.loads(txt.strip())
+
+def _ai(parts):
+    """Matnli so'rovni birinchi ishlayotgan AI ga yuboradi: Groq (bepul), keyin Gemini. Hammasi yiqilsa — xato."""
+    prompt = _parts_text(parts)
+    errs = []
+    for name, key, fn in (("groq", "GROQ_API_KEY", _groq_call), ("gemini", "GEMINI_API_KEY", _gemini_call)):
+        if not os.environ.get(key):
+            continue
+        try:
+            return _with_limit(name, fn, prompt)
+        except Exception as e:  # noqa: BLE001
+            log.warning("%s xato: %s", name, e)
+            errs.append(f"{name}: {e}")
+    raise RuntimeError("; ".join(errs) or "AI kaliti yo'q")
+
+
+_gemini = _ai  # eski nom bilan moslik
 
 
 ERROR_TYPES = {"grammar", "vocabulary", "article", "spelling", "punctuation", "style", "tense", "preposition"}
@@ -412,7 +441,7 @@ def ai_check(text, answers, audio, files, task):
     if task["type"] == "test" and task["questions"]:
         score, ok = scoring.test_score(task["questions"], answers)
         return {"score": score, "feedback": f"Avto-tekshiruv: {ok}/{len(task['questions'])} to'g'ri.", "details": {}}
-    if os.environ.get("GEMINI_API_KEY"):
+    if ai_enabled():
         try:
             parts = [{"text": (
                 f"Siz tajribali ingliz tili o'qituvchisisiz. Vazifa turi: {task['type']}. Vazifa: {task['title']}. {task['body']}\n"
@@ -425,28 +454,45 @@ def ai_check(text, answers, audio, files, task):
             )}]
             if text:
                 parts.append({"text": "Talaba javobi:\n" + text})
-            for f in ([audio] if audio else []) + files:
-                if f["mime"].startswith(("audio/", "image/")) or f["mime"] == "application/pdf":
-                    parts.append({"inlineData": {"mimeType": f["mime"], "data": base64.b64encode(f["buf"]).decode()}})
-            o = _gemini(parts)
+            if not text and (audio or files):
+                raise RuntimeError("faqat fayl/audio — ustoz tekshiradi")
+            o = _ai(parts)
             return {"score": max(0, min(100, int(o["score"]))), "feedback": str(o.get("feedback", ""))[:600], "details": _clean_details(o, text)}
         except Exception as e:  # noqa: BLE001
-            log.warning("Gemini xato, namunaviy javob: %s", e)
+            log.warning("AI xato, namunaviy javob: %s", e)
     n = len(text or "") + (300 if audio else 0) + len(files) * 150
-    return {"score": min(95, 45 + scoring.r(n / 8)), "feedback": "AI (namuna javob): Gemini ulanmagan, ustoz tekshiradi.", "details": {}}
+    return {"score": min(95, 45 + scoring.r(n / 8)), "feedback": "AI (namuna javob): AI hozir ulanmagan, ustoz tekshiradi.", "details": {}}
 
 
-def generate_task(prompt, type_="writing", count=10):
-    if os.environ.get("GEMINI_API_KEY"):
+def _valid_q(q):
+    p = [x.strip() for x in str(q).split("|")]
+    if len(p) != 6 or not p[0] or p[5].upper() not in ("A", "B", "C", "D"):
+        return None
+    p[5] = p[5].upper()
+    return "|".join(p)
+
+
+def generate_task(prompt, type_="writing", count=10, level="", weak=None):
+    if ai_enabled():
         try:
-            fmt = (f"{count} ta test: har biri \"Savol|A variant|B variant|C variant|D variant|to'g'ri harf (A/B/C/D)\" formatida."
-                   if type_ == "test" else "Matn/topshiriq yozing.")
-            o = _gemini([{"text": f"Ingliz tili vazifasi tuzing. Mavzu: {prompt}. Tur: {type_}. {fmt} FAQAT JSON: {{\"title\":string,\"body\":string,\"questions\":string[]}}"}])
-            return {"title": str(o.get("title", prompt))[:80], "body": str(o.get("body", "")), "questions": [str(q) for q in o.get("questions", [])]}
+            focus = ""
+            if weak:
+                focus = (" O'quvchining zaif joylari (AI tekshiruvi topgan xatolar): " + ", ".join(weak) +
+                         ". Savollarning ko'pchiligi aynan shu mavzularga bo'lsin.")
+            lvl = f" Daraja: {level}." if level else ""
+            fmt = (f"Aynan {count} ta test savoli. Har biri bitta satr: \"Savol|A variant|B variant|C variant|D variant|to'g'ri harf (A/B/C/D)\". "
+                   "Variant matnlarida | belgisi bo'lmasin, to'g'ri javoblar harflari aralash bo'lsin."
+                   if type_ == "test" else "Aniq topshiriq matnini yozing (body), questions bo'sh ro'yxat bo'lsin.")
+            o = _ai([{"text": f"Ingliz tili vazifasi tuzing. Mavzu: {prompt}.{lvl}{focus} Tur: {type_}. {fmt} "
+                              "Sarlavha va izohlar o'zbekcha, savollar inglizcha. "
+                              "FAQAT JSON: {\"title\":string,\"body\":string,\"questions\":string[]}"}])
+            qs = [x for x in (_valid_q(q) for q in (o.get("questions") or [])) if x] if type_ == "test" else []
+            if type_ != "test" or qs:
+                return {"title": str(o.get("title") or prompt)[:80], "body": str(o.get("body") or ""), "questions": qs[:max(1, count)], "ai": True}
         except Exception as e:  # noqa: BLE001
-            log.warning("Gemini generate_task xato: %s", e)
+            log.warning("AI generate_task xato: %s", e)
     qs = [f"{prompt}: {i}-savol?|A variant|B variant|C variant|D variant|A" for i in range(1, min(50, count) + 1)] if type_ == "test" else []
-    return {"title": str(prompt)[:60], "body": "" if type_ == "test" else "(AI yaratgan matn) " + prompt, "questions": qs}
+    return {"title": str(prompt)[:60], "body": "" if type_ == "test" else "(AI yaratgan matn) " + prompt, "questions": qs, "ai": False}
 
 
 # ── reyting, streak, davomat
@@ -556,15 +602,48 @@ def manual_record(st, date, items, note):
 
 
 # ── AI takliflari: o'rtacha foizi 60% dan past (haftada bir marta)
+LOW_SCORE = int(os.environ.get("LOW_SCORE", "60"))
+LOW_STREAK = int(os.environ.get("LOW_STREAK", "3"))
+
+ERR_TOPICS = {"grammar": "grammatika", "tense": "zamonlar (tenses)", "article": "artikllar (a/an/the)", "preposition": "predloglar",
+              "vocabulary": "so'z boyligi", "spelling": "imlo", "punctuation": "tinish belgilari", "style": "uslub"}
+
+
+def weak_topics(st, limit=3):
+    """O'quvchining oxirgi ishlaridagi AI topgan xatolar turlari bo'yicha eng zaif mavzular."""
+    cnt = {}
+    for d in Submission.objects.filter(student=st).order_by("-id").values_list("ai_details", flat=True)[:30]:
+        for e in (d or {}).get("errors") or []:
+            t = e.get("type")
+            if t in ERR_TOPICS:
+                cnt[t] = cnt.get(t, 0) + 1
+    return [ERR_TOPICS[t] for t, _ in sorted(cnt.items(), key=lambda x: -x[1])[:limit]]
+
+
+def low_streak(st):
+    """Oxirgi natijalar ketma-ket nechta past (LOW_SCORE dan kam) — eng yangisidan boshlab."""
+    n, last = 0, []
+    for a in HwRecord.objects.filter(student=st).order_by("-date").values_list("avg_score", flat=True)[:10]:
+        if a is None:
+            continue
+        last.append(a)
+        if a < LOW_SCORE and n == len(last) - 1:
+            n += 1
+    return n, last[:LOW_STREAK]
+
+
 def suggestions():
     log_ = {s.student_id: s.ts for s in SugLog.objects.all()}
     out = []
     for g in Group.objects.all():
         low = []
         for st in Student.objects.filter(group=g):
-            r = calc_rating(st)
-            if 0 < r["avg"] < 60 and now_ms() - log_.get(st.id, 0) > 7 * 864e5:
-                low.append((st, r))
+            if now_ms() - log_.get(st.id, 0) <= 7 * 864e5:
+                continue
+            n, last = low_streak(st)
+            if n >= LOW_STREAK:
+                r = calc_rating(st)
+                low.append((st, {**r, "streak": n, "last": last, "weak": weak_topics(st)}))
         if low:
             out.append({"group": g, "low": low})
     return out

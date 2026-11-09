@@ -523,7 +523,7 @@ def ai_generate(request):
     b = body(request)
     if not b.get("prompt"):
         raise E(400, "Mavzu kerak")
-    return L.generate_task(b["prompt"], b.get("type", "writing"), int(b.get("count") or 10))
+    return L.generate_task(b["prompt"], b.get("type", "writing"), int(b.get("count") or 10), b.get("level") or "")
 
 
 @api(["POST"], T)
@@ -538,7 +538,9 @@ def tasks_create(request):
 
 @api(["GET"], T)
 def suggestions(request):
-    return [{"group": row(o["group"], ["id", "name", "level", "days"]), "students": [{"id": s.id, "name": s.name, "avg": r["avg"]} for s, r in o["low"]]} for o in L.suggestions()]
+    return [{"group": row(o["group"], ["id", "name", "level", "days"]),
+             "students": [{"id": s.id, "name": s.name, "avg": r["avg"], "streak": r["streak"], "last": r["last"], "weak": r["weak"]} for s, r in o["low"]]}
+            for o in L.suggestions()]
 
 
 def mark_suggested(o):
@@ -548,15 +550,35 @@ def mark_suggested(o):
 
 @api(["POST"], T)
 def suggestions_send(request):
+    """Ha → har bir zaif o'quvchiga o'zining xatolariga mos alohida 10 ta test; 'all' → butun guruhga umumiy test."""
+    import concurrent.futures
+
     b = body(request)
     o = next((x for x in L.suggestions() if x["group"].id == b.get("groupId")), None)
     if not o:
         raise E(404, "Taklif topilmadi")
-    gen = L.generate_task(o["group"].name + " guruhi uchun takrorlash", "test", 10)
-    r = L.create_task({**gen, "type": "test", "kind": "extra", "level": o["group"].level, "groupId": o["group"].id if b.get("all") else None,
-                       "studentIds": [] if b.get("all") else [s.id for s, _ in o["low"]]})
+    g = o["group"]
+    if b.get("all"):
+        weak = sorted({w for _, r in o["low"] for w in r["weak"]})[:4]
+        gen = L.generate_task(g.name + " guruhi uchun takrorlash", "test", 10, g.level, weak)
+        r = L.create_task({**gen, "type": "test", "kind": "extra", "level": g.level, "groupId": g.id, "studentIds": []})
+        mark_suggested(o)
+        return {**r, "tasks": 1, "ai": gen.get("ai", False)}
+
+    def make(item):
+        st, rr = item
+        topic = (", ".join(rr["weak"]) or "oxirgi darslar") + " — shaxsiy takrorlash"
+        return st, L.generate_task(topic, "test", 10, g.level, rr["weak"])
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:
+        gens = list(ex.map(make, o["low"]))
+    n, ai_used = 0, False
+    for st, gen in gens:
+        gen["title"] = (gen["title"] + " · " + st.name)[:120]
+        L.create_task({**gen, "type": "test", "kind": "extra", "level": g.level, "groupId": None, "studentIds": [st.id]})
+        n, ai_used = n + 1, ai_used or gen.get("ai", False)
     mark_suggested(o)
-    return r
+    return {"recipients": n, "tasks": n, "ai": ai_used}
 
 
 @api(["POST"], T)
@@ -631,7 +653,7 @@ def settings_view(request):
         bot = L.cfg("bot_cfg") or {}
         return {"rating_weights": L.weights(), "late_pen": L.cfg("late_pen", 5), "pay_settings": L.cfg("pay_settings", {"levelPrices": {}}),
                 "tg_opts": {"teacher": 1, "tasks": 1, **(L.cfg("tg_opts") or {})}, "bot": {"configured": bool(bot.get("token")), "gid": bot.get("gid", "")},
-                "gemini": bool(os.environ.get("GEMINI_API_KEY"))}
+                "gemini": L.ai_enabled(), "ai": {"groq": bool(os.environ.get("GROQ_API_KEY")), "gemini": bool(os.environ.get("GEMINI_API_KEY"))}}
     b = body(request)
     if b.get("rating_weights"):
         w = b["rating_weights"]

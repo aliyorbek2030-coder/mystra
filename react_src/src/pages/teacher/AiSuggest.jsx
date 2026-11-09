@@ -10,6 +10,7 @@ export default function AiSuggest() {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(null);
   const [error, setError] = useState('');
+  const [done, setDone] = useState('');
 
   const loadSuggestions = useCallback(async () => {
     setLoading(true);
@@ -37,7 +38,13 @@ export default function AiSuggest() {
 
     try {
       if (action === 'send') {
-        await sendSuggestion(groupId, all);
+        const r = await sendSuggestion(groupId, all);
+        setDone(
+          (all
+            ? `Butun guruhga 10 ta test yuborildi (${r?.recipients ?? 0} o‘quvchi).`
+            : `${r?.tasks ?? 0} ta o‘quvchiga shaxsiy 10 talik test yuborildi.`) +
+            (r && r.ai === false ? ' (AI ulanmagan — namunaviy savollar, tahrirlang)' : ' AI ularning xatolariga qarab tuzdi.')
+        );
       } else {
         await skipSuggestion(groupId);
       }
@@ -53,6 +60,12 @@ export default function AiSuggest() {
   return (
     <div className="wrap">
       <h3>AI takliflari ({list.length})</h3>
+      <p style={{ color: 'var(--text3)', marginTop: -4 }}>
+        Ketma-ket 3 marta 60% dan past natija olgan o‘quvchilar. AI har biriga xatolariga mos alohida test tuzadi.
+      </p>
+      {done && (
+        <div className="card" style={{ color: '#16A34A', fontWeight: 600 }}>✅ {done}</div>
+      )}
 
       {error && (
         <div className="card" style={{ color: 'var(--danger, #DC2626)' }}>
@@ -83,13 +96,27 @@ export default function AiSuggest() {
             <div className="card" key={group.id}>
               <b>{group.name}</b>
 
-              <p>
-                {students
-                  .map((student) => `${student.name} (${student.avg}%)`)
-                  .join(', ')}
-                {' — oxirgi vazifalarda past natija. '}
-                Shu mavzuda 10 ta test yuboraymi?
-              </p>
+              <div style={{ display: 'grid', gap: 8, margin: '10px 0' }}>
+                {students.map((student) => (
+                  <div
+                    key={student.id}
+                    style={{ padding: '10px 12px', borderRadius: 12, background: 'rgba(239,68,68,.08)' }}
+                  >
+                    <b>{student.name}</b>
+                    {' — '}
+                    ketma-ket {student.streak} marta past:{' '}
+                    {(student.last || []).map((v) => `${v}%`).join(' → ')}
+                    {student.avg ? ` · oylik o‘rtacha ${student.avg}%` : ''}
+                    <div style={{ fontSize: 13, color: 'var(--text3)', marginTop: 2 }}>
+                      Zaif joylari:{' '}
+                      {student.weak && student.weak.length
+                        ? student.weak.join(', ')
+                        : 'aniqlanmagan (umumiy takrorlash)'}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p>Har biriga xatolariga mos alohida 10 ta test yuboraymi?</p>
 
               <div
                 style={{

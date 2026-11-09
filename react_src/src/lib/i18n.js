@@ -440,6 +440,11 @@ const RAW = {
   "Ruxsat berilmadi. Qayta tizimga kiring.": ['Доступ запрещён. Войдите снова.', 'Access denied. Please sign in again.'],
   "Faylni ochib bo'lmadi.": ['Не удалось открыть файл.', 'Could not open the file.'],
   "Fayl manzili noto'g'ri.": ['Неверный адрес файла.', 'Invalid file address.'],
+  "Ketma-ket 3 marta 60% dan past natija olgan o‘quvchilar. AI har biriga xatolariga mos alohida test tuzadi.": ['Ученики с 3 низкими результатами подряд (ниже 60%). AI составит каждому отдельный тест по его ошибкам.', 'Students with 3 low results in a row (below 60%). AI builds each one a personal test based on their mistakes.'],
+  "Har biriga xatolariga mos alohida 10 ta test yuboraymi?": ['Отправить каждому персональные 10 тестов по его ошибкам?', 'Send each of them 10 personal tests based on their mistakes?'],
+  "Zaif joylari:": ['Слабые места:', 'Weak spots:'],
+  "aniqlanmagan (umumiy takrorlash)": ['не определены (общее повторение)', 'not detected (general review)'],
+  "AI ularning xatolariga qarab tuzdi.": ['AI составил их по ошибкам учеников.', 'AI built them from the students’ mistakes.'],
 };
 
 const DICT = new Map(Object.entries(RAW).map(([k, v]) => [norm(k), v]));
