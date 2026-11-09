@@ -79,7 +79,7 @@ export default function People({ view = 'groups' }) {
     // Homework is assigned to a specific group, not just a level.
     const [h, setH] = useState({
         title: '',
-        groupId: '',
+        level: '',
     });
 
     const loadData = useCallback(async () => {
@@ -351,19 +351,8 @@ export default function People({ view = 'groups' }) {
             return;
         }
 
-        if (!h.groupId) {
-            alert('Vazifa uchun guruh tanlang.');
-            return;
-        }
-
-        const selectedGroup = groups.find(
-            group => String(group.id) === String(h.groupId)
-        );
-
-        if (!selectedGroup) {
-            alert(
-                "Tanlangan guruh topilmadi. Guruhlar ro'yxatini yangilang."
-            );
+        if (!h.level) {
+            alert('Vazifa uchun darajani tanlang.');
             return;
         }
 
@@ -373,26 +362,19 @@ export default function People({ view = 'groups' }) {
         setError('');
 
         try {
-            // Django must save this homework with the selected group.
+            // Darajaga beriladi: shu darajadagi barcha guruhlar uchun umumiy
             await apiRequest('/homeworks', {
                 method: 'POST',
-                body: JSON.stringify({
-                    title,
-                    groupId: selectedGroup.id,
-                }),
+                body: JSON.stringify({ title, level: h.level }),
             });
 
-            setH({
-                title: '',
-                groupId: '',
-            });
+            const n = groups.filter(gr => gr.level === h.level).length;
+            setH(prev => ({ title: '', level: prev.level }));
 
             await loadData();
             window.dispatchEvent(new Event('mys:homeworks'));
 
-            alert(
-                `Vazifa "${selectedGroup.name}" guruhiga muvaffaqiyatli berildi.`
-            );
+            alert(`Vazifa ${h.level} darajasidagi barcha guruhlarga (${n} ta) berildi.`);
         } catch (err) {
             setError(`Vazifa yaratilmadi: ${err.message}`);
         } finally {
@@ -489,7 +471,7 @@ export default function People({ view = 'groups' }) {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 10, marginBottom: 12 }}>
                     <div>
                         <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0' }}>Vazifalar</h1>
-                        <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>Vazifalar ro'yxati va guruhga vazifa berish</p>
+                        <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>Vazifa darajaga beriladi — shu darajadagi barcha guruhlarga umumiy</p>
                     </div>
                     <button style={BTN} onClick={() => setShowAdd(v => !v)}>{showAdd ? 'Yopish' : "+ Vazifa qo'shish"}</button>
                 </div>
@@ -498,18 +480,26 @@ export default function People({ view = 'groups' }) {
                         <div style={{ marginBottom: 12 }}>
                             <In v={h.title} f={value => setH(prev => ({ ...prev, title: value }))} p="Vazifa nomi" />
                         </div>
-                        <select className="fi" style={{ ...FIELD, marginBottom: 12 }} value={h.groupId} onChange={event => setH(prev => ({ ...prev, groupId: event.target.value }))}>
-                            <option value="">— Vazifa beriladigan guruhni tanlang —</option>
-                            {groups.map(group => (
-                                <option key={group.id} value={group.id}>
-                                    {group.name} — {group.level} ({students.filter(st => gid(st) === String(group.id)).length} o'quvchi)
-                                </option>
-                            ))}
+                        <select className="fi" style={{ ...FIELD, marginBottom: 8 }} value={h.level} onChange={event => setH(prev => ({ ...prev, level: event.target.value }))}>
+                            <option value="">— Darajani tanlang —</option>
+                            {LEVELS.map(level => {
+                                const n = groups.filter(gr => gr.level === level).length;
+                                return (
+                                    <option key={level} value={level}>
+                                        {level} ({n} ta guruh, {students.filter(st => st.level === level).length} o'quvchi)
+                                    </option>
+                                );
+                            })}
                         </select>
-                        <button style={BTN} onClick={addH} disabled={busy || loading || groups.length === 0}>
-                            {busy ? 'Kutilmoqda...' : '📚 Tanlangan guruhga vazifa berish'}
+                        {h.level && (
+                            <p style={{ margin: '0 0 12px', fontSize: 13, color: '#5B6070' }}>
+                                Vazifa {h.level} darajasidagi barcha guruhlarga beriladi:{' '}
+                                {groups.filter(gr => gr.level === h.level).map(gr => gr.name).join(', ') || "hali guruh yo'q"}
+                            </p>
+                        )}
+                        <button style={BTN} onClick={addH} disabled={busy || loading}>
+                            {busy ? 'Kutilmoqda...' : '📚 Darajaga vazifa berish'}
                         </button>
-                        {groups.length === 0 && !loading && <p style={{ marginTop: 8, fontSize: 13, color: '#DC2626' }}>Avval kamida bitta guruh yarating.</p>}
                     </div>
                 )}
                 <div style={{ fontSize: 13, fontWeight: 700, color: '#5B6070', margin: '6px 0 8px' }}>Vazifalar ro'yxati ({hws.length})</div>
@@ -520,7 +510,9 @@ export default function People({ view = 'groups' }) {
                             <div key={homework.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff', border: '1px solid #E3E5EA', borderRadius: 12, padding: '10px 16px' }}>
                                 <div>
                                     <div style={{ fontWeight: 500, fontSize: 14 }}>{homework.title}</div>
-                                    <div style={{ fontSize: 12, color: '#5B6070' }}>{homework.groupName || group?.name || 'Guruh belgilanmagan'} · {homework.level}</div>
+                                    <div style={{ fontSize: 12, color: '#5B6070' }}>
+                                        {homework.level} · {homework.groupName || group?.name || `barcha guruhlar (${groups.filter(gr => gr.level === homework.level).length})`}
+                                    </div>
                                 </div>
                                 <button disabled={busy} onClick={() => del('homeworks', homework)} style={ICON_BTN}>🗑️</button>
                             </div>

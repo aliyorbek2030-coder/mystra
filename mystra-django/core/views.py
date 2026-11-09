@@ -205,6 +205,7 @@ def homeworks(request):
     b = body(request)
     title = str(b.get("title") or "").strip()
     group_id = b.get("groupId")
+    level = str(b.get("level") or "").strip()
 
     if not title:
         raise E(400, "Vazifa nomini kiriting.")
@@ -212,42 +213,28 @@ def homeworks(request):
     if len(title) > 200:
         raise E(400, "Vazifa nomi 200 belgidan oshmasligi kerak.")
 
-    if not group_id:
-        raise E(400, "Vazifa uchun guruh tanlang.")
-
-    g = Group.objects.filter(id=group_id).first()
-    if not g:
-        raise E(400, "Tanlangan guruh topilmadi.")
-
-    # Guruhning darajasi avtomatik olinadi.
-    h = Homework.objects.create(
-        title=title,
-        level=g.level,
-        group=g,
-    )
-
-    # Faqat tanlangan guruh o'quvchilariga xabar yuboriladi.
-    students = Student.objects.filter(group=g)
+    if group_id:
+        # Bitta guruhga (eski usul, moslik uchun)
+        g = Group.objects.filter(id=group_id).first()
+        if not g:
+            raise E(400, "Tanlangan guruh topilmadi.")
+        h = Homework.objects.create(title=title, level=g.level, group=g)
+        students = Student.objects.filter(group=g)
+        where = g.name
+    else:
+        # Darajaga: shu darajadagi barcha guruhlarga umumiy vazifa
+        if not level:
+            raise E(400, "Vazifa uchun darajani tanlang.")
+        h = Homework.objects.create(title=title, level=level, group=None)
+        students = Student.objects.filter(level=level)
+        where = level + " — barcha guruhlar"
 
     for student in students:
-        L.notify(
-            student.id,
-            "Yangi vazifa: " + h.title,
-            "/tasks",
-        )
+        L.notify(student.id, "Yangi vazifa: " + h.title, "/tasks")
 
-    L.tg(
-        "tasks",
-        f"📚 Yangi vazifa: {h.title} ({g.name})",
-    )
+    L.tg("tasks", f"📚 Yangi vazifa: {h.title} ({where})")
 
-    return {
-        "id": h.id,
-        "title": h.title,
-        "level": h.level,
-        "groupId": g.id,
-        "groupName": g.name,
-    }
+    return {"id": h.id, "title": h.title, "level": h.level, "groupId": h.group_id, "groupName": h.group.name if h.group else None}
 
 
 @api(["DELETE"], T)
