@@ -445,6 +445,11 @@ const RAW = {
   "Zaif joylari:": ['Слабые места:', 'Weak spots:'],
   "aniqlanmagan (umumiy takrorlash)": ['не определены (общее повторение)', 'not detected (general review)'],
   "AI ularning xatolariga qarab tuzdi.": ['AI составил их по ошибкам учеников.', 'AI built them from the students’ mistakes.'],
+  'Umumiy': ['Обзор', 'Overview'],
+  'Oylik hisobot': ['Месячный отчёт', 'Monthly report'],
+  'Ota-ona hisobot': ['Отчёт родителям', 'Parent report'],
+  'Natija yuborish': ['Отправка результатов', 'Send results'],
+  'Admin paneli': ['Панель админа', 'Admin panel'],
 };
 
 const DICT = new Map(Object.entries(RAW).map(([k, v]) => [norm(k), v]));

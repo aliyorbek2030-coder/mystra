@@ -130,6 +130,12 @@ const SIDEBAR_CSS = `
 .sb-out:hover{background:#FFE4D6;color:#C2410C}
 .app-main{flex:1;min-width:0}
 body{padding-bottom:0 !important}
+.tabwrap{padding:22px 32px 0;max-width:1240px;margin:0 auto;box-sizing:border-box}
+.tab-bar{display:inline-flex;gap:4px;padding:5px;background:#fff;border:1px solid #E3E5EA;border-radius:16px;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-bar a{padding:9px 16px;border-radius:11px;font-size:13px;font-weight:600;color:#5B6070;text-decoration:none;white-space:nowrap;transition:background .15s,color .15s}
+.tab-bar a:hover{background:#F4F5F7;color:#12131A}
+.tab-bar a.active{background:var(--tc,#5B4BFF);color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.12)}
 @media (max-width: 860px){
   .app-root{flex-direction:column}
   .sb-root{position:fixed;bottom:0;top:auto;left:0;right:0;width:auto;height:auto;flex-direction:row;padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:50;border-right:0;border-top:1px solid #E3E5EA;background:rgba(255,255,255,.95)}
@@ -140,6 +146,10 @@ body{padding-bottom:0 !important}
   .sb-ic{width:28px;height:28px}
   .sb-badge{position:absolute;margin:0;top:2px;right:8px}
   .app-main{padding-bottom:84px}
+  .tabwrap{padding:14px 16px 0}
+  .sb-link{flex:1 1 0;min-width:0;padding:4px 1px !important}
+  .sb-label{max-width:100%;overflow:hidden;text-overflow:ellipsis;font-size:10px;letter-spacing:-.2px}
+  .sb-mlang{flex-wrap:wrap}
   .sb-mlang{display:flex !important}
 }
 `;
@@ -168,12 +178,14 @@ function PageLoading() {
 
 const ROLE_LABEL = { teacher: 'Ustoz', admin: 'Administrator', student: "O'quvchi" };
 
-function Shell({ tabs, notifTo, children }) {
+// Eski versiyadagi joylashuv: chapda bo'limlar, bo'lim ichida yuqorida tablar
+function Shell({ groups, notifTo, children }) {
     const { user, logout } = useAuth();
     const { pathname } = useLocation();
     const [signupCount, setSignupCount] = useState(0);
 
-    const hasSignups = tabs.some(([to]) => to === '/signups');
+    const hasSignups = groups.some(g => g.tabs.some(([to]) => to === '/signups'));
+    const cur = groups.find(g => g.tabs.some(([to]) => pathname.startsWith(to))) || groups[0];
 
     // Yangi so'rovlar soni (sahifa almashganda yangilanadi)
     useEffect(() => {
@@ -199,13 +211,17 @@ function Shell({ tabs, notifTo, children }) {
                     </div>
 
                     <nav className="sb-nav">
-                        {tabs.map(([to, l]) => (
-                            <NavLink key={to} to={to} title={l} className={({ isActive }) => 'sb-link' + (isActive ? ' active' : '')}>
-                                <span className="sb-ic" style={{ background: (TILE[to] || TILE._)[0], color: (TILE[to] || TILE._)[1] }}><Icon name={ICON_FOR[to]} /></span>
-                                <span className="sb-label">{l}</span>
-                                {to === '/signups' && signupCount > 0 && <span className="sb-badge">{signupCount}</span>}
-                            </NavLink>
-                        ))}
+                        {groups.map(g => {
+                            const badge = g.tabs.some(([to]) => to === '/signups') ? signupCount : 0;
+                            return (
+                                <NavLink key={g.id} to={g.tabs[0][0]} title={g.label}
+                                    className={'sb-link' + (cur.id === g.id ? ' active' : '')}>
+                                    <span className="sb-ic" style={{ background: g.color + '1F', color: g.color }}><Icon name={g.icon} /></span>
+                                    <span className="sb-label">{g.label}</span>
+                                    {badge > 0 && <span className="sb-badge">{badge}</span>}
+                                </NavLink>
+                            );
+                        })}
                     </nav>
 
                     <div className="sb-user">
@@ -233,6 +249,18 @@ function Shell({ tabs, notifTo, children }) {
                         <button type="button" onClick={logout} aria-label="Chiqish" title="Chiqish" style={{ border: 0, background: '#fff', borderRadius: 10, height: 36, padding: '0 12px', font: 'inherit', fontWeight: 600, fontSize: 13, color: '#3D4150', cursor: 'pointer' }}>Chiqish</button>
                     </div>
                     <NotifBar to={notifTo} />
+                    {cur.tabs.length > 1 && (
+                        <div className="tabwrap">
+                            <div className="tab-bar" style={{ '--tc': cur.color }}>
+                                {cur.tabs.map(([to, l]) => (
+                                    <NavLink key={to} to={to} className={({ isActive }) => (isActive ? 'active' : '')}>
+                                        {l}
+                                        {to === '/signups' && signupCount > 0 ? ` (${signupCount})` : ''}
+                                    </NavLink>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                     <div key={pathname} className="page-in"><Suspense fallback={<PageLoading />}>{children}</Suspense></div>
                 </main>
             </div>
@@ -240,21 +268,28 @@ function Shell({ tabs, notifTo, children }) {
     );
 }
 
+// O'qituvchi menyusi — eski versiya bilan bir xil tartib
 const T = [
-    ['/overview', 'Bosh sahifa'],
-    ['/review', 'Tekshirish'],
-    ['/signups', "So'rovlar"],
-    ['/people', "O'quvchilar"],
-    ['/payment', "To'lovlar"],
-    ['/finance', 'Moliya'],
-    ['/reports', 'Hisobotlar'],
-    ['/hwcheck', 'Uy vazifa'],
-    ['/attend', 'Davomat'],
-    ['/suggest', 'AI takliflar'],
-    ['/send', 'Yuborish'],
-    ['/aitask', 'AI vazifa'],
-    ['/parent', 'Ota-onalar'],
-    ['/settings', 'Sozlamalar'],
+    { id: 'overview', label: 'Bosh sahifa', color: '#5B4BFF', icon: 'home', tabs: [['/overview', 'Umumiy']] },
+    { id: 'groups', label: 'Guruhlar', color: '#0EA5E9', icon: 'users', tabs: [['/people', 'Guruhlar'], ['/attend', 'Davomat'], ['/signups', "So'rovlar"]] },
+    { id: 'work', label: 'Vazifalar', color: '#F59E0B', icon: 'check', tabs: [['/hwcheck', 'Uy vazifa'], ['/review', 'Tekshirish'], ['/aitask', 'AI vazifa'], ['/suggest', 'AI takliflar']] },
+    { id: 'reports', label: 'Hisobotlar', color: '#EC4899', icon: 'bars', tabs: [['/reports', 'Oylik hisobot'], ['/parent', 'Ota-ona hisobot'], ['/send', 'Natija yuborish']] },
+    { id: 'payment', label: "To'lov", color: '#65A30D', icon: 'card', tabs: [['/payment', "To'lov"], ['/finance', 'Moliya']] },
+    { id: 'settings', label: 'Sozlamalar', color: '#10B981', icon: 'sliders', tabs: [['/settings', 'Sozlamalar']] },
+];
+
+// O'quvchi menyusi — eski versiya bilan bir xil tartib (yangi bo'limlar tab sifatida)
+const S_NAV = [
+    { id: 'overview', label: 'Natijalarim', color: '#5B4BFF', icon: 'home', tabs: [['/results', 'Natijalarim'], ['/game', 'Yutuqlar']] },
+    { id: 'archive', label: 'Oylik Arxiv', color: '#EC4899', icon: 'calendar', tabs: [['/archive', 'Oylik Arxiv']] },
+    { id: 'tasks', label: 'Vazifalar', color: '#F59E0B', icon: 'book', tabs: [['/tasks', 'Vazifalar'], ['/cards', 'Kartochkalar']] },
+    { id: 'pay', label: "To'lov", color: '#65A30D', icon: 'card', tabs: [['/pay', "To'lov"]] },
+    { id: 'certs', label: 'Sertifikatlar', color: '#10B981', icon: 'award', tabs: [['/certs', 'Sertifikatlar']] },
+];
+
+const A_NAV = [
+    { id: 'admin', label: 'Admin paneli', color: '#5B4BFF', icon: 'shield', tabs: [['/admin', 'Admin paneli']] },
+    { id: 'settings', label: 'Sozlamalar', color: '#10B981', icon: 'sliders', tabs: [['/settings', 'Sozlamalar']] },
 ];
 
 export default function App() {
@@ -278,15 +313,7 @@ export default function App() {
         return (
             <Shell
                 notifTo={user.id}
-                tabs={[
-                    ['/tasks', 'Vazifalar'],
-                    ['/game', 'Yutuqlar'],
-                    ['/cards', 'Kartochkalar'],
-                    ['/results', 'Natijalar'],
-                    ['/archive', 'Arxiv'],
-                    ['/pay', "To'lov"],
-                    ['/certs', 'Sertifikat'],
-                ]}
+                groups={S_NAV}
             >
                 <Routes>
                     <Route path="/tasks" element={<Tasks />} />
@@ -298,7 +325,7 @@ export default function App() {
                     <Route path="/certs" element={<Certs />} />
                     <Route
                         path="*"
-                        element={<Navigate to="/tasks" />}
+                        element={<Navigate to="/results" />}
                     />
                 </Routes>
             </Shell>
@@ -309,10 +336,7 @@ export default function App() {
         return (
             <Shell
                 notifTo="admin"
-                tabs={[
-                    ['/admin', 'Admin'],
-                    ['/settings', 'Sozlamalar'],
-                ]}
+                groups={A_NAV}
             >
                 <Routes>
                     <Route path="/admin" element={<Admin />} />
@@ -327,7 +351,7 @@ export default function App() {
     }
 
     return (
-        <Shell notifTo="teacher" tabs={T}>
+        <Shell notifTo="teacher" groups={T}>
             <Routes>
                 <Route path="/overview" element={<Overview />} />
                 <Route path="/review" element={<Review />} />
