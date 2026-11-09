@@ -292,6 +292,17 @@ const A_NAV = [
     { id: 'settings', label: 'Sozlamalar', color: '#10B981', icon: 'sliders', tabs: [['/settings', 'Sozlamalar']] },
 ];
 
+// "Uy vazifa": yuqorida vazifalar ro'yxati, pastda dars tekshiruvi (eski versiyadagidek)
+function HomeworkTab() {
+    const [k, setK] = useState(0);
+    useEffect(() => {
+        const f = () => setK(x => x + 1);
+        window.addEventListener('mys:homeworks', f);
+        return () => window.removeEventListener('mys:homeworks', f);
+    }, []);
+    return (<><People view="homework" /><HwCheck key={k} /></>);
+}
+
 export default function App() {
     const { user } = useAuth();
     const { pathname } = useLocation();
@@ -360,7 +371,7 @@ export default function App() {
                 <Route path="/payment" element={<Payment />} />
                 <Route path="/finance" element={<Finance />} />
                 <Route path="/reports" element={<Reports />} />
-                <Route path="/hwcheck" element={<HwCheck />} />
+                <Route path="/hwcheck" element={<HomeworkTab />} />
                 <Route path="/suggest" element={<AiSuggest />} />
                 <Route path="/send" element={<SendResults />} />
                 <Route path="/attend" element={<Attendance />} />

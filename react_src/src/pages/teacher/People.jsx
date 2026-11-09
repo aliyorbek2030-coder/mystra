@@ -53,7 +53,7 @@ const Lv = ({ v, f }) => (
     </select>
 );
 
-export default function People() {
+export default function People({ view = 'groups' }) {
     const [groups, setGroups] = useState(S.get('groups') || []);
     const [students, setStudents] = useState(S.get('students') || []);
     const [hws, setHws] = useState(S.get('homeworks') || []);
@@ -245,15 +245,16 @@ export default function People() {
                 }),
             });
 
-            setS({
+            setS(prev => ({
                 name: '',
                 phone: '',
-                groupId: '',
+                groupId: prev.groupId,
                 username: '',
                 password: '',
-            });
+            }));
 
             await loadData();
+            loadRatings();
 
             alert("O'quvchi muvaffaqiyatli yaratildi.");
         } catch (err) {
@@ -387,6 +388,7 @@ export default function People() {
             });
 
             await loadData();
+            window.dispatchEvent(new Event('mys:homeworks'));
 
             alert(
                 `Vazifa "${selectedGroup.name}" guruhiga muvaffaqiyatli berildi.`
@@ -431,6 +433,7 @@ export default function People() {
             );
 
             await loadData();
+            if (kind === 'homeworks') window.dispatchEvent(new Event('mys:homeworks'));
         } catch (err) {
             setError(`O'chirishda xatolik: ${err.message}`);
         } finally {
@@ -438,328 +441,266 @@ export default function People() {
         }
     };
 
-    const wipe = () => {
-        alert(
-            "Serverdagi barcha o'quvchilarni xavfsiz o'chirish uchun " +
-            "alohida ommaviy o'chirish endpointi kerak. " +
-            "Bu tugma hozircha server ma'lumotlarini o'chirmaydi."
-        );
+
+    // --- ESKI VERSIYADAGIDEK: avval guruh kartalari, guruhga kirsangiz — o'quvchilar ---
+    const [activeLevel, setActiveLevel] = useState(LEVELS[0]);
+    const [openId, setOpenId] = useState(null);
+    const [showAdd, setShowAdd] = useState(false);
+    const [ratings, setRatings] = useState({});
+
+    const loadRatings = useCallback(() => {
+        if (view !== 'groups') return;
+        apiRequest('/rating')
+            .then(list => {
+                const m = {};
+                (Array.isArray(list) ? list : []).forEach(r => { if (r?.student?.id != null) m[r.student.id] = r; });
+                setRatings(m);
+            })
+            .catch(() => {});
+    }, [view]);
+
+    useEffect(() => { loadRatings(); }, [loadRatings]);
+
+    const gid = st => String(st.groupId ?? st.group_id ?? '');
+    const filteredGroups = groups.filter(group => group.level === activeLevel);
+    const noGroup = students.filter(st => !gid(st) || !groups.some(gr => String(gr.id) === gid(st)));
+    const avgOf = list => {
+        const v = list.map(st => ratings[st.id]?.avg).filter(x => x > 0);
+        return v.length ? Math.round(v.reduce((x, y) => x + y, 0) / v.length) : null;
     };
 
-    // --- NEW DESIGN LOGIC: LEVEL TABS ---
-    const [activeLevel, setActiveLevel] = useState(LEVELS[0]);
-    const filteredGroups = groups.filter(
-        group => group.level === activeLevel
+    const BTN = { padding: '9px 16px', backgroundColor: '#5B4BFF', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontFamily: 'inherit', fontSize: 13, fontWeight: 600 };
+    const BTN_G = { ...BTN, backgroundColor: '#fff', color: '#12131A', border: '1px solid #E3E5EA' };
+    const ICON_BTN = { padding: '4px 8px', fontSize: 13, background: '#F4F5F7', border: 'none', borderRadius: 8, cursor: 'pointer' };
+    const PAGE = { width: '100%', boxSizing: 'border-box', padding: 0, fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif", color: '#12131A' };
+
+    const errorBox = error && (
+        <div className="card" role="alert" style={{ color: 'var(--danger)', overflowWrap: 'anywhere', marginBottom: 16, padding: '12px 14px', backgroundColor: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, fontSize: 13 }}>
+            {error}
+            <button className="btn" style={{ marginLeft: 8 }} onClick={loadData} disabled={loading || busy}>Qayta yuklash</button>
+        </div>
     );
 
+    // ── "Uy vazifa" bo'limi: vazifalar ro'yxati va yangi vazifa berish
+    if (view === 'homework') {
+        return (
+            <div style={{ ...PAGE, padding: '20px 24px 0' }}>
+                {errorBox}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 10, marginBottom: 12 }}>
+                    <div>
+                        <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0' }}>Vazifalar</h1>
+                        <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>Vazifalar ro'yxati va guruhga vazifa berish</p>
+                    </div>
+                    <button style={BTN} onClick={() => setShowAdd(v => !v)}>{showAdd ? 'Yopish' : "+ Vazifa qo'shish"}</button>
+                </div>
+                {showAdd && (
+                    <div style={{ backgroundColor: '#fff', border: '1px solid #E3E5EA', borderRadius: 12, padding: 16, marginBottom: 12 }}>
+                        <div style={{ marginBottom: 12 }}>
+                            <In v={h.title} f={value => setH(prev => ({ ...prev, title: value }))} p="Vazifa nomi" />
+                        </div>
+                        <select className="fi" style={{ ...FIELD, marginBottom: 12 }} value={h.groupId} onChange={event => setH(prev => ({ ...prev, groupId: event.target.value }))}>
+                            <option value="">— Vazifa beriladigan guruhni tanlang —</option>
+                            {groups.map(group => (
+                                <option key={group.id} value={group.id}>
+                                    {group.name} — {group.level} ({students.filter(st => gid(st) === String(group.id)).length} o'quvchi)
+                                </option>
+                            ))}
+                        </select>
+                        <button style={BTN} onClick={addH} disabled={busy || loading || groups.length === 0}>
+                            {busy ? 'Kutilmoqda...' : '📚 Tanlangan guruhga vazifa berish'}
+                        </button>
+                        {groups.length === 0 && !loading && <p style={{ marginTop: 8, fontSize: 13, color: '#DC2626' }}>Avval kamida bitta guruh yarating.</p>}
+                    </div>
+                )}
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#5B6070', margin: '6px 0 8px' }}>Vazifalar ro'yxati ({hws.length})</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {hws.map(homework => {
+                        const group = groups.find(item => String(item.id) === String(homework.groupId ?? homework.group_id));
+                        return (
+                            <div key={homework.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff', border: '1px solid #E3E5EA', borderRadius: 12, padding: '10px 16px' }}>
+                                <div>
+                                    <div style={{ fontWeight: 500, fontSize: 14 }}>{homework.title}</div>
+                                    <div style={{ fontSize: 12, color: '#5B6070' }}>{homework.groupName || group?.name || 'Guruh belgilanmagan'} · {homework.level}</div>
+                                </div>
+                                <button disabled={busy} onClick={() => del('homeworks', homework)} style={ICON_BTN}>🗑️</button>
+                            </div>
+                        );
+                    })}
+                    {!hws.length && !loading && <div style={{ fontSize: 13, color: '#6B7080' }}>Hali vazifa yo'q.</div>}
+                </div>
+            </div>
+        );
+    }
+
+    const openGroup = openId === 'none'
+        ? { id: 'none', name: "Guruhsiz o'quvchilar", level: '', days: '' }
+        : groups.find(gr => String(gr.id) === String(openId));
+
+    // ── Guruh ichi: faqat shu guruh o'quvchilari
+    if (openGroup) {
+        const list = (openGroup.id === 'none' ? noGroup : students.filter(st => gid(st) === String(openGroup.id)))
+            .map(st => ({ ...st, r: ratings[st.id] || {} }))
+            .sort((x, y) => (y.r.score || 0) - (x.r.score || 0));
+        const canAdd = openGroup.id !== 'none';
+        const startAdd = () => { setS(prev => ({ ...prev, groupId: String(openGroup.id) })); setShowAdd(true); };
+        return (
+            <div style={PAGE}>
+                <div style={{ backgroundColor: '#fff', borderBottom: '1px solid #E3E5EA', padding: '18px 24px 14px' }}>
+                    <button onClick={() => { setOpenId(null); setShowAdd(false); }} style={{ ...ICON_BTN, marginBottom: 10, fontWeight: 600, fontFamily: 'inherit' }}>
+                        ← {openGroup.level ? `${openGroup.level} guruhlari` : 'Guruhlar'}
+                    </button>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 10 }}>
+                        <div>
+                            <h1 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 4px 0' }}>{openGroup.name}</h1>
+                            <div style={{ fontSize: 13, color: '#5B6070' }}>
+                                {openGroup.level && <span style={{ background: '#ECEAFF', color: '#5B4BFF', padding: '2px 8px', borderRadius: 99, fontWeight: 600, fontSize: 12 }}>{openGroup.level}</span>}
+                                {openGroup.days ? ` · ${openGroup.days}` : ''} · {list.length} o'quvchi
+                            </div>
+                        </div>
+                        {canAdd && (
+                            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                                <button style={BTN_G} disabled={busy} onClick={() => editG(openGroup)}>✏️ Guruhni tahrirlash</button>
+                                <button style={BTN} onClick={() => (showAdd ? setShowAdd(false) : startAdd())}>{showAdd ? 'Yopish' : "+ Talaba qo'shish"}</button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div style={{ padding: 24 }}>
+                    {errorBox}
+                    {showAdd && canAdd && (
+                        <div style={{ backgroundColor: '#fff', border: '1px solid #E3E5EA', borderRadius: 12, padding: 16, marginBottom: 16 }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 12 }}>
+                                <In v={s.name} f={value => setS(prev => ({ ...prev, name: value }))} p="Ism Familya" />
+                                <In v={s.phone} f={value => setS(prev => ({ ...prev, phone: value }))} p="Telefon" />
+                                <In v={s.username} f={value => setS(prev => ({ ...prev, username: value }))} p="Login" />
+                                <In v={s.password} f={value => setS(prev => ({ ...prev, password: value }))} p="Parol" t="password" />
+                            </div>
+                            <button style={BTN} onClick={addS} disabled={busy}>{busy ? 'Kutilmoqda...' : "➕ O'quvchi qo'shish"}</button>
+                        </div>
+                    )}
+
+                    {list.length ? (
+                        <div style={{ backgroundColor: '#fff', border: '1px solid #E3E5EA', borderRadius: 12, overflowX: 'auto' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+                                <thead>
+                                    <tr style={{ textAlign: 'left', color: '#6B7080', fontSize: 12 }}>
+                                        {['Reyting', "O'quvchi", 'Telefon', 'Login', 'Reyting bali', "O'rtacha", ''].map(hd => (
+                                            <th key={hd} style={{ padding: '10px 14px', borderBottom: '1px solid #E3E5EA', fontWeight: 600, whiteSpace: 'nowrap' }}>{hd}</th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {list.map((st, i) => (
+                                        <tr key={st.id} style={{ borderBottom: '1px solid #F0F1F4' }}>
+                                            <td style={{ padding: '10px 14px', fontSize: i < 3 ? 16 : 13 }}>{['🥇', '🥈', '🥉'][i] || `#${i + 1}`}</td>
+                                            <td style={{ padding: '10px 14px', fontWeight: 600, whiteSpace: 'nowrap' }}>{st.name}</td>
+                                            <td style={{ padding: '10px 14px', color: '#6B7080', whiteSpace: 'nowrap' }}>{st.phone || '—'}</td>
+                                            <td style={{ padding: '10px 14px', color: '#6B7080' }}><code>{st.username}</code></td>
+                                            <td style={{ padding: '10px 14px', fontWeight: 700, color: '#5B4BFF' }}>{st.r.score ?? '—'}</td>
+                                            <td style={{ padding: '10px 14px' }}>{st.r.avg ? `${st.r.avg}%` : '—'}</td>
+                                            <td style={{ padding: '10px 14px', whiteSpace: 'nowrap', textAlign: 'right' }}>
+                                                <button disabled={busy} onClick={() => editS(st)} style={ICON_BTN}>✏️</button>{' '}
+                                                <button disabled={busy} onClick={() => del('students', st)} style={ICON_BTN}>🗑️</button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <div style={{ textAlign: 'center', padding: '40px 16px', color: '#6B7080', fontSize: 14 }}>
+                            <div style={{ fontSize: 32, marginBottom: 8 }}>👥</div>
+                            Bu guruhda hali o'quvchi yo'q.
+                            {canAdd && !showAdd && (
+                                <div style={{ marginTop: 14 }}><button style={BTN} onClick={startAdd}>+ Birinchi o'quvchini qo'shish</button></div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
+    // ── Guruh kartalari
+    const card = { border: '1px solid #E3E5EA', borderRadius: 14, padding: 14, backgroundColor: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 110, cursor: 'pointer', position: 'relative', transition: 'transform .15s, box-shadow .15s' };
+    const hover = e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(18,19,26,.08)'; };
+    const unhover = e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; };
+
     return (
-        <div
-            style={{
-                width: '100%',
-                maxWidth: 'none',
-                margin: 0,
-                boxSizing: 'border-box',
-                padding: 0,
-                fontFamily: "'Onest', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
-                color: '#12131A',
-                backgroundColor: '#F4F5F7',
-                minHeight: '100vh',
-            }}
-        >
-            {/* Header (white top bar) */}
-            <div
-                style={{
-                    backgroundColor: '#fff',
-                    borderBottom: '1px solid #E3E5EA',
-                    padding: '24px 24px 14px',
-                }}
-            >
-                <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0', color: '#12131A' }}>Guruhlar</h1>
+        <div style={PAGE}>
+            <div style={{ backgroundColor: '#fff', borderBottom: '1px solid #E3E5EA', padding: '24px 24px 14px' }}>
+                <h1 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 2px 0' }}>Guruhlar</h1>
                 <p style={{ color: '#5B6070', margin: 0, fontSize: 13 }}>Guruhni bosing — ichiga kirasiz</p>
             </div>
 
             <div style={{ padding: '24px' }}>
-                {error && (
-                    <div
-                        className="card"
-                        role="alert"
-                        style={{
-                            color: 'var(--danger)',
-                            overflowWrap: 'anywhere',
-                            marginBottom: 16,
-                            padding: '12px 14px',
-                            backgroundColor: '#fef2f2',
-                            border: '1px solid #fecaca',
-                            borderRadius: 10,
-                            fontSize: 13,
-                        }}
-                    >
-                        {error}
-                        <button
-                            className="btn"
-                            style={{ marginLeft: 8 }}
-                            onClick={loadData}
-                            disabled={loading || busy}
-                        >
-                            Qayta yuklash
-                        </button>
-                    </div>
-                )}
-
+                {errorBox}
                 {loading && <p style={{ fontSize: 13, color: '#5B6070' }}>Ma'lumotlar yuklanmoqda...</p>}
 
-                {/* Level Tabs */}
-                <div style={{
-                    display: 'flex',
-                    gap: 24,
-                    borderBottom: '1px solid #E3E5EA',
-                    marginBottom: 14,
-                    overflowX: 'auto'
-                }}>
+                <div style={{ display: 'flex', gap: 24, borderBottom: '1px solid #E3E5EA', marginBottom: 14, overflowX: 'auto' }}>
                     {LEVELS.map(level => (
-                        <button
-                            key={level}
-                            onClick={() => setActiveLevel(level)}
-                            style={{
-                                background: 'none',
-                                border: 'none',
-                                padding: '0 0 10px',
-                                marginBottom: -1,
-                                cursor: 'pointer',
-                                fontFamily: 'inherit',
-                                fontSize: 13,
-                                fontWeight: activeLevel === level ? 500 : 400,
-                                color: activeLevel === level ? '#12131A' : '#5B6070',
-                                borderBottom: activeLevel === level ? '2px solid #12131A' : '2px solid transparent',
-                                transition: 'color 0.15s',
-                                whiteSpace: 'nowrap'
-                            }}
-                        >
+                        <button key={level} onClick={() => setActiveLevel(level)}
+                            style={{ background: 'none', border: 'none', padding: '0 0 10px', marginBottom: -1, cursor: 'pointer', fontFamily: 'inherit', fontSize: 13, fontWeight: activeLevel === level ? 600 : 400, color: activeLevel === level ? '#12131A' : '#5B6070', borderBottom: activeLevel === level ? '2px solid #12131A' : '2px solid transparent', whiteSpace: 'nowrap' }}>
                             {level}
                         </button>
                     ))}
                 </div>
 
-                {/* Group List (Filtered by Level) */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(194px, 194px))', gap: 14, marginBottom: 16 }}>
-                    {filteredGroups.map(group => (
-                        <div
-                            key={group.id}
-                            style={{
-                                border: '1px solid #E3E5EA',
-                                borderRadius: 12,
-                                padding: 14,
-                                backgroundColor: '#fff',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'space-between',
-                                minHeight: 87
-                            }}
-                        >
-                            <div>
-                                <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4, color: '#12131A' }}>{group.name}</div>
-                                <div style={{ fontSize: 12, color: '#5B6070', marginBottom: 2 }}>{group.days || "Kunlar belgilanmagan"}</div>
-                                <div style={{ fontSize: 12, color: '#6B7080' }}>
-                                    {students.filter(
-                                        student =>
-                                            String(student.groupId ?? student.group_id) === String(group.id)
-                                    ).length}{' '}
-                                    o'quvchi
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 14, marginBottom: 16 }}>
+                    {filteredGroups.map(group => {
+                        const gs = students.filter(st => gid(st) === String(group.id));
+                        const avg = avgOf(gs);
+                        return (
+                            <div key={group.id} style={card} onClick={() => setOpenId(group.id)} onMouseEnter={hover} onMouseLeave={unhover}>
+                                <div>
+                                    <div style={{ fontSize: 22, marginBottom: 6 }}>📚</div>
+                                    <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 2 }}>{group.name}</div>
+                                    <div style={{ fontSize: 12, color: '#5B6070' }}>{group.days || 'Vaqt belgilanmagan'}</div>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 10, fontSize: 12, color: '#6B7080' }}>
+                                    {gs.length} ta o'quvchi
+                                    {avg !== null && <span style={{ background: '#DCFCE7', color: '#15803D', padding: '1px 7px', borderRadius: 99, fontWeight: 700, fontSize: 11 }}>{avg}%</span>}
+                                </div>
+                                <div style={{ position: 'absolute', top: 10, right: 10, display: 'flex', gap: 4 }}>
+                                    <button disabled={busy} title="Tahrirlash" onClick={e => { e.stopPropagation(); editG(group); }} style={ICON_BTN}>✏️</button>
+                                    <button disabled={busy} title="O'chirish" onClick={e => { e.stopPropagation(); del('groups', group); }} style={ICON_BTN}>🗑️</button>
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', gap: 6, marginTop: 10, justifyContent: 'flex-end' }}>
-                                <button className="btn" disabled={busy} onClick={() => editG(group)} style={{ padding: '3px 8px', fontSize: 13, background: '#F4F5F7', border: 'none', borderRadius: 8, cursor: 'pointer' }}>✏️</button>
-                                <button className="btn" disabled={busy} onClick={() => del('groups', group)} style={{ padding: '3px 8px', fontSize: 13, background: '#F4F5F7', border: 'none', borderRadius: 8, cursor: 'pointer' }}>🗑️</button>
-                            </div>
-                        </div>
-                    ))}
+                        );
+                    })}
 
-                    {/* Add New Group Card */}
                     <div
                         onClick={() => {
                             const name = prompt('Guruh nomi:');
                             if (name === null) return;
                             const days = prompt('Dars kunlari (Mon,Wed,Fri):', '');
                             if (days === null) return;
-
                             setG({ name: name.trim(), level: activeLevel, days: days.trim() });
-                            setTimeout(() => {
-                                const btn = document.getElementById('hidden-add-g');
-                                if (btn) btn.click();
-                            }, 100);
+                            setTimeout(() => { const btn = document.getElementById('hidden-add-g'); if (btn) btn.click(); }, 100);
                         }}
-                        style={{
-                            border: '1.5px dashed #D9DCE3',
-                            borderRadius: 12,
-                            padding: 14,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-                            color: '#6B7080',
-                            minHeight: 87,
-                            transition: 'border-color 0.15s, color 0.15s',
-                        }}
-                        onMouseEnter={e => {
-                            e.currentTarget.style.borderColor = '#6B7080';
-                            e.currentTarget.style.color = '#4A4E5C';
-                        }}
-                        onMouseLeave={e => {
-                            e.currentTarget.style.borderColor = '#D9DCE3';
-                            e.currentTarget.style.color = '#6B7080';
-                        }}
+                        style={{ ...card, border: '1.5px dashed #D9DCE3', alignItems: 'center', justifyContent: 'center', color: '#6B7080' }}
                     >
-                        <div style={{ fontSize: 20, marginBottom: 6, lineHeight: 1 }}>+</div>
+                        <div style={{ fontSize: 22, marginBottom: 6, lineHeight: 1 }}>+</div>
                         <div style={{ fontSize: 13 }}>Yangi guruh</div>
                     </div>
                 </div>
 
-                {/* Hidden Add Group Trigger */}
                 <button id="hidden-add-g" onClick={addG} style={{ display: 'none' }} disabled={busy} />
 
-                {/* Empty State */}
                 {filteredGroups.length === 0 && !loading && (
-                    <div style={{
-                        backgroundColor: '#eef6fb',
-                        border: '1px solid #1f6f9f',
-                        color: '#0c5a85',
-                        padding: '10px 12px',
-                        borderRadius: 10,
-                        fontSize: 13,
-                        marginBottom: 24
-                    }}>
+                    <div style={{ backgroundColor: '#eef6fb', border: '1px solid #1f6f9f', color: '#0c5a85', padding: '10px 12px', borderRadius: 10, fontSize: 13, marginBottom: 16 }}>
                         Bu daraja uchun guruh yo'q. Yuqoridagi + Yangi guruh kartani bosing!
                     </div>
                 )}
 
-                {/* --- REST OF THE SECTIONS (STUDENTS, HOMEWORK) --- */}
-
-                <div style={{ marginTop: 40 }}>
-                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, color: '#12131A' }}>O'quvchilar ({students.length})</h2>
-                    <div style={{ backgroundColor: '#fff', border: '1px solid #E3E5EA', borderRadius: 12, padding: 16, marginBottom: 16 }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
-                            <In v={s.name} f={value => setS(prev => ({ ...prev, name: value }))} p="Ism Familya" />
-                            <In v={s.phone} f={value => setS(prev => ({ ...prev, phone: value }))} p="Telefon" />
-                        </div>
-                        <select
-                            className="fi"
-                            style={{ ...FIELD, marginBottom: 12 }}
-                            value={s.groupId}
-                            onChange={event => setS(prev => ({ ...prev, groupId: event.target.value }))}
-                        >
-                            <option value="">Guruhni tanlang</option>
-                            {groups.map(group => (
-                                <option key={group.id} value={group.id}>{group.name} — {group.level}</option>
-                            ))}
-                        </select>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
-                            <In v={s.username} f={value => setS(prev => ({ ...prev, username: value }))} p="Login" />
-                            <In v={s.password} f={value => setS(prev => ({ ...prev, password: value }))} p="Parol" t="password" />
-                        </div>
-                        <button className="btn btn-p" onClick={addS} disabled={busy} style={{ padding: '9px 18px', backgroundColor: '#5B4BFF', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontFamily: 'inherit', fontSize: 13, fontWeight: 500 }}>
-                            {busy ? 'Kutilmoqda...' : "➕ O'quvchi qo'shish"}
-                        </button>
+                {noGroup.length > 0 && (
+                    <div style={{ ...card, minHeight: 0, flexDirection: 'row', alignItems: 'center', background: '#FFFBEB', borderColor: '#FDE68A', maxWidth: 420 }}
+                        onClick={() => setOpenId('none')} onMouseEnter={hover} onMouseLeave={unhover}>
+                        ⚠️ Guruhsiz o'quvchilar: <b style={{ marginLeft: 4 }}>{noGroup.length}</b>
+                        <span style={{ marginLeft: 'auto', color: '#B45309', fontWeight: 600 }}>Ko'rish →</span>
                     </div>
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                        {students.map(student => {
-                            const group = groups.find(item => String(item.id) === String(student.groupId ?? student.group_id));
-                            return (
-                                <div key={student.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff', border: '1px solid #E3E5EA', borderRadius: 12, padding: '12px 16px' }}>
-                                    <div>
-                                        <div style={{ fontWeight: 500, fontSize: 14 }}>{student.name}</div>
-                                        <div style={{ fontSize: 12, color: '#5B6070' }}>
-                                            {student.level} · {group?.name || 'Guruh belgilanmagan'} · {student.phone}
-                                        </div>
-                                        <div style={{ fontSize: 12, color: '#6B7080', marginTop: 2 }}>Login: {student.username}</div>
-                                    </div>
-                                    <div style={{ display: 'flex', gap: 6 }}>
-                                        <button className="btn" disabled={busy} onClick={() => editS(student)} style={{ padding: '5px 9px', background: '#F4F5F7', border: 'none', borderRadius: 8, cursor: 'pointer' }}>✏️</button>
-                                        <button className="btn" disabled={busy} onClick={() => del('students', student)} style={{ padding: '5px 9px', background: '#F4F5F7', border: 'none', borderRadius: 8, cursor: 'pointer' }}>🗑️</button>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-
-                <div style={{ marginTop: 40, marginBottom: 40 }}>
-                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, color: '#12131A' }}>Vazifa berish — guruh bo'yicha</h2>
-                    <div style={{ backgroundColor: '#fff', border: '1px solid #E3E5EA', borderRadius: 12, padding: 16 }}>
-                        <div style={{ marginBottom: 12 }}>
-                            <In v={h.title} f={value => setH(prev => ({ ...prev, title: value }))} p="Vazifa nomi" />
-                        </div>
-                        <select
-                            className="fi"
-                            style={{ ...FIELD, marginBottom: 12 }}
-                            value={h.groupId}
-                            onChange={event => setH(prev => ({ ...prev, groupId: event.target.value }))}
-                        >
-                            <option value="">— Vazifa beriladigan guruhni tanlang —</option>
-                            {groups.map(group => {
-                                const count = students.filter(student => String(student.groupId ?? student.group_id) === String(group.id)).length;
-                                return (
-                                    <option key={group.id} value={group.id}>{group.name} — {group.level} ({count} o'quvchi)</option>
-                                );
-                            })}
-                        </select>
-                        {h.groupId && (
-                            <p style={{ margin: '4px 0 12px', fontSize: 13, color: '#5B6070' }}>
-                                {(() => {
-                                    const selected = groups.find(group => String(group.id) === String(h.groupId));
-                                    const count = students.filter(student => String(student.groupId ?? student.group_id) === String(h.groupId)).length;
-                                    return selected ? `Tanlangan guruh: ${selected.name}. ${count} nafar o'quvchi.` : '';
-                                })()}
-                            </p>
-                        )}
-                        <button className="btn btn-p" onClick={addH} disabled={busy || loading || groups.length === 0} style={{ padding: '9px 18px', backgroundColor: '#5B4BFF', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontFamily: 'inherit', fontSize: 13, fontWeight: 500 }}>
-                            {busy ? 'Kutilmoqda...' : "📚 Tanlangan guruhga vazifa berish"}
-                        </button>
-                        {groups.length === 0 && !loading && <p style={{ marginTop: 8, fontSize: 13, color: '#DC2626' }}>Avval kamida bitta guruh yarating.</p>}
-                    </div>
-                </div>
-
-                <div>
-                    <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 12, color: '#12131A' }}>Berilgan vazifalar ({hws.length})</h2>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                        {hws.map(homework => {
-                            const group = groups.find(item => String(item.id) === String(homework.groupId ?? homework.group_id));
-                            return (
-                                <div key={homework.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff', border: '1px solid #E3E5EA', borderRadius: 12, padding: '12px 16px' }}>
-                                    <div>
-                                        <div style={{ fontWeight: 500, fontSize: 14 }}>{homework.title}</div>
-                                        <div style={{ fontSize: 12, color: '#5B6070' }}>
-                                            {homework.groupName || group?.name || 'Guruh belgilanmagan'} · {homework.level}
-                                        </div>
-                                    </div>
-                                    <button className="btn" disabled={busy} onClick={() => del('homeworks', homework)} style={{ padding: '5px 9px', background: '#F4F5F7', border: 'none', borderRadius: 8, cursor: 'pointer' }}>🗑️</button>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-
-                <button
-                    className="btn"
-                    style={{
-                        width: '100%',
-                        marginTop: 32,
-                        padding: '12px',
-                        backgroundColor: '#fef2f2',
-                        color: '#DC2626',
-                        border: '1px solid #fecaca',
-                        borderRadius: 12,
-                        cursor: 'pointer',
-                        fontFamily: 'inherit',
-                        fontSize: 13,
-                        fontWeight: 500,
-                    }}
-                    onClick={wipe}
-                    disabled={busy}
-                >
-                    ⚠️ Barcha o'quvchilarni o'chirish
-                </button>
+                )}
             </div>
         </div>
     );
